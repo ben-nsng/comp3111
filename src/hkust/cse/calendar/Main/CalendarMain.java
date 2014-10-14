@@ -1,6 +1,7 @@
 //main method, code starts here
 package hkust.cse.calendar.Main;
 
+
 import javax.swing.UIManager;
 
 import hkust.cse.calendar.gui.LoginDialog;
@@ -29,4 +30,4 @@ public class CalendarMain {
 		}
 	}
 }
-		//test
+		
