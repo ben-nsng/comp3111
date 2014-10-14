@@ -8,11 +8,13 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.FlowLayout;
+import java.sql.Timestamp;
 
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
@@ -61,19 +63,25 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 	private JLabel dTimeML;
 	private JTextField dTimeM;
 	
+	//current time
+	private JLabel cTimeL;
+	
 	public TimeMachineDialog(TimeMachine machine) {
 
 		this.machine = machine;
+		this.machine.addElpasedListener(this);
 		
 		setTitle("Time Machine");
 		
 		Container contentPane;
 		contentPane = getContentPane();
 		
+		//start date panel
 		JPanel psDate = new JPanel();
-		Border sDateBorder = new TitledBorder(null, "Start DATE");
+		Border sDateBorder = new TitledBorder(null, "Start Date");
 		psDate.setBorder(sDateBorder);
 
+		//label and textfield in start date
 		sYearL = new JLabel("YEAR: ");
 		psDate.add(sYearL);
 		sYearF = new JTextField(6);
@@ -87,10 +95,12 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		sDayF = new JTextField(4);
 		psDate.add(sDayF);
 
+		//end date panel
 		JPanel peDate = new JPanel();
-		Border eDateBorder = new TitledBorder(null, "End DATE");
+		Border eDateBorder = new TitledBorder(null, "End Date");
 		peDate.setBorder(eDateBorder);
 
+		//label and textfield in end date
 		eYearL = new JLabel("YEAR: ");
 		peDate.add(eYearL);
 		eYearF = new JTextField(6);
@@ -104,9 +114,12 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		eDayF = new JTextField(4);
 		peDate.add(eDayF);
 
+		//start time panel
 		JPanel psTime = new JPanel();
-		Border stimeBorder = new TitledBorder(null, "START TIME");
+		Border stimeBorder = new TitledBorder(null, "Start Time");
 		psTime.setBorder(stimeBorder);
+		
+		//label and textfield in start time
 		sTimeHL = new JLabel("Hour");
 		psTime.add(sTimeHL);
 		sTimeH = new JTextField(4);
@@ -116,9 +129,12 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		sTimeM = new JTextField(4);
 		psTime.add(sTimeM);
 
+		//end time panel
 		JPanel peTime = new JPanel();
-		Border etimeBorder = new TitledBorder(null, "END TIME");
+		Border etimeBorder = new TitledBorder(null, "End Time");
 		peTime.setBorder(etimeBorder);
+		
+		//label and textfield in end time
 		eTimeHL = new JLabel("Hour");
 		peTime.add(eTimeHL);
 		eTimeH = new JTextField(4);
@@ -128,19 +144,58 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		eTimeM = new JTextField(4);
 		peTime.add(eTimeM);
 		
+		//time panel for start time and end time
 		JPanel pTime = new JPanel();
 		pTime.setLayout(new BorderLayout());
 		pTime.add("West", psTime);
 		pTime.add("East", peTime);
+		
+		//delay time panel
+		JPanel pdTime = new JPanel();
+		Border dtimeBorder = new TitledBorder(null, "Delay Time");
+		pdTime.setBorder(dtimeBorder);
+		dTimeHL = new JLabel("Hour");
+		pdTime.add(dTimeHL);
+		dTimeH = new JTextField(4);
+		pdTime.add(dTimeH);
+		dTimeML = new JLabel("Minute");
+		pdTime.add(dTimeML);
+		dTimeM = new JTextField(4);
+		pdTime.add(dTimeM);
+		
+		//current time label
+		cTimeL = new JLabel("");
+		
+		
+		//time panel for delay time
+		JPanel pdsTime = new JPanel();
+		pdsTime.setLayout(new BorderLayout());
+		pdsTime.add("West", pdTime);
+		pdsTime.add("East", cTimeL);
 
-		JPanel top = new JPanel();
-		top.setLayout(new BorderLayout());
-		top.setBorder(new BevelBorder(BevelBorder.RAISED));
-		top.add(psDate, BorderLayout.NORTH);
-		top.add(peDate, BorderLayout.CENTER);
-		top.add(pTime, BorderLayout.SOUTH);
+		//top panel
+		JPanel pTop = new JPanel();
+		pTop.setLayout(new BorderLayout());
+		pTop.setBorder(new BevelBorder(BevelBorder.RAISED));
+		pTop.add(psDate, BorderLayout.NORTH);
+		pTop.add(peDate, BorderLayout.SOUTH);
+		
+		//bottom panel
+		JPanel pBottom = new JPanel();
+		pBottom.setLayout(new BorderLayout());
+		pBottom.setBorder(new BevelBorder(BevelBorder.RAISED));
+		pBottom.add(pTime, BorderLayout.NORTH);
+		pBottom.add(pdsTime, BorderLayout.SOUTH);
 
-		contentPane.add("North", top);
+		//window panel
+		JPanel pWindows = new JPanel();
+		pWindows.setLayout(new BorderLayout());
+		pWindows.setBorder(new BevelBorder(BevelBorder.RAISED));
+		pWindows.add(pTop, BorderLayout.NORTH);
+		pWindows.add(pBottom, BorderLayout.SOUTH);
+		
+		//add top and bottom to contentPane
+		contentPane.add("North", pWindows);
 		
 		// start & stop button
 		JPanel butPanel = new JPanel();
@@ -169,8 +224,35 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(arg0.getSource() == btnStartTime) {
-			machine.start();
-			setEnable(false);
+ 			try {
+ 				sYearF.setText("2014");
+ 				sMonthF.setText("10");
+ 				sDayF.setText("10");
+ 				sTimeH.setText("0");
+ 				sTimeM.setText("0");
+ 				
+ 				eYearF.setText("2014");
+ 				eMonthF.setText("10");
+ 				eDayF.setText("13");
+ 				eTimeH.setText("0");
+ 				eTimeM.setText("0");
+ 				
+ 				dTimeH.setText("10");
+ 				dTimeM.setText("0");
+ 				
+ 				machine.changeStartTime(new Timestamp(Integer.parseInt(sYearF.getText()), Integer.parseInt(sMonthF.getText()),Integer.parseInt( sDayF.getText()), Integer.parseInt(sTimeH.getText()), Integer.parseInt(sTimeM.getText()), 0, 0));
+ 				machine.changeEndTime(new Timestamp(Integer.parseInt(eYearF.getText()), Integer.parseInt(eMonthF.getText()), Integer.parseInt(eDayF.getText()), Integer.parseInt(eTimeH.getText()), Integer.parseInt(eTimeM.getText()), 0, 0));
+ 				machine.changeTimeDelay((Integer.parseInt(dTimeH.getText()) * 60 +  Integer.parseInt(dTimeM.getText())) * 60000);
+ 				
+ 				machine.start();
+ 				setEnable(false);
+ 			}
+ 			catch(NumberFormatException e) {
+ 				JOptionPane.showMessageDialog(null,
+ 	 				    "Please enter valid input!",
+ 	 				    "Warning",
+ 	 				    JOptionPane.WARNING_MESSAGE);
+ 			}	
 		}
 		else if(arg0.getSource() == btnStopTime) {
 			machine.stop();
@@ -178,12 +260,41 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		}
 	}
 	
-	public void timeElapsed(TimeMachine sender, Object o) {
-		
+	public void timeElapsed(TimeMachine sender) {
+		cTimeL.setText("Time: " + sender.toString());
+	}
+	
+	public void timeStopped(TimeMachine sender) {
+		//cTimeL.setText("");
+		setEnable(true);
 	}
 	
 	private void setEnable(Boolean b) {
+		btnStopTime.setEnabled(!b);
+		btnStartTime.setEnabled(b);
+		sYearL.setEnabled(b);
+		sYearF.setEnabled(b);
+		sMonthL.setEnabled(b);
+		sMonthF.setEnabled(b);
+		sDayL.setEnabled(b);
+		sDayF.setEnabled(b);
+		eYearL.setEnabled(b);
+		eYearF.setEnabled(b);
+		eMonthL.setEnabled(b);
+		eMonthF.setEnabled(b);
+		eDayL.setEnabled(b);
+		eDayF.setEnabled(b);
+		sTimeHL.setEnabled(b);
+		sTimeH.setEnabled(b);
+		sTimeML.setEnabled(b);
+		sTimeM.setEnabled(b);
+		eTimeHL.setEnabled(b);
+		eTimeH.setEnabled(b);
+		eTimeML.setEnabled(b);
+		eTimeM.setEnabled(b);
+		dTimeHL.setEnabled(b);
+		dTimeH.setEnabled(b);
+		dTimeML.setEnabled(b);
+		dTimeM.setEnabled(b);
 	}
-
-
 }

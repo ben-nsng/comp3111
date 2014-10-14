@@ -105,6 +105,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 	private AppScheduler setAppDial;
 	private TimeMachine timeMachine;
+	private TimeMachineDialog tm;
 
 	public CalGrid(ApptStorageControllerImpl con) {
 		super();
@@ -122,8 +123,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		previousCol = 0;
 		currentRow = 0;
 		currentCol = 0;
-		timeMachine = new TimeMachine(new Timestamp(0), new Timestamp(60));
-		//timeMachine.addElpased(new TimeMachineListener());
+		timeMachine = new TimeMachine();
+		timeMachine.addElpasedListener(this);
+		
 
 		applist = new AppList();
 		applist.setParent(this);
@@ -331,12 +333,12 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					tableView.repaint();
 				}
 				else if(e.getActionCommand().equals("Time Machine")) {
-					TimeMachineDialog tm = new TimeMachineDialog(timeMachine);
+					if(tm == null) tm = new TimeMachineDialog(timeMachine);
 					tm.setLocationRelativeTo(null);
 					tm.show();
-					TableModel t = prepareTableModel();
-					tableView.setModel(t);
-					tableView.repaint();
+					//TableModel t = prepareTableModel();
+					//tableView.setModel(t);
+					//tableView.repaint();
 				}
 
 			}
@@ -405,12 +407,16 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		checkUpdateJoinAppt();
 	}
 	
-	public void timeElapsed(TimeMachine sender, Object obj) {
+	public void timeElapsed(TimeMachine sender) {
+		
 		//check if there are appointments from currenttime to currenttime + timedelay
-		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), sender.getTimeDelay()));
+		/*Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), sender.getTimeDelay()));
 		for(int i = 0; i < appts.length; i++) {
 			Appt currAppt = appts[i];
-		}
+		}*/
+	}
+	
+	public void timeStopped(TimeMachine sender) {
 	}
 
 	public void actionPerformed(ActionEvent e) {

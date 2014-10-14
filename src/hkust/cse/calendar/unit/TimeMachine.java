@@ -16,44 +16,55 @@ public class TimeMachine implements ActionListener {
 
 	private Timer timer;
 	private Timestamp startTime;
+	private Timestamp endTime;
 	private Timestamp currentTime;
-	private Timestamp timeDelay;
+	private int timeDelay;
 	private Boolean isStart;
 	//private CalGrid parent;
 	private List<TimeMachineListener> listeners;
 	
 	
-	public TimeMachine(Timestamp startTime, Timestamp timeDelay) {
+	public TimeMachine() {
 		
-		this.startTime = startTime;
+		this.startTime = new Timestamp(0);
 		this.currentTime = startTime;
-		this.timeDelay = timeDelay;
+		this.timeDelay = 1000;
 		this.isStart = false;
 		//this.parent = parent;
-		this.timer = new Timer(timeDelay.getSeconds() , this);
+		this.timer = new Timer(1000 , this);
 		this.listeners = new ArrayList<TimeMachineListener>();
 	}
 	
-	public void addElpased(TimeMachineListener listener) {
+	public void addElpasedListener(TimeMachineListener listener) {
 		this.listeners.add(listener);
 	}
 	
 	public void changeStartTime(Timestamp startTime) {
 		this.startTime = startTime;
+		this.currentTime = startTime;
 	}
 	
-	public void changeTimeDelay(Timestamp timeDelay) {
+	public void changeTimeDelay(int timeDelay) {
 		this.timeDelay = timeDelay;
+	}
+	
+	public void changeEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 	
 	public void start() {
 		if(this.isStart) return;
 		this.timer.start();
+		this.isStart = true;
 	}
 	
 	public void stop() {
 		if(!this.isStart) return;
 		this.timer.stop();
+		this.isStart = false;
+		for(TimeMachineListener l : listeners) {
+			l.timeStopped(this);
+		}
 	}
 	
 	public Boolean IsStart() {
@@ -65,36 +76,34 @@ public class TimeMachine implements ActionListener {
 	}
 	
 	public String toString() {
-		return this.currentTime.getYear() + "-" + 
-				this.currentTime.getMonth() + "-" + 
-				this.currentTime.getDay() + " " + 
-				this.currentTime.getHours() + ":" + 
-				this.currentTime.getMinutes() + ":" + 
-				this.currentTime.getSeconds();
+		return String.format("%04d-%02d-%02d %02d:%02d:%02d", this.currentTime.getYear(), this.currentTime.getMonth(), this.currentTime.getDate(), this.currentTime.getHours(), this.currentTime.getMinutes(), this.currentTime.getSeconds());
 	}
 	
 	public Timestamp getCurrentTime() {
 		return this.currentTime;
 	}
 	
-	public Timestamp getTimeDelay() {
+	public int getTimeDelay() {
 		return this.timeDelay;
+	}
+	
+	public Timestamp getStartTime() {
+		return this.startTime;
+	}
+	
+	public Timestamp getEndTime() {
+		return this.endTime;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == this.timer)	{
-			
-			//check if there are appointments from currenttime to currenttime + timedelay
-			//if yes 
-			/*Appt[] appts = parent.controller.RetrieveAppts(parent.mCurrUser, new TimeSpan(this.currentTime, this.timeDelay));
-			for(int i = 0; i < appts.length; i++) {
-				Appt currAppt = appts[i];
-				
-			}*/
 			for(TimeMachineListener l : listeners) {
-				l.timeElapsed(this, null);
+				l.timeElapsed(this);
 			}
-			this.currentTime.setSeconds(this.currentTime.getSeconds() + this.timeDelay.getSeconds());
+			this.currentTime.setTime(this.currentTime.getTime() + this.timeDelay);
+			if(this.currentTime.compareTo(this.endTime) > 0) {
+				this.stop();
+			}
 		}
 		
 	}
