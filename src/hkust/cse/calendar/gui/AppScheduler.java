@@ -353,6 +353,26 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
+		Appt newAppt = new Appt();
+		newAppt.setTitle(titleField.getText());
+		newAppt.setInfo(detailArea.getText());
+		int yearF_int = Utility.getNumber(yearF.getText());
+		int monthF_int = Utility.getNumber(monthF.getText());
+		int dayF_int = Utility.getNumber(dayF.getText());
+		int sTimeH_int = Utility.getNumber(sTimeH.getText());
+		int sTimeM_int = Utility.getNumber(sTimeM.getText());
+		Timestamp apptStartTime = new Timestamp(yearF_int, monthF_int, dayF_int, sTimeH_int, sTimeM_int, 0, 0);
+		int yearL_int = Utility.getNumber(yearL.getText());
+		int monthL_int = Utility.getNumber(monthL.getText());
+		int dayL_int = Utility.getNumber(dayL.getText());
+		int eTimeH_int = Utility.getNumber(eTimeH.getText());
+		int eTimeM_int = Utility.getNumber(eTimeM.getText());
+		Timestamp apptEndTime = new Timestamp(yearL_int, monthL_int, dayL_int, eTimeH_int, eTimeM_int, 0, 0);
+		TimeSpan apptTimeSpan = new TimeSpan(apptStartTime, apptEndTime);
+		newAppt.setTimeSpan(apptTimeSpan);
+		JOptionPane.showMessageDialog(this, detailArea.getText(),
+				"Confirm Save", JOptionPane.ERROR_MESSAGE);
+		parent.controller.ManageAppt(newAppt, ApptStorageControllerImpl.NEW);
 	}
 
 	private Timestamp CreateTimeStamp(int[] date, int time) {
