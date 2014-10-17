@@ -4,6 +4,8 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
 
+import java.util.HashMap;
+
 public class ApptStorageMemImpl extends ApptStorage {
 
 	private User defaultUser = null;
@@ -11,42 +13,63 @@ public class ApptStorageMemImpl extends ApptStorage {
 	public ApptStorageMemImpl( User user )
 	{
 		defaultUser = user;
+		mAssignedApptID=0;
+		mAppts = new HashMap<Integer, Appt>();
 	}
 	
 	@Override
 	public void SaveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-
+		if(mAppts.containsKey(appt.getID())){
+			mAppts.put(appt.getID(), appt);
+		}
+		else{
+			mAppts.put(mAssignedApptID, appt);
+			appt.setID(mAssignedApptID);
+			mAssignedApptID++;
+		}
 	}
 
 	@Override
 	public Appt[] RetrieveAppts(TimeSpan d) {
 		// TODO Auto-generated method stub
-		return null;
+		Appt[] timeAppt=new Appt[mAppts.size()];
+		int apptNum=0;
+		for(int num=0;num<mAssignedApptID;num++){
+			Appt apptAtD= mAppts.get(num);
+			if(apptAtD.TimeSpan().Overlap(d)){
+				timeAppt[apptNum]=apptAtD;
+				apptNum++;
+			}
+		}
+		return timeAppt;
 	}
 
 	@Override
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
 		// TODO Auto-generated method stub
-		return null;
+			return RetrieveAppts(time);
 	}
 
 	@Override
 	public Appt RetrieveAppts(int joinApptID) {
 		// TODO Auto-generated method stub
-		return null;
+		if(mAppts.containsKey(joinApptID))
+			return mAppts.get(joinApptID);
+		else
+			return null;
 	}
 
 	@Override
 	public void UpdateAppt(Appt appt) {
 		// TODO Auto-generated method stub
-
+		SaveAppt(appt);
 	}
 
 	@Override
 	public void RemoveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-
+		mAppts.remove(appt.getID());
 	}
 
 	@Override
