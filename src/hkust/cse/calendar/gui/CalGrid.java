@@ -5,6 +5,7 @@ import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -375,7 +376,17 @@ public class CalGrid extends JFrame implements ActionListener {
 		mi = new JMenuItem("Manual Scheduling");
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
+		
+		mi = new JMenuItem("Manage Location");
+		mi.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				LocationsDialog dlg = new LocationsDialog(controller);
+			}
+		
+			});
 
+		Appmenu.add(mi); 
+		
 		return menuBar;
 	}
 
