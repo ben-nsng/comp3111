@@ -4,7 +4,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class ApptStorageMemImpl extends ApptStorage {
 
@@ -33,16 +33,20 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public Appt[] RetrieveAppts(TimeSpan d) {
 		// TODO Auto-generated method stub
-		Appt[] timeAppt=new Appt[mAppts.size()];
+		List<Appt> tempList=new ArrayList<Appt>();
 		int apptNum=0;
 		for(int num=0;num<mAssignedApptID;num++){
-			Appt apptAtD= mAppts.get(num);
-			if(apptAtD.TimeSpan().Overlap(d)){
-				timeAppt[apptNum]=apptAtD;
-				apptNum++;
+			if(mAppts.containsKey(num)){
+				Appt apptAtD= mAppts.get(num);
+				if(apptAtD.TimeSpan().Overlap(d)){
+					tempList.add(apptAtD);
+					apptNum++;
+				}
 			}
 		}
-		return timeAppt;
+			Appt[] timeAppt=new Appt[apptNum];
+			tempList.toArray(timeAppt);
+			return timeAppt;
 	}
 
 	@Override
