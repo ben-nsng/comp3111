@@ -3,6 +3,8 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.Main.CalendarMain;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.TimeMachine;
+import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
 
@@ -47,7 +49,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 
-public class CalGrid extends JFrame implements ActionListener {
+public class CalGrid extends JFrame implements ActionListener, TimeMachineListener {
 
 	// private User mNewUser;
 	private static final long serialVersionUID = 1L;
@@ -102,6 +104,8 @@ public class CalGrid extends JFrame implements ActionListener {
 			"Veterans Day(US)\nThanksgiving Day(US)\n", "Christmas\n" };
 
 	private AppScheduler setAppDial;
+	private TimeMachine timeMachine;
+	private TimeMachineDialog tm;
 
 	public CalGrid(ApptStorageControllerImpl con) {
 		super();
@@ -119,6 +123,9 @@ public class CalGrid extends JFrame implements ActionListener {
 		previousCol = 0;
 		currentRow = 0;
 		currentCol = 0;
+		timeMachine = new TimeMachine();
+		timeMachine.addElpasedListener(this);
+		
 
 		applist = new AppList();
 		applist.setParent(this);
@@ -325,6 +332,14 @@ public class CalGrid extends JFrame implements ActionListener {
 					tableView.setModel(t);
 					tableView.repaint();
 				}
+				else if(e.getActionCommand().equals("Time Machine")) {
+					if(tm == null) tm = new TimeMachineDialog(timeMachine);
+					tm.setLocationRelativeTo(null);
+					tm.show();
+					//TableModel t = prepareTableModel();
+					//tableView.setModel(t);
+					//tableView.repaint();
+				}
 
 			}
 		};
@@ -375,6 +390,10 @@ public class CalGrid extends JFrame implements ActionListener {
 		mi = new JMenuItem("Manual Scheduling");
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
+		
+		mi = new JMenuItem("Time Machine");
+		mi.addActionListener(listener);
+		Appmenu.add(mi);
 
 		return menuBar;
 	}
@@ -386,6 +405,18 @@ public class CalGrid extends JFrame implements ActionListener {
 		// Fix Me !
 		// Load the saved appointments from disk
 		checkUpdateJoinAppt();
+	}
+	
+	public void timeElapsed(TimeMachine sender) {
+		
+		//check if there are appointments from currenttime to currenttime + timedelay
+		/*Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), sender.getTimeDelay()));
+		for(int i = 0; i < appts.length; i++) {
+			Appt currAppt = appts[i];
+		}*/
+	}
+	
+	public void timeStopped(TimeMachine sender) {
 	}
 
 	public void actionPerformed(ActionEvent e) {
