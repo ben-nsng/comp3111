@@ -37,7 +37,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 		int apptNum=0;
 		for(int num=0;num<mAssignedApptID;num++){
 			if(mAppts.containsKey(num)){
-				Appt apptAtD= mAppts.get(num);
+				Appt apptAtD= (Appt)mAppts.get(num);
 				if(apptAtD.TimeSpan().Overlap(d)){
 					tempList.add(apptAtD);
 					apptNum++;
@@ -59,7 +59,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 	public Appt RetrieveAppts(int joinApptID) {
 		// TODO Auto-generated method stub
 		if(mAppts.containsKey(joinApptID))
-			return mAppts.get(joinApptID);
+			return (Appt)mAppts.get(joinApptID);
 		else
 			return null;
 	}
