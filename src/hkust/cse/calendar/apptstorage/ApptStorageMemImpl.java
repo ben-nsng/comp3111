@@ -20,7 +20,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void SaveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-		if(mAppts.containsKey(appt.getID())){
+		if(mAppts.containsKey(appt.getID())&&appt.getID()==mAssignedApptID){
 			mAppts.put(appt.getID(), appt);
 		}
 		else{
