@@ -32,11 +32,6 @@ public class ApptStorageControllerImpl {
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
 		return mApptStorage.RetrieveAppts(entity, time);
 	}
-
-	// overload method to retrieve appointment with the given joint appointment id
-	public Appt RetrieveAppts(int joinApptID) {
-		return mApptStorage.RetrieveAppts(joinApptID);
-	}
 	
 	/* Manage the Appt in the storage
 	 * parameters: the Appt involved, the action to take on the Appt */

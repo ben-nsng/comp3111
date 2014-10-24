@@ -360,7 +360,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[1]), CreateTimeStamp(validDate, validTime[0]));
 		newAppt.setTimeSpan(apptTimeSpan);
-		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		Appt[] retrivedAppts = parent.controller.RetrieveAppts(parent.mCurrUser, apptTimeSpan);
 		if((validDate!=null) && (validTime!=null) && (retrivedAppts.length==0)) {
 			parent.controller.ManageAppt(newAppt, ApptStorageControllerImpl.NEW);
 			JOptionPane.showMessageDialog(this,
