@@ -6,6 +6,8 @@ import hkust.cse.calendar.unit.User;
 
 import java.util.*;
 
+import javax.xml.stream.Location;
+
 public class ApptStorageMemImpl extends ApptStorage {
 
 	private User defaultUser = null;
@@ -13,8 +15,25 @@ public class ApptStorageMemImpl extends ApptStorage {
 	public ApptStorageMemImpl( User user )
 	{
 		defaultUser = user;
-		mAssignedApptID=0;
+		mAssignedApptID = 0;
 		mAppts = new HashMap<Integer, Appt>();
+		_locations = new Location[0];
+	}
+	
+	public Location[] getLocationList(){
+		return _locations;
+	}
+	
+	public void setLocationList(Location[] locations) {
+		Location[] _locationsTemp = new Location[_locations.length];
+		for(int i=0;i<_locations.length;i++)
+			_locationsTemp[i]=_locations[i];
+		int newLength = _locationsTemp.length+locations.length;
+		_locations = new Location[newLength];
+		for(int j=0;j<_locationsTemp.length;j++)
+			_locations[j]=_locationsTemp[j];
+		for(int k=_locationsTemp.length;k<newLength;k++)
+			_locations[k]=locations[k];
 	}
 	
 	@Override

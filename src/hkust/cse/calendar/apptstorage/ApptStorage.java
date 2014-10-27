@@ -6,16 +6,22 @@ import hkust.cse.calendar.unit.User;
 
 import java.util.HashMap;
 
+import javax.xml.stream.Location;
+
 
 public abstract class ApptStorage {
 
-	public HashMap mAppts;		//a hashmap to save every thing to it, write to memory by the memory based storage implementation	
+	public HashMap<Integer, Appt> mAppts;		//a hashmap to save every thing to it, write to memory by the memory based storage implementation	
 	public User defaultUser;	//a user object, now is single user mode without login
 	public int mAssignedApptID;	//a global appointment ID for each appointment record
-
+	public Location[] _locations;
 	public ApptStorage() {	//default constructor
 	}
-
+	
+	public abstract Location[] getLocationList();
+	
+	public abstract void setLocationList(Location[] locations);
+	
 	public abstract void SaveAppt(Appt appt);	//abstract method to save an appointment record
 
 	public abstract Appt[] RetrieveAppts(TimeSpan d);	//abstract method to retrieve an appointment record by a given timespan

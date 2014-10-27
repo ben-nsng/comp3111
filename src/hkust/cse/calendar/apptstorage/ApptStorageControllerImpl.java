@@ -1,5 +1,7 @@
 package hkust.cse.calendar.apptstorage;
 
+import javax.tools.JavaFileManager.Location;
+
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
@@ -63,5 +65,13 @@ public class ApptStorageControllerImpl {
 	// method used to load appointment from xml record into hash map
 	public void LoadApptFromXml(){
 		mApptStorage.LoadApptFromXml();
+	}
+	
+	public Location[] getLocationList() {
+		return mApptStorage.getLocationList();
+	}
+	
+	public void setLocationList(Location[]locations){
+		mApptStorage.setLocationList(locations);
 	}
 }
