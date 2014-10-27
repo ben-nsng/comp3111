@@ -1,11 +1,9 @@
 package hkust.cse.calendar.apptstorage;
 
-import javax.tools.JavaFileManager.Location;
-
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
-import hkust.cse.calendar.unit.Location;
 
 /* This class is for managing the Appt Storage according to different actions */
 public class ApptStorageControllerImpl {

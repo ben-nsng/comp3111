@@ -6,7 +6,6 @@ import hkust.cse.calendar.unit.User;
 
 import java.util.HashMap;
 import hkust.cse.calendar.unit.Location;
-import javax.xml.stream.Location;
 
 
 public abstract class ApptStorage {
