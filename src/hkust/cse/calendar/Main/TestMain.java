@@ -20,6 +20,7 @@ public class TestMain {
 		User user = new User( "noname", "nopass");
 		ApptStorageControllerImpl ctrl = new ApptStorageControllerImpl(new ApptStorageMemImpl(user));
 		
+		TimeSpan time0 = new TimeSpan(new Timestamp(2014, 12, 24, 10, 30, 0, 0), new Timestamp(2014, 12, 24, 11, 30, 0, 0));
 		TimeSpan time1 = new TimeSpan(new Timestamp(2014, 12, 24, 10, 0, 0, 0), new Timestamp(2014, 12, 24, 11, 0, 0, 0));
 		TimeSpan time2 = new TimeSpan(new Timestamp(2014, 12, 24, 11, 0, 0, 0), new Timestamp(2014, 12, 24, 12, 0, 0, 0));
 		
@@ -35,10 +36,15 @@ public class TestMain {
 		ctrl.ManageAppt(appt, ApptStorageControllerImpl.NEW);
 		
 		//retrieve appts
-		Appt[] appts = ctrl.RetrieveAppts(user, new TimeSpan(new Timestamp(2014, 12, 24, 9, 30, 0, 0), new Timestamp(2014, 12, 24, 12, 30, 0, 0)));
+		Appt[] appts = ctrl.RetrieveAppts(user, time0);
 		
-		System.out.println(appts.length);
+		//assert appts.length == 2;
+		//assert appts.length != 1;
 		
+		
+	}
+	
+	public static void TestTimeMachine() {
 	}
 
 	
