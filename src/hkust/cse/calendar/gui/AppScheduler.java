@@ -4,6 +4,7 @@ import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -85,7 +86,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 //	private JTextField waitingField;
 	private int selectedApptId = -1;
 	
-
 	private void commonConstructor(String title, CalGrid cal) {
 		parent = cal;
 		this.setAlwaysOnTop(true);
@@ -163,6 +163,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		locField = new JComboBox<Location>(locations);
 		titleAndTextPanel.add(locationL);
 		titleAndTextPanel.add(locField);
+		
+		
 			
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
