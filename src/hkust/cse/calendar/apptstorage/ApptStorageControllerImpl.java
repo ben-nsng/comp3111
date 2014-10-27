@@ -3,6 +3,7 @@ package hkust.cse.calendar.apptstorage;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.Location;
 
 /* This class is for managing the Appt Storage according to different actions */
 public class ApptStorageControllerImpl {
@@ -63,5 +64,13 @@ public class ApptStorageControllerImpl {
 	// method used to load appointment from xml record into hash map
 	public void LoadApptFromXml(){
 		mApptStorage.LoadApptFromXml();
+	}
+	
+	public Location[] getLocationList(){
+		return mApptStorage.getLocationList();
+	}
+	
+	public void setlocationList(Location[] locations){
+		mApptStorage.setLocationList(locations);
 	}
 }

@@ -7,6 +7,7 @@ import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -395,6 +396,18 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
 
+		Appmenu.add(mi);
+
+		mi = new JMenuItem("Manage Location");
+		mi.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				LocationsDialog dlg = new LocationsDialog(controller);
+			}
+		
+			});
+
+		Appmenu.add(mi); 
+		
 		return menuBar;
 	}
 

@@ -3,10 +3,24 @@ package hkust.cse.calendar.apptstorage;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.Location;
 
 public class ApptStorageNullImpl extends ApptStorage {
 
 	private User defaultUser = null;
+	
+	Location[] _locations;
+	
+	@Override
+	public Location[] getLocationList(){
+		return _locations;
+	}
+	
+	@Override
+	public void setLocationList(Location[] locations){
+		_locations = locations;
+	}
+	
 	
 	public ApptStorageNullImpl( User user )
 	{
