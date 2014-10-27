@@ -14,4 +14,9 @@ public class Location {
 	public void setName(String name){
 		_name = name;
 	}
+	
+	public String toString() {
+		return _name;
+	}
+
 }
