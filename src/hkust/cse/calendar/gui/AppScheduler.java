@@ -363,9 +363,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
 		if((validDate!=null) && (validTime!=null) && (retrivedAppts.length==0)) {
 			parent.controller.ManageAppt(newAppt, ApptStorageControllerImpl.NEW);
-			JOptionPane.showMessageDialog(this,
-					apptTimeSpan.TimeLength(), "Check Time length",
-					JOptionPane.ERROR_MESSAGE);
 			this.setVisible(false);
 		}
 	}
@@ -377,12 +374,23 @@ public class AppScheduler extends JDialog implements ActionListener,
 		stamp.setDate(date[2]);
 		stamp.setHours(time / 60);
 		stamp.setMinutes(time % 60);
+		System.out.println(stamp);
 		return stamp;
 	}
 
 	public void updateSetApp(Appt appt) {
 		// Fix Me!
-		parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY);
+		appt.setTitle(titleField.getText());
+		appt.setInfo(detailArea.getText());
+		int[] validDate = getValidDate();
+		int[] validTime = getValidTimeInterval();
+		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[1]), CreateTimeStamp(validDate, validTime[0]));
+		appt.setTimeSpan(apptTimeSpan);
+		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrievedAppts[0].getID==appt.getID()))) {
+			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY;
+			this.setVisible(false);
+		}
 	}
 
 	public void componentHidden(ComponentEvent e) {

@@ -27,6 +27,10 @@ public class ApptStorageControllerImpl {
 	public ApptStorageControllerImpl(ApptStorage storage) {
 		mApptStorage = storage;
 	}
+	
+	public Appt[] RetrieveAppts(TimeSpan time) {
+		return mApptStorage.RetrieveAppts(time);
+	}
 
 	/* Retrieve the Appt's in the storage for a specific user within the specific time span */
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
