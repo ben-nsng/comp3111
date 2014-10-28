@@ -76,7 +76,7 @@ public class TimeMachine implements ActionListener {
 	}
 	
 	public String toString() {
-		return String.format("%04d-%02d-%02d %02d:%02d:%02d", this.currentTime.getYear(), this.currentTime.getMonth(), this.currentTime.getDate(), this.currentTime.getHours(), this.currentTime.getMinutes(), this.currentTime.getSeconds());
+		return String.format("%04d-%02d-%02d %02d:%02d:%02d", this.currentTime.getYear() + 1900, this.currentTime.getMonth(), this.currentTime.getDate(), this.currentTime.getHours(), this.currentTime.getMinutes(), this.currentTime.getSeconds());
 	}
 	
 	public Timestamp getCurrentTime() {

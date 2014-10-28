@@ -428,7 +428,6 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		Timestamp next = (Timestamp)sender.getCurrentTime().clone();
 		next.setTime(sender.getCurrentTime().getTime() + sender.getTimeDelay() * 2);
 		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), next));
-		System.out.println(appts);
 		for(int i = 0; i < appts.length; i++) {
 			Appt currAppt = appts[i];
 			Timestamp startTime =  currAppt.TimeSpan().StartTime();
@@ -437,8 +436,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		}
 		
 
+		if(!info.equals(""))
 		JOptionPane.showMessageDialog(null,
-	 			    "The following appointment(s) will be happened:",
+	 			    "The following appointment(s) will be happened:" + "\n" + info,
 	 			    "Appointment!",
 	 			    JOptionPane.INFORMATION_MESSAGE);
 	}
