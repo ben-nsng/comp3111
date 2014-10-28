@@ -387,8 +387,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[1]), CreateTimeStamp(validDate, validTime[0]));
 		appt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
-		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrievedAppts[0].getID==appt.getID()))) {
-			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY;
+		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==appt.getID()))) {
+			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY);
 			this.setVisible(false);
 		}
 	}
