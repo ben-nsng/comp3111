@@ -160,7 +160,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 			locations = new Location[0];
 		}
 		JLabel locationL = new JLabel("LOCATION");
-		locField = new JComboBox<Location>(locations);
+		locField = new JComboBox(locations);
 		titleAndTextPanel.add(locationL);
 		titleAndTextPanel.add(locField);
 		

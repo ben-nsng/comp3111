@@ -19,20 +19,12 @@ public class ApptStorageMemImpl extends ApptStorage {
 		_locations = new Location[0];
 	}
 	
-	public Location[] getLocationList(){
+	public Location[] getLocationList() {
 		return _locations;
 	}
 	
 	public void setLocationList(Location[] locations) {
-		Location[] _locationsTemp = new Location[_locations.length];
-		for(int i=0;i<_locations.length;i++)
-			_locationsTemp[i]=_locations[i];
-		int newLength = _locationsTemp.length+locations.length;
-		_locations = new Location[newLength];
-		for(int j=0;j<_locationsTemp.length;j++)
-			_locations[j]=_locationsTemp[j];
-		for(int k=_locationsTemp.length;k<newLength;k++)
-			_locations[k]=locations[k];
+		_locations = locations.clone();
 	}
 	
 	@Override
@@ -46,18 +38,18 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public Appt[] RetrieveAppts(TimeSpan d) {
 		// TODO Auto-generated method stub
-		List<Appt> tempList=new ArrayList<Appt>();
-		int apptNum=0;
-		for(int num=0;num<mAssignedApptID;num++){
+		List<Appt> tempList = new ArrayList<Appt>();
+		int apptNum = 0;
+		for(int num = 0;num < mAssignedApptID;num++){
 			if(mAppts.containsKey(num)){
-				Appt apptAtD= (Appt)mAppts.get(num);
+				Appt apptAtD = (Appt)mAppts.get(num);
 				if(apptAtD.TimeSpan().Overlap(d)){
 					tempList.add(apptAtD);
 					apptNum++;
 				}
 			}
 		}
-			Appt[] timeAppt=new Appt[apptNum];
+			Appt[] timeAppt = new Appt[apptNum];
 			tempList.toArray(timeAppt);
 			return timeAppt;
 	}
