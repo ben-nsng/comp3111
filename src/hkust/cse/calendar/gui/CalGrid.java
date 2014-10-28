@@ -423,10 +423,24 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	public void timeElapsed(TimeMachine sender) {
 		
 		//check if there are appointments from currenttime to currenttime + timedelay
-		/*Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), sender.getTimeDelay()));
+		String info = "";
+		
+		Timestamp next = (Timestamp)sender.getCurrentTime().clone();
+		next.setTime(sender.getCurrentTime().getTime() + sender.getTimeDelay() * 2);
+		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), next));
 		for(int i = 0; i < appts.length; i++) {
 			Appt currAppt = appts[i];
-		}*/
+			Timestamp startTime =  currAppt.TimeSpan().StartTime();
+			info += startTime.getHours() + ":" + startTime.getMinutes() + "  " + currAppt.getInfo() + "\n";
+			
+		}
+		
+
+		if(!info.equals(""))
+		JOptionPane.showMessageDialog(null,
+	 			    "The following appointment(s) will be happened:" + "\n" + info,
+	 			    "Appointment!",
+	 			    JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void timeStopped(TimeMachine sender) {
