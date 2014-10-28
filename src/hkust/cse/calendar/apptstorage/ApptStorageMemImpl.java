@@ -30,9 +30,14 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void SaveAppt(Appt appt) {
 		// TODO Auto-generated method stub
+		if(mAppts.containsKey(appt.getID())){
+			mAppts.put(appt.getID(), appt);
+		}
+		else{
 			mAppts.put(mAssignedApptID, appt);
 			appt.setID(mAssignedApptID);
 			mAssignedApptID++;
+		}
 	}
 
 	@Override
