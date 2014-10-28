@@ -225,7 +225,7 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		// TODO Auto-generated method stub
 		if(arg0.getSource() == btnStartTime) {
  			try {
- 				sYearF.setText("2014");
+ 				/*sYearF.setText("2014");
  				sMonthF.setText("10");
  				sDayF.setText("10");
  				sTimeH.setText("0");
@@ -238,10 +238,10 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
  				eTimeM.setText("0");
  				
  				dTimeH.setText("10");
- 				dTimeM.setText("0");
+ 				dTimeM.setText("0");*/
  				
- 				machine.changeStartTime(new Timestamp(Integer.parseInt(sYearF.getText()), Integer.parseInt(sMonthF.getText()),Integer.parseInt( sDayF.getText()), Integer.parseInt(sTimeH.getText()), Integer.parseInt(sTimeM.getText()), 0, 0));
- 				machine.changeEndTime(new Timestamp(Integer.parseInt(eYearF.getText()), Integer.parseInt(eMonthF.getText()), Integer.parseInt(eDayF.getText()), Integer.parseInt(eTimeH.getText()), Integer.parseInt(eTimeM.getText()), 0, 0));
+ 				machine.changeStartTime(new Timestamp(Integer.parseInt(sYearF.getText()) - 1900, Integer.parseInt(sMonthF.getText()) - 1,Integer.parseInt( sDayF.getText()), Integer.parseInt(sTimeH.getText()), Integer.parseInt(sTimeM.getText()), 0, 0));
+ 				machine.changeEndTime(new Timestamp(Integer.parseInt(eYearF.getText()) - 1900, Integer.parseInt(eMonthF.getText()) - 1, Integer.parseInt(eDayF.getText()), Integer.parseInt(eTimeH.getText()), Integer.parseInt(eTimeM.getText()), 0, 0));
  				machine.changeTimeDelay((Integer.parseInt(dTimeH.getText()) * 60 +  Integer.parseInt(dTimeM.getText())) * 60000);
  				
  				machine.start();
