@@ -62,15 +62,15 @@ public class ApptStorageControllerImpl {
 	}
 
 	// method used to load appointment from xml record into hash map
-	public void LoadApptFromXml(){
+	public void LoadApptFromXml() {
 		mApptStorage.LoadApptFromXml();
 	}
 	
-	public Location[] getLocationList(){
+	public Location[] getLocationList() {
 		return mApptStorage.getLocationList();
 	}
 	
-	public void setlocationList(Location[] locations){
+	public void setLocationList(Location[] locations) {
 		mApptStorage.setLocationList(locations);
 	}
 }
