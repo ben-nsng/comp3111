@@ -7,6 +7,7 @@ import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -395,6 +396,18 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
 
+		Appmenu.add(mi);
+
+		mi = new JMenuItem("Manage Location");
+		mi.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				LocationsDialog dlg = new LocationsDialog(controller);
+			}
+		
+			});
+
+		Appmenu.add(mi); 
+		
 		return menuBar;
 	}
 
@@ -410,10 +423,20 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	public void timeElapsed(TimeMachine sender) {
 		
 		//check if there are appointments from currenttime to currenttime + timedelay
-		/*Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), sender.getTimeDelay()));
+		String info = "";
+		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), sender.getNextElapsedTime()));
 		for(int i = 0; i < appts.length; i++) {
 			Appt currAppt = appts[i];
-		}*/
+			Timestamp startTime =  currAppt.TimeSpan().StartTime();
+			info += startTime.getHours() + ":" + startTime.getMinutes() + "  " + currAppt.getInfo() + "\n";
+			
+		}
+		
+
+		JOptionPane.showMessageDialog(null,
+	 			    "The following appointment(s) will be happened:",
+	 			    "Appointment!",
+	 			    JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void timeStopped(TimeMachine sender) {

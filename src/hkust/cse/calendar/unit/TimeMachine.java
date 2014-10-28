@@ -83,6 +83,12 @@ public class TimeMachine implements ActionListener {
 		return this.currentTime;
 	}
 	
+	public Timestamp getNextElapsedTime() {
+		Timestamp t = (Timestamp)this.currentTime.clone();
+		t.setTime(this.currentTime.getTime() + this.timeDelay);
+		return t;
+	}
+	
 	public int getTimeDelay() {
 		return this.timeDelay;
 	}

@@ -3,6 +3,8 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
+import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,6 +28,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -73,6 +76,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	private JTextArea detailArea;
 
+	private JComboBox locField;
+	
 	private JSplitPane pDes;
 	JPanel detailPanel;
 
@@ -81,7 +86,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 //	private JTextField waitingField;
 	private int selectedApptId = -1;
 	
-
 	private void commonConstructor(String title, CalGrid cal) {
 		parent = cal;
 		this.setAlwaysOnTop(true);
@@ -151,6 +155,17 @@ public class AppScheduler extends JDialog implements ActionListener,
 		titleAndTextPanel.add(titleL);
 		titleAndTextPanel.add(titleField);
 
+		Location[] locations = cal.controller.getLocationList();
+		if(locations == null){
+			locations = new Location[0];
+		}
+		JLabel locationL = new JLabel("LOCATION");
+		locField = new JComboBox<Location>(locations);
+		titleAndTextPanel.add(locationL);
+		titleAndTextPanel.add(locField);
+		
+		
+			
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
