@@ -353,7 +353,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
-		System.out.println(NewAppt.getID());
+		//System.out.println(NewAppt.getID());
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		int[] validDate = getValidDate();
@@ -362,9 +362,9 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
 		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
-			if(this.getTitle()=="New")
+			if(this.getTitle().equals("New"))
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-			if(this.getTitle()=="Modify")
+			if(this.getTitle().equals("Modify"))
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
 			this.setVisible(false);
 		}
