@@ -30,14 +30,14 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void SaveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-		if(mAppts.containsKey(appt.getID())){
+		/*if(mAppts.containsKey(appt.getID())){
 			mAppts.put(appt.getID(), appt);
-		}
-		else{
+		}*/
+		//else{
 			mAppts.put(mAssignedApptID, appt);
 			appt.setID(mAssignedApptID);
 			mAssignedApptID++;
-		}
+		//}
 	}
 
 	@Override
@@ -83,7 +83,10 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void RemoveAppt(Appt appt) {
 		// TODO Auto-generated method stub
+		System.out.println("Values before remove: "+ mAppts);
+		System.out.println("Remove "+appt.getID());
 		mAppts.remove(appt.getID());
+		System.out.println("Values after remove: "+ mAppts);
 	}
 
 	@Override

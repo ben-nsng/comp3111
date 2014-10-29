@@ -18,6 +18,8 @@ import java.awt.event.ComponentListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -368,7 +370,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
-		//System.out.println(NewAppt.getID());
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		int[] validDate = getValidDate();
@@ -377,11 +378,16 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
 		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
-			if(this.getTitle().equals("New"))
+			if(this.getTitle().equals("New")) {
+				System.out.println("New");
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-			if(this.getTitle().equals("Modify"))
+				this.setVisible(false);
+			}
+			if(this.getTitle().equals("Modify")) {
+				System.out.println("Modify");
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
-			this.setVisible(false);
+				this.setVisible(false);
+			}
 		}
 	}
 
@@ -397,27 +403,29 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	public void updateSetApp(Appt appt) {
 		// Fix Me!
-		//NewAppt=appt;
-		yearF.setText(Integer.toString(appt.TimeSpan().StartTime().getYear()+1900));
+		System.out.println(appt.TimeSpan().StartTime());
+		System.out.println(appt.TimeSpan().EndTime());
+		System.out.println(appt.getID());
+		Calendar sCal = Calendar.getInstance();
+		sCal.setTime(new Date(appt.TimeSpan().StartTime().getTime()));
+		Calendar eCal = Calendar.getInstance();
+		eCal.setTime(new Date(appt.TimeSpan().EndTime().getTime()));
+		/*yearF.setText(Integer.toString(appt.TimeSpan().StartTime().getYear()+1900));
 		monthF.setText(Integer.toString(appt.TimeSpan().StartTime().getMonth()+1));
 		dayF.setText(Integer.toString(appt.TimeSpan().StartTime().getDay()));
 		sTimeH.setText(Integer.toString(appt.TimeSpan().StartTime().getHours()));
 		sTimeM.setText(Integer.toString(appt.TimeSpan().StartTime().getMinutes()));
 		eTimeH.setText(Integer.toString(appt.TimeSpan().EndTime().getHours()));
-		eTimeM.setText(Integer.toString(appt.TimeSpan().EndTime().getMinutes()));
+		eTimeM.setText(Integer.toString(appt.TimeSpan().EndTime().getMinutes()));*/
+		yearF.setText(Integer.toString(sCal.get(Calendar.YEAR)));
+		monthF.setText(Integer.toString(sCal.get(Calendar.MONTH)+1));
+		dayF.setText(Integer.toString(sCal.get(Calendar.DAY_OF_MONTH)));
+		sTimeH.setText(Integer.toString(sCal.get(Calendar.HOUR_OF_DAY)));
+		sTimeM.setText(Integer.toString(sCal.get(Calendar.MINUTE)));
+		eTimeH.setText(Integer.toString(eCal.get(Calendar.HOUR_OF_DAY)));
+		eTimeM.setText(Integer.toString(eCal.get(Calendar.MINUTE)));
 		titleField.setText(appt.getTitle());
 		detailArea.setText(appt.getInfo());
-		/*int[] validDate = getValidDate();
-		int[] validTime = getValidTimeInterval();
-		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[1]), CreateTimeStamp(validDate, validTime[0]));*/
-		//appt.setTimeSpan(appt.TimeSpan());
-		//Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
-		//if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==appt.getID()))) {
-		/*if(this.getTitle()=="New")
-			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.NEW);
-		if(this.getTitle()=="Modify")
-			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY);*/
-		//}
 		NewAppt=appt;
 	}
 
