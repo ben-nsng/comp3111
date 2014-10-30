@@ -417,9 +417,7 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
-		GregorianCalendar today = new GregorianCalendar();
-		Timestamp todayTimestamp = new Timestamp(today.get(Calendar.YEAR), (today.get(Calendar.MONTH)+1), today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE), 0, 0);
-		if(apptTitle.TimeSpan().StartTime().before(todayTimestamp))
+		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 			JOptionPane.showMessageDialog(this,
 					"Cannot Delete Past Events !", "Delete",
 					JOptionPane.ERROR_MESSAGE);
@@ -437,9 +435,7 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void modify() {
 		Appt apptTitle = getSelectedAppTitle();
-		GregorianCalendar today = new GregorianCalendar();
-		Timestamp todayTimestamp = new Timestamp(today.get(Calendar.YEAR), (today.get(Calendar.MONTH)+1), today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE), 0, 0);
-		if(apptTitle.TimeSpan().StartTime().before(todayTimestamp))
+		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 			JOptionPane.showMessageDialog(this,
 					"Cannot Modify Past Events !", "Modify",
 					JOptionPane.ERROR_MESSAGE);

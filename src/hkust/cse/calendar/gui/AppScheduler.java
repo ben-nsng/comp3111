@@ -387,8 +387,13 @@ public class AppScheduler extends JDialog implements ActionListener,
 				this.setVisible(false);
 			}
 			if(this.getTitle().equals("Modify")) {
-				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
-				this.setVisible(false);
+				if(NewAppt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+					JOptionPane.showMessageDialog(this, "Cannot Modify Past Events !",
+							"Modify", JOptionPane.ERROR_MESSAGE);
+				else {
+					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
+					this.setVisible(false);
+				}
 			}
 		}
 	}

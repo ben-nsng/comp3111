@@ -105,7 +105,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			"Veterans Day(US)\nThanksgiving Day(US)\n", "Christmas\n" };
 
 	private AppScheduler setAppDial;
-	private TimeMachine timeMachine;
+	public TimeMachine timeMachine;
 	private TimeMachineDialog tm;
 
 	public CalGrid(ApptStorageControllerImpl con) {
