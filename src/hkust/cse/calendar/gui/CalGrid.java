@@ -431,7 +431,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		//the timestamp to check next occurrence event (if no reminder need)
 		Timestamp next = (Timestamp)sender.getCurrentTime().clone();
-		next.setTime(sender.getCurrentTime().getTime() + sender.getTimeDelay() * 2);
+		next.setTime(sender.getCurrentTime().getTime() + sender.getTimeDelay());
 		
 		//another timestamp to check next need reminder event
 		Timestamp next2 = (Timestamp)sender.getCurrentTime().clone();
@@ -439,7 +439,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		
 		for(Appt appt : appts) {
 			//next occurrence event at next time
-			if(curr.before(appt.TimeSpan().StartTime()) && appt.TimeSpan().StartTime().before(next)) {
+			if(curr.before(appt.TimeSpan().StartTime()) && appt.TimeSpan().StartTime().compareTo(next) <= 0) {
 				//check if this appt is scheduled task or not
 				if(appt.getFrequency() != Appt.SINGLE) {
 					//scheduled task & create past event
@@ -460,9 +460,8 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				Timestamp reminderTime = appt.getReminderTime();
 				//offset start time by reminder time
 				next2.setTime(appt.TimeSpan().StartTime().getTime() - (reminderTime.getHours() * 60 + reminderTime.getMinutes()) * 60000);
-				
-				if(curr.before(next2) && next2.before(next)) {
-					info += appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getInfo() + "\n";
+				if(curr.compareTo(next2) <= 0 && next2.compareTo(next) < 0) {
+					info += appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getTitle() + "\n";
 				}
 			}
 		}
