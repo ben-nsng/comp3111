@@ -421,26 +421,57 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	}
 	
 	public void timeElapsed(TimeMachine sender) {
+		if(sender.IsRewind()) return;
 		
-		//check if there are appointments from currenttime to currenttime + timedelay
+		Timestamp curr = sender.getCurrentTime();
+		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(
+				new Timestamp(curr.getYear(), curr.getMonth(), curr.getDate(), 0, 0, 0, 0),
+				new Timestamp(curr.getYear(), curr.getMonth(), curr.getDate(), 23, 59, 59, 0)));
 		String info = "";
-		
+
+		//the timestamp to check next occurrence event (if no reminder need)
 		Timestamp next = (Timestamp)sender.getCurrentTime().clone();
 		next.setTime(sender.getCurrentTime().getTime() + sender.getTimeDelay() * 2);
-		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(sender.getCurrentTime(), next));
-		for(int i = 0; i < appts.length; i++) {
-			Appt currAppt = appts[i];
-			Timestamp startTime =  currAppt.TimeSpan().StartTime();
-			info += startTime.getHours() + ":" + startTime.getMinutes() + "  " + currAppt.getInfo() + "\n";
+		
+		//another timestamp to check next need reminder event
+		Timestamp next2 = (Timestamp)sender.getCurrentTime().clone();
+		next2.setTime(sender.getCurrentTime().getTime());
+		
+		for(Appt appt : appts) {
+			//next occurrence event at next time
+			if(curr.before(appt.TimeSpan().StartTime()) && appt.TimeSpan().StartTime().before(next)) {
+				//check if this appt is scheduled task or not
+				if(appt.getFrequency() != Appt.SINGLE) {
+					//scheduled task & create past event
+					//check if past event has been created in case rewind
+					next2.setTime(appt.TimeSpan().StartTime().getTime() + 15 * 60000);
+					Appt[] pastAppts = controller.RetrieveAppts(mCurrUser, new TimeSpan(appt.TimeSpan().StartTime(), next2));
+					
+					// only scheduled appt in the time slot, create an new appt here
+					if(pastAppts.length == 1) {
+						Appt pastAppt = (Appt)appt.clone();
+						pastAppt.setFrequency(Appt.SINGLE);
+						controller.ManageAppt(pastAppt, ApptStorageControllerImpl.NEW);
+					}
+				}
+			}
 			
+			if(appt.needReminder()) {
+				Timestamp reminderTime = appt.getReminderTime();
+				//offset start time by reminder time
+				next2.setTime(appt.TimeSpan().StartTime().getTime() - (reminderTime.getHours() * 60 + reminderTime.getMinutes()) * 60000);
+				
+				if(curr.before(next2) && next2.before(next)) {
+					info += appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getInfo() + "\n";
+				}
+			}
 		}
 		
-
 		if(!info.equals(""))
-		JOptionPane.showMessageDialog(null,
-	 			    "The following appointment(s) will be happened:" + "\n" + info,
-	 			    "Appointment!",
-	 			    JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+		 			    "The following appointment(s) will be happened:" + "\n" + info,
+		 			    "Appointment!",
+		 			    JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void timeStopped(TimeMachine sender) {

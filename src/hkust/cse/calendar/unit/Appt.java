@@ -232,4 +232,14 @@ public class Appt implements Serializable {
 	public void setReminderTime(int h, int m){
 		reminderTime = new Timestamp(0, 0, 0, h, m, 0, 0);
 	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
