@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -183,14 +185,20 @@ public class AppScheduler extends JDialog implements ActionListener,
 		rTimeM = new JTextField(4);
 		titleAndTextPanel.add(rTimeH);
 		titleAndTextPanel.add(rTimeM);
-		if(remField.isSelected()){
-			rTimeH.enable();
-			rTimeM.enable();
-		}
-		else{
-			rTimeH.disable();
-			rTimeM.disable();
-		}
+		rTimeH.disable();
+		rTimeM.disable();
+		remField.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  if(remField.isSelected()){
+		  			rTimeH.enable();
+		  			rTimeM.enable();
+		  			}
+		  		else{
+		  			rTimeH.disable();
+		  			rTimeM.disable();
+		  			}
+		        }
+		      });
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
@@ -393,9 +401,37 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
+		boolean rTimeValid=true;
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setReminder(remField.isSelected());
+		if(remField.isSelected()) {
+			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
+				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
+				rTimeValid = true;
+			}
+			else {
+				rTimeValid = false;
+				NewAppt.setReminderTime(0, 0);
+				JOptionPane.showMessageDialog(this, "Invalid Time For Reminder !",
+						"Input Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else
+			rTimeValid = true;
+		switch(freField.getSelectedIndex()){
+			case 0:
+				NewAppt.setFrequency(Appt.SINGLE);
+				break;
+			case 1:
+				NewAppt.setFrequency(Appt.DAILY);
+				break;
+			case 2:
+				NewAppt.setFrequency(Appt.WEEKLY);
+				break;
+			case 3:
+				NewAppt.setFrequency(Appt.MONTHLY);
+		}
 		//check of valid date and time
 		int[] validDate = getValidDate();
 		int[] validTime = getValidTimeInterval();
@@ -407,7 +443,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 		}
-		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 			if(this.getTitle().equals("New")) {
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
 				this.setVisible(false);
