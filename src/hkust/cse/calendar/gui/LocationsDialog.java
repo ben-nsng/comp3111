@@ -75,17 +75,34 @@ public class LocationsDialog extends JFrame {
 		JButton addButton = new JButton("Add");		
 		addButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				//remove any space at the beginning or end of text
+				locNameText.setText(locNameText.getText().trim());
+				
+				//check if location input is empty
+				if(locNameText.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Empty Location" ,"INPUT ERROR", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				//check if there are any duplicated items
 				Location[] locations = _controller.getLocationList();
-				for(int i = 0; i < locations.length; i++){
-					if (locations[i].getName().equals(locNameText.getText())){
+				for(int i = 0; i < locations.length; i++) {
+					if (locations[i].getName().equals(locNameText.getText())) {
 						JOptionPane.showMessageDialog(null, "Duplicate location" ,"INPUT ERROR", JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				}
+				
+				//add the item to the list
 				listModel.addElement(new Location(locNameText.getText()));
+				
+				//save the location into storage
+				saveLocations();
+				
+				//focus the location input
 				locNameText.setText("");
 				locNameText.requestFocus();
-				saveLocations();
+				
 			}
 		});	
 		addButton.setEnabled(true);	
