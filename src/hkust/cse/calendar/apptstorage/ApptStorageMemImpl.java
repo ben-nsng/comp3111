@@ -14,7 +14,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 	public ApptStorageMemImpl( User user )
 	{
 		defaultUser = user;
-		mAssignedApptID = 0;
+		mAssignedApptID = 1;
 		mAppts = new HashMap<Integer, Appt>();
 		_locations = new Location[0];
 	}

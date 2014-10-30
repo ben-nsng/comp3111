@@ -13,6 +13,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
+
 import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -414,10 +415,20 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
+		System.out.println(apptTitle.TimeSpan().StartTime());
+		System.out.println("befor");
+		System.out.println(hkust.cse.calendar.gui.Utility.createDefaultAppt(
+				parent.currentY, parent.currentM, parent.currentD,
+				parent.mCurrUser).TimeSpan().StartTime());
 		if (apptTitle == null)
 			return;
 		else
+		{
 			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+			parent.getAppList().clear();
+			parent.getAppList().setTodayAppt(parent.GetTodayAppt());
+			parent.repaint();
+		}
 	}
 
 	private void modify() {

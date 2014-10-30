@@ -377,6 +377,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
+					"Input Error", JOptionPane.ERROR_MESSAGE);
+		}
 		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 			if(this.getTitle().equals("New")) {
 				System.out.println("New");
