@@ -83,10 +83,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void RemoveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-		System.out.println("Values before remove: "+ mAppts);
-		System.out.println("Remove "+appt.getID());
 		mAppts.remove(appt.getID());
-		System.out.println("Values after remove: "+ mAppts);
 	}
 
 	@Override

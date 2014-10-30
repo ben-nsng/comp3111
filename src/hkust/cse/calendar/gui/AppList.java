@@ -13,6 +13,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
@@ -35,7 +37,7 @@ import javax.swing.table.TableModel;
 class AppCellRenderer extends DefaultTableCellRenderer {
 	private int r;
 	private int c;
-
+	
 	// public final static int EARLIEST_TIME = 480;
 	//
 	// public final static int LATEST_TIME = 1050;
@@ -415,31 +417,41 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
-		System.out.println(apptTitle.TimeSpan().StartTime());
-		System.out.println("befor");
-		System.out.println(hkust.cse.calendar.gui.Utility.createDefaultAppt(
-				parent.currentY, parent.currentM, parent.currentD,
-				parent.mCurrUser).TimeSpan().StartTime());
-		if (apptTitle == null)
-			return;
-		else
-		{
-			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
-			parent.getAppList().clear();
-			parent.getAppList().setTodayAppt(parent.GetTodayAppt());
-			parent.repaint();
+		GregorianCalendar today = new GregorianCalendar();
+		Timestamp todayTimestamp = new Timestamp(today.get(Calendar.YEAR), (today.get(Calendar.MONTH)+1), today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE), 0, 0);
+		if(apptTitle.TimeSpan().StartTime().before(todayTimestamp))
+			JOptionPane.showMessageDialog(this,
+					"Cannot Delete Past Events !", "Delete",
+					JOptionPane.ERROR_MESSAGE);
+		else {
+			if (apptTitle == null)
+				return;
+			else {
+				parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+				parent.getAppList().clear();
+				parent.getAppList().setTodayAppt(parent.GetTodayAppt());
+				parent.repaint();
+			}
 		}
 	}
 
 	private void modify() {
 		Appt apptTitle = getSelectedAppTitle();
-		if (apptTitle == null)
-			return;
-		AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
+		GregorianCalendar today = new GregorianCalendar();
+		Timestamp todayTimestamp = new Timestamp(today.get(Calendar.YEAR), (today.get(Calendar.MONTH)+1), today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.HOUR_OF_DAY), today.get(Calendar.MINUTE), 0, 0);
+		if(apptTitle.TimeSpan().StartTime().before(todayTimestamp))
+			JOptionPane.showMessageDialog(this,
+					"Cannot Modify Past Events !", "Modify",
+					JOptionPane.ERROR_MESSAGE);
+		else {
+			if (apptTitle == null)
+				return;
+			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
 
-		setAppDial.updateSetApp(apptTitle);
-		setAppDial.show();
-		setAppDial.setResizable(false);
+			setAppDial.updateSetApp(apptTitle);
+			setAppDial.show();
+			setAppDial.setResizable(false);
+		}
 
 	}
 

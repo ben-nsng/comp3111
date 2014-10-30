@@ -383,12 +383,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 		}
 		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 			if(this.getTitle().equals("New")) {
-				System.out.println("New");
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
 				this.setVisible(false);
 			}
 			if(this.getTitle().equals("Modify")) {
-				System.out.println("Modify");
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
 				this.setVisible(false);
 			}
@@ -407,9 +405,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	public void updateSetApp(Appt appt) {
 		// Fix Me!
-		System.out.println(appt.TimeSpan().StartTime());
-		System.out.println(appt.TimeSpan().EndTime());
-		System.out.println(appt.getID());
 		Calendar sCal = Calendar.getInstance();
 		sCal.setTime(new Date(appt.TimeSpan().StartTime().getTime()));
 		Calendar eCal = Calendar.getInstance();
