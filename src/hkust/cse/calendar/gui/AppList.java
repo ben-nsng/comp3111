@@ -417,6 +417,7 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
+		//check whether the start time of selected appointment is before the current time
 		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 			JOptionPane.showMessageDialog(this,
 					"Cannot Delete Past Events !", "Delete",
@@ -435,6 +436,7 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void modify() {
 		Appt apptTitle = getSelectedAppTitle();
+		//check whether the start time of selected appointment is before the current time
 		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 			JOptionPane.showMessageDialog(this,
 					"Cannot Modify Past Events !", "Modify",

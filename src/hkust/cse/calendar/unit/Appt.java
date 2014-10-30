@@ -1,10 +1,18 @@
 package hkust.cse.calendar.unit;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 public class Appt implements Serializable {
-
+	
+	public final static int SINGLE = 1;
+	public final static int DAILY = 2;
+	public final static int WEEKLY = 3;
+	public final static int MONTHLY = 4;
+	
 	private TimeSpan mTimeSpan;					// Include day, start time and end time of the appointments
 
 	private String mTitle;						// The Title of the appointments
@@ -23,6 +31,12 @@ public class Appt implements Serializable {
 	
 	private LinkedList<String> waiting;			// The waiting list
 	
+	private int frequency;						// The frequency of the appointment (e.g. WEEKLY)
+	
+	private boolean reminder;					// Whether a reminder is needed
+	
+	private Timestamp reminderTime;				// Time before the appointment to remind
+	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
 		mTimeSpan = null;
@@ -33,6 +47,9 @@ public class Appt implements Serializable {
 		reject = new LinkedList<String>();
 		waiting = new LinkedList<String>();
 		joinApptID = -1;
+		frequency = SINGLE;
+		reminder = false;
+		setReminderTime(0, 0);
 	}
 
 	// Getter of the mTimeSpan
@@ -180,6 +197,39 @@ public class Appt implements Serializable {
 		this.isjoint = isjoint;
 	}
 
-
-
+	public int getFrequency(){
+		return frequency;
+	}
+	
+	public void setFrequency(int f){
+		switch(f){
+		case 1:
+			frequency = SINGLE;
+			break;
+		case 2:
+			frequency = DAILY;
+			break;
+		case 3:
+			frequency = WEEKLY;
+			break;
+		case 4:
+			frequency = MONTHLY;
+		}
+	}
+	
+	public boolean needReminder(){
+		return reminder;
+	}
+	
+	public void setReminder(boolean r){
+		reminder =r;
+	}
+	
+	public Timestamp getReminderTime(){
+		return reminderTime;
+	}
+	
+	public void setReminderTime(int h, int m){
+		reminderTime = new Timestamp(0, 0, 0, h, m, 0, 0);
+	}
 }

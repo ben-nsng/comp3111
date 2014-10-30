@@ -30,6 +30,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -79,6 +80,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JTextArea detailArea;
 
 	private JComboBox locField;
+	private JComboBox freField;
+	private JCheckBox remField;
+	private JTextField rTimeH;
+	private JTextField rTimeM;
 	
 	private JSplitPane pDes;
 	JPanel detailPanel;
@@ -137,7 +142,13 @@ public class AppScheduler extends JDialog implements ActionListener,
 		peTime.add(eTimeML);
 		eTimeM = new JTextField(4);
 		peTime.add(eTimeM);
-
+		
+		JLabel frequencyL = new JLabel("FREQUENCY");
+		String[] frequencyType = {"Single", "Daily", "Weekly", "Monthly"};
+		freField = new JComboBox(frequencyType);
+		peTime.add(frequencyL);
+		peTime.add(freField);
+		
 		JPanel pTime = new JPanel();
 		pTime.setLayout(new BorderLayout());
 		pTime.add("West", psTime);
@@ -166,8 +177,20 @@ public class AppScheduler extends JDialog implements ActionListener,
 		titleAndTextPanel.add(locationL);
 		titleAndTextPanel.add(locField);
 		
-		
-			
+		remField = new JCheckBox("REMINDER");
+		titleAndTextPanel.add(remField);
+		rTimeH = new JTextField(4);
+		rTimeM = new JTextField(4);
+		titleAndTextPanel.add(rTimeH);
+		titleAndTextPanel.add(rTimeM);
+		if(remField.isSelected()){
+			rTimeH.enable();
+			rTimeM.enable();
+		}
+		else{
+			rTimeH.disable();
+			rTimeM.disable();
+		}
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
@@ -372,11 +395,14 @@ public class AppScheduler extends JDialog implements ActionListener,
 		// Save the appointment to the hard disk
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
+		NewAppt.setReminder(remField.isSelected());
+		//check of valid date and time
 		int[] validDate = getValidDate();
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		//check if the appointment is overlapped with other appointments
 		if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
@@ -414,13 +440,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 		sCal.setTime(new Date(appt.TimeSpan().StartTime().getTime()));
 		Calendar eCal = Calendar.getInstance();
 		eCal.setTime(new Date(appt.TimeSpan().EndTime().getTime()));
-		/*yearF.setText(Integer.toString(appt.TimeSpan().StartTime().getYear()+1900));
-		monthF.setText(Integer.toString(appt.TimeSpan().StartTime().getMonth()+1));
-		dayF.setText(Integer.toString(appt.TimeSpan().StartTime().getDay()));
-		sTimeH.setText(Integer.toString(appt.TimeSpan().StartTime().getHours()));
-		sTimeM.setText(Integer.toString(appt.TimeSpan().StartTime().getMinutes()));
-		eTimeH.setText(Integer.toString(appt.TimeSpan().EndTime().getHours()));
-		eTimeM.setText(Integer.toString(appt.TimeSpan().EndTime().getMinutes()));*/
 		yearF.setText(Integer.toString(sCal.get(Calendar.YEAR)));
 		monthF.setText(Integer.toString(sCal.get(Calendar.MONTH)+1));
 		dayF.setText(Integer.toString(sCal.get(Calendar.DAY_OF_MONTH)));
