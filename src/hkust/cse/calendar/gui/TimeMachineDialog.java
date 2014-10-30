@@ -27,6 +27,9 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 
 	private JButton btnStartTime;
 	private JButton btnStopTime;
+	private JButton btnResume;
+	private JButton btnRewind;
+	private JButton btnReset;
 	private TimeMachine machine;
 	
 	//start date params
@@ -201,14 +204,26 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		JPanel butPanel = new JPanel();
 		butPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
-		btnStartTime = new JButton("Start Time");
+		btnStartTime = new JButton("Start");
 		btnStartTime.addActionListener(this);
 		butPanel.add(btnStartTime);
-		
-		btnStopTime = new JButton("Stop Time");
+
+		btnResume = new JButton("Resume");
+		btnResume.addActionListener(this);
+		butPanel.add(btnResume);
+
+		btnStopTime = new JButton("Stop");
 		btnStopTime.addActionListener(this);
 		butPanel.add(btnStopTime);
 		
+		btnRewind = new JButton("Rewind");
+		btnRewind.addActionListener(this);
+		butPanel.add(btnRewind);
+	
+		btnReset = new JButton("Reset");
+		btnReset.addActionListener(this);
+		butPanel.add(btnReset);
+
 		contentPane.add("South", butPanel);
 		
 		pack();
@@ -220,20 +235,20 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		else
 			setEnable(true);
 		
-			sYearF.setText("2014");
-			sMonthF.setText("10");
-			sDayF.setText("10");
-			sTimeH.setText("0");
-			sTimeM.setText("0");
-			
-			eYearF.setText("2014");
-			eMonthF.setText("10");
-			eDayF.setText("13");
-			eTimeH.setText("0");
-			eTimeM.setText("0");
-			
-			dTimeH.setText("10");
-			dTimeM.setText("0");
+		sYearF.setText("2014");
+		sMonthF.setText("10");
+		sDayF.setText("27");
+		sTimeH.setText("8");
+		sTimeM.setText("0");
+		
+		eYearF.setText("2014");
+		eMonthF.setText("11");
+		eDayF.setText("10");
+		eTimeH.setText("0");
+		eTimeM.setText("0");
+		
+		dTimeH.setText("0");
+		dTimeM.setText("15");
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -247,6 +262,10 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
  				
  				machine.start();
  				setEnable(false);
+ 				setDelayEnable(false);
+ 				btnResume.setEnabled(false);
+ 				btnRewind.setEnabled(false);
+ 				btnReset.setEnabled(false);
  			}
  			catch(NumberFormatException e) {
  				JOptionPane.showMessageDialog(null,
@@ -257,7 +276,36 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		}
 		else if(arg0.getSource() == btnStopTime) {
 			machine.stop();
+			setEnable(false);
+			setDelayEnable(true);
+			btnStopTime.setEnabled(false);
+			btnResume.setEnabled(true);
+			btnRewind.setEnabled(true);
+			btnReset.setEnabled(true);
+			
+		}
+		else if(arg0.getSource() == btnResume) {
+			machine.changeTimeDelay((Integer.parseInt(dTimeH.getText()) * 60 +  Integer.parseInt(dTimeM.getText())) * 60000);
+			machine.resume();
+			setEnable(false);
+			setDelayEnable(false);
+			btnResume.setEnabled(false);
+			btnRewind.setEnabled(false);
+			btnReset.setEnabled(false);
+		}
+		else if(arg0.getSource() == btnReset) {
+			cTimeL.setText("");
+			machine.stop();
 			setEnable(true);
+		}
+		else if(arg0.getSource() == btnRewind) {
+			machine.changeTimeDelay((Integer.parseInt(dTimeH.getText()) * 60 +  Integer.parseInt(dTimeM.getText())) * 60000);
+			machine.rewind();
+			setEnable(false);
+			setDelayEnable(false);
+			btnResume.setEnabled(false);
+			btnRewind.setEnabled(false);
+			btnReset.setEnabled(false);
 		}
 	}
 	
@@ -272,6 +320,9 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 	
 	private void setEnable(Boolean b) {
 		btnStopTime.setEnabled(!b);
+		btnResume.setEnabled(!b);
+		btnReset.setEnabled(!b);
+		btnRewind.setEnabled(!b);
 		btnStartTime.setEnabled(b);
 		sYearL.setEnabled(b);
 		sYearF.setEnabled(b);
@@ -293,6 +344,9 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		eTimeH.setEnabled(b);
 		eTimeML.setEnabled(b);
 		eTimeM.setEnabled(b);
+	}
+	
+	private void setDelayEnable(Boolean b) {
 		dTimeHL.setEnabled(b);
 		dTimeH.setEnabled(b);
 		dTimeML.setEnabled(b);
