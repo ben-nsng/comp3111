@@ -14,7 +14,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 	public ApptStorageMemImpl( User user )
 	{
 		defaultUser = user;
-		mAssignedApptID = 0;
+		mAssignedApptID = 1;
 		mAppts = new HashMap<Integer, Appt>();
 		_locations = new Location[0];
 	}
@@ -30,14 +30,14 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void SaveAppt(Appt appt) {
 		// TODO Auto-generated method stub
-		if(mAppts.containsKey(appt.getID())){
+		/*if(mAppts.containsKey(appt.getID())){
 			mAppts.put(appt.getID(), appt);
-		}
-		else{
+		}*/
+		//else{
 			mAppts.put(mAssignedApptID, appt);
 			appt.setID(mAssignedApptID);
 			mAssignedApptID++;
-		}
+		//}
 	}
 
 	@Override
