@@ -51,31 +51,97 @@ public class ApptStorageMemImpl extends ApptStorage {
 			if(mAppts.containsKey(num)){
 				Appt apptAtD = (Appt)mAppts.get(num);
 				switch(apptAtD.getFrequency()){
-				case 1:
+				case Appt.SINGLE:
 					if(apptAtD.TimeSpan().Overlap(d)){
 						tempList.add(apptAtD);
 						apptNum++;
 					}
 					break;
-				case 2:
-					apptAtD.setTimeSpan(new TimeSpan(new Timestamp(d.StartTime().getYear(), d.StartTime().getMonth(), d.StartTime().getDay(), apptAtD.TimeSpan().StartTime().getHours(), apptAtD.TimeSpan().StartTime().getMinutes(), apptAtD.TimeSpan().StartTime().getSeconds(), apptAtD.TimeSpan().StartTime().getNanos()), new Timestamp(d.EndTime().getYear(), d.EndTime().getMonth(), d.EndTime().getDay(), apptAtD.TimeSpan().EndTime().getHours(), apptAtD.TimeSpan().EndTime().getMinutes(), apptAtD.TimeSpan().EndTime().getSeconds(), apptAtD.TimeSpan().EndTime().getNanos())));
+				case Appt.DAILY:
+					apptAtD.setTimeSpan(new TimeSpan(
+							new Timestamp(
+									d.StartTime().getYear(),
+									d.StartTime().getMonth(),
+									d.StartTime().getDate(),
+									apptAtD.TimeSpan().StartTime().getHours(),
+									apptAtD.TimeSpan().StartTime().getMinutes(),
+									apptAtD.TimeSpan().StartTime().getSeconds(),
+									apptAtD.TimeSpan().StartTime().getNanos()
+								),
+							new Timestamp(
+									d.EndTime().getYear(),
+									d.EndTime().getMonth(),
+									d.EndTime().getDate(),
+									apptAtD.TimeSpan().EndTime().getHours(),
+									apptAtD.TimeSpan().EndTime().getMinutes(),
+									apptAtD.TimeSpan().EndTime().getSeconds(),
+									apptAtD.TimeSpan().EndTime().getNanos()
+								)
+							)
+						);
+					
 					if(apptAtD.TimeSpan().Overlap(d)){
 						tempList.add(apptAtD);
 						apptNum++;
 					}
+					
 					break;
-				case 3:
+				case Appt.WEEKLY:
 					if(apptAtD.TimeSpan().StartTime().getDay() == d.StartTime().getDay()){
-						apptAtD.setTimeSpan(new TimeSpan(new Timestamp(d.StartTime().getYear(), d.StartTime().getMonth(), d.StartTime().getDay(), apptAtD.TimeSpan().StartTime().getHours(), apptAtD.TimeSpan().StartTime().getMinutes(), apptAtD.TimeSpan().StartTime().getSeconds(), apptAtD.TimeSpan().StartTime().getNanos()), new Timestamp(d.EndTime().getYear(), d.EndTime().getMonth(), d.EndTime().getDay(), apptAtD.TimeSpan().EndTime().getHours(), apptAtD.TimeSpan().EndTime().getMinutes(), apptAtD.TimeSpan().EndTime().getSeconds(), apptAtD.TimeSpan().EndTime().getNanos())));
+						apptAtD.setTimeSpan(
+								new TimeSpan(
+										new Timestamp(
+												d.StartTime().getYear(),
+												d.StartTime().getMonth(),
+												d.StartTime().getDate(),
+												apptAtD.TimeSpan().StartTime().getHours(),
+												apptAtD.TimeSpan().StartTime().getMinutes(),
+												apptAtD.TimeSpan().StartTime().getSeconds(),
+												apptAtD.TimeSpan().StartTime().getNanos()
+												),
+										new Timestamp(
+												d.EndTime().getYear(),
+												d.EndTime().getMonth(),
+												d.EndTime().getDate(),
+												apptAtD.TimeSpan().EndTime().getHours(),
+												apptAtD.TimeSpan().EndTime().getMinutes(),
+												apptAtD.TimeSpan().EndTime().getSeconds(),
+												apptAtD.TimeSpan().EndTime().getNanos()
+												)
+										)
+								);
+						
 						if(apptAtD.TimeSpan().Overlap(d)){
 							tempList.add(apptAtD);
 							apptNum++;
 						}
 					}
 					break;
-				case 4:
+				case Appt.MONTHLY:
 					if(apptAtD.TimeSpan().StartTime().getDate() == d.StartTime().getDate()){
-						apptAtD.setTimeSpan(new TimeSpan(new Timestamp(d.StartTime().getYear(), d.StartTime().getMonth(), apptAtD.TimeSpan().StartTime().getDay(), apptAtD.TimeSpan().StartTime().getHours(), apptAtD.TimeSpan().StartTime().getMinutes(), apptAtD.TimeSpan().StartTime().getSeconds(), apptAtD.TimeSpan().StartTime().getNanos()), new Timestamp(d.EndTime().getYear(), d.EndTime().getMonth(), apptAtD.TimeSpan().EndTime().getDay(), apptAtD.TimeSpan().EndTime().getHours(), apptAtD.TimeSpan().EndTime().getMinutes(), apptAtD.TimeSpan().EndTime().getSeconds(), apptAtD.TimeSpan().EndTime().getNanos())));
+						apptAtD.setTimeSpan(
+								new TimeSpan(
+										new Timestamp(
+												d.StartTime().getYear(),
+												d.StartTime().getMonth(),
+												apptAtD.TimeSpan().StartTime().getDate(),
+												apptAtD.TimeSpan().StartTime().getHours(),
+												apptAtD.TimeSpan().StartTime().getMinutes(),
+												apptAtD.TimeSpan().StartTime().getSeconds(),
+												apptAtD.TimeSpan().StartTime().getNanos()
+											),
+										new Timestamp(
+												d.EndTime().getYear(),
+												d.EndTime().getMonth(),
+												apptAtD.TimeSpan().EndTime().getDate(),
+												apptAtD.TimeSpan().EndTime().getHours(),
+												apptAtD.TimeSpan().EndTime().getMinutes(),
+												apptAtD.TimeSpan().EndTime().getSeconds(),
+												apptAtD.TimeSpan().EndTime().getNanos()
+											)
+									)
+								);
+						
 						if(apptAtD.TimeSpan().Overlap(d)){
 							tempList.add(apptAtD);
 							apptNum++;

@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-public class Appt implements Serializable {
+public class Appt implements Serializable, Cloneable {
 	
 	public final static int SINGLE = 1;
 	public final static int DAILY = 2;
