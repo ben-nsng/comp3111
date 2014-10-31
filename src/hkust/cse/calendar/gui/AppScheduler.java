@@ -437,7 +437,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
-		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
 		//check if the appointment is overlapped with other appointments
 		if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
@@ -483,8 +483,12 @@ public class AppScheduler extends JDialog implements ActionListener,
 		sTimeM.setText(Integer.toString(sCal.get(Calendar.MINUTE)));
 		eTimeH.setText(Integer.toString(eCal.get(Calendar.HOUR_OF_DAY)));
 		eTimeM.setText(Integer.toString(eCal.get(Calendar.MINUTE)));
+		freField.setSelectedIndex(appt.getFrequency()-1);
 		titleField.setText(appt.getTitle());
 		detailArea.setText(appt.getInfo());
+		remField.setSelected(appt.needReminder());
+		rTimeH.setText(Integer.toString(appt.getReminderTime().getHours()));
+		rTimeM.setText(Integer.toString(appt.getReminderTime().getMinutes()));
 		NewAppt=appt;
 	}
 

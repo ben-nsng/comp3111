@@ -420,19 +420,23 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
-		//check whether the start time of selected appointment is before the current time
-		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+		if (apptTitle == null) {
 			JOptionPane.showMessageDialog(this,
-					"Cannot Delete Past Events !", "Delete",
+					"No Appointments To Delete !", "Delete",
 					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		//check whether the start time of selected appointment is before the current time
 		else {
-			if (apptTitle == null)
-				return;
+			if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+				JOptionPane.showMessageDialog(this,
+						"Cannot Delete Past Events !", "Delete",
+						JOptionPane.ERROR_MESSAGE);
 			else {
-				parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
-				parent.getAppList().clear();
-				parent.getAppList().setTodayAppt(parent.GetTodayAppt());
-				parent.repaint();
+					parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+					parent.getAppList().clear();
+					parent.getAppList().setTodayAppt(parent.GetTodayAppt());
+					parent.repaint();
 			}
 		}
 	}
@@ -440,13 +444,17 @@ public class AppList extends JPanel implements ActionListener {
 	private void modify() {
 		Appt apptTitle = getSelectedAppTitle();
 		//check whether the start time of selected appointment is before the current time
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this,
+					"No Appointment To Modify !", "Delete",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 			JOptionPane.showMessageDialog(this,
 					"Cannot Modify Past Events !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
 		else {
-			if (apptTitle == null)
-				return;
 			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
 
 			setAppDial.updateSetApp(apptTitle);

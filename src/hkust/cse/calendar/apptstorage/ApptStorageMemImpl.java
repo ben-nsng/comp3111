@@ -155,7 +155,151 @@ public class ApptStorageMemImpl extends ApptStorage {
 			tempList.toArray(timeAppt);
 			return timeAppt;
 	}
-
+	
+	@Override
+	public Appt[] RetrieveAppts(TimeSpan d, int f) {
+		// TODO Auto-generated method stub
+		List<Appt> tempList = new ArrayList<Appt>();
+		int apptNum = 0;
+		for(int num = 0;num < mAssignedApptID;num++){
+			if(mAppts.containsKey(num)){
+				Appt apptAtD = (Appt)mAppts.get(num);
+				TimeSpan newApptTimeSpan;
+				TimeSpan oldApptTimeSpan;
+				switch(f){
+				case Appt.SINGLE:
+					if(apptAtD.TimeSpan().Overlap(d)){
+						tempList.add(apptAtD);
+						apptNum++;
+					}
+					break;
+				case Appt.DAILY:
+					newApptTimeSpan = new TimeSpan(
+							new Timestamp(
+									0,
+									0,
+									0,
+									d.StartTime().getHours(),
+									d.StartTime().getMinutes(),
+									0,
+									0),
+							new Timestamp(
+									0,
+									0,
+									0,
+									d.EndTime().getHours(),
+									d.EndTime().getMinutes(),
+									0,
+									0));
+					oldApptTimeSpan = new TimeSpan(
+							new Timestamp(
+									0,
+									0,
+									0,
+									apptAtD.TimeSpan().StartTime().getHours(),
+									apptAtD.TimeSpan().StartTime().getMinutes(),
+									0,
+									0),
+							new Timestamp(
+									0,
+									0,
+									0,
+									apptAtD.TimeSpan().EndTime().getHours(),
+									apptAtD.TimeSpan().EndTime().getMinutes(),
+									0,
+									0));
+					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().after(d.StartTime())){
+						tempList.add(apptAtD);
+						apptNum++;
+					}
+					break;
+				case Appt.WEEKLY:
+					newApptTimeSpan = new TimeSpan(
+							new Timestamp(
+									0,
+									0,
+									0,
+									d.StartTime().getHours(),
+									d.StartTime().getMinutes(),
+									0,
+									0),
+							new Timestamp(
+									0,
+									0,
+									0,
+									d.EndTime().getHours(),
+									d.EndTime().getMinutes(),
+									0,
+									0));
+					oldApptTimeSpan = new TimeSpan(
+							new Timestamp(
+									0,
+									0,
+									0,
+									apptAtD.TimeSpan().StartTime().getHours(),
+									apptAtD.TimeSpan().StartTime().getMinutes(),
+									0,
+									0),
+							new Timestamp(
+									0,
+									0,
+									0,
+									apptAtD.TimeSpan().EndTime().getHours(),
+									apptAtD.TimeSpan().EndTime().getMinutes(),
+									0,
+									0));
+					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().getDay()==d.StartTime().getDay() && apptAtD.TimeSpan().StartTime().after(d.StartTime())){
+						tempList.add(apptAtD);
+						apptNum++;
+					}
+					break;
+				case Appt.MONTHLY:
+					newApptTimeSpan = new TimeSpan(
+							new Timestamp(
+									0,
+									0,
+									0,
+									d.StartTime().getHours(),
+									d.StartTime().getMinutes(),
+									0,
+									0),
+							new Timestamp(
+									0,
+									0,
+									0,
+									d.EndTime().getHours(),
+									d.EndTime().getMinutes(),
+									0,
+									0));
+					oldApptTimeSpan = new TimeSpan(
+							new Timestamp(
+									0,
+									0,
+									0,
+									apptAtD.TimeSpan().StartTime().getHours(),
+									apptAtD.TimeSpan().StartTime().getMinutes(),
+									0,
+									0),
+							new Timestamp(
+									0,
+									0,
+									0,
+									apptAtD.TimeSpan().EndTime().getHours(),
+									apptAtD.TimeSpan().EndTime().getMinutes(),
+									0,
+									0));
+					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().getDate()==d.StartTime().getDate() && apptAtD.TimeSpan().StartTime().after(d.StartTime())){
+						tempList.add(apptAtD);
+						apptNum++;
+					}
+					break;
+				}
+			}
+		}
+			Appt[] timeAppt = new Appt[apptNum];
+			tempList.toArray(timeAppt);
+			return timeAppt;
+	}
 
 	@Override
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {

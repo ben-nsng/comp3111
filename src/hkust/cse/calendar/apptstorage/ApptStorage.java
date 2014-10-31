@@ -24,6 +24,8 @@ public abstract class ApptStorage {
 	public abstract void SaveAppt(Appt appt);	//abstract method to save an appointment record
 
 	public abstract Appt[] RetrieveAppts(TimeSpan d);	//abstract method to retrieve an appointment record by a given timespan
+	
+	public abstract Appt[] RetrieveAppts(TimeSpan d, int f);
 
 	public abstract Appt[] RetrieveAppts(User entity, TimeSpan time);	//overloading abstract method to retrieve an appointment record by a given user object and timespan
 	
