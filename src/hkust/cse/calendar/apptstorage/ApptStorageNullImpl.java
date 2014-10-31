@@ -38,6 +38,12 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public Appt[] RetrieveAppts(TimeSpan d, int f) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
