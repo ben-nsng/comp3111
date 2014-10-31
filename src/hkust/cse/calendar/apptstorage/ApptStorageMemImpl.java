@@ -208,7 +208,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 									apptAtD.TimeSpan().EndTime().getMinutes(),
 									0,
 									0));
-					if(newApptTimeSpan.Overlap(oldApptTimeSpan)){
+					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().after(d.StartTime())){
 						tempList.add(apptAtD);
 						apptNum++;
 					}
@@ -248,7 +248,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 									apptAtD.TimeSpan().EndTime().getMinutes(),
 									0,
 									0));
-					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().getDay()==d.StartTime().getDay()){
+					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().getDay()==d.StartTime().getDay() && apptAtD.TimeSpan().StartTime().after(d.StartTime())){
 						tempList.add(apptAtD);
 						apptNum++;
 					}
@@ -288,7 +288,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 									apptAtD.TimeSpan().EndTime().getMinutes(),
 									0,
 									0));
-					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().getDate()==d.StartTime().getDate()){
+					if(newApptTimeSpan.Overlap(oldApptTimeSpan) && apptAtD.TimeSpan().StartTime().getDate()==d.StartTime().getDate() && apptAtD.TimeSpan().StartTime().after(d.StartTime())){
 						tempList.add(apptAtD);
 						apptNum++;
 					}
