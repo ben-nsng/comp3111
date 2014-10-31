@@ -1,9 +1,11 @@
 package hkust.cse.calendar.apptstorage;
 
 import hkust.cse.calendar.unit.Appt;
+
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
+import java.sql.Timestamp;
 
 import java.util.*;
 
@@ -48,9 +50,38 @@ public class ApptStorageMemImpl extends ApptStorage {
 		for(int num = 0;num < mAssignedApptID;num++){
 			if(mAppts.containsKey(num)){
 				Appt apptAtD = (Appt)mAppts.get(num);
-				if(apptAtD.TimeSpan().Overlap(d)){
-					tempList.add(apptAtD);
-					apptNum++;
+				switch(apptAtD.getFrequency()){
+				case 1:
+					if(apptAtD.TimeSpan().Overlap(d)){
+						tempList.add(apptAtD);
+						apptNum++;
+					}
+					break;
+				case 2:
+					apptAtD.setTimeSpan(new TimeSpan(new Timestamp(d.StartTime().getYear(), d.StartTime().getMonth(), d.StartTime().getDay(), apptAtD.TimeSpan().StartTime().getHours(), apptAtD.TimeSpan().StartTime().getMinutes(), apptAtD.TimeSpan().StartTime().getSeconds(), apptAtD.TimeSpan().StartTime().getNanos()), new Timestamp(d.EndTime().getYear(), d.EndTime().getMonth(), d.EndTime().getDay(), apptAtD.TimeSpan().EndTime().getHours(), apptAtD.TimeSpan().EndTime().getMinutes(), apptAtD.TimeSpan().EndTime().getSeconds(), apptAtD.TimeSpan().EndTime().getNanos())));
+					if(apptAtD.TimeSpan().Overlap(d)){
+						tempList.add(apptAtD);
+						apptNum++;
+					}
+					break;
+				case 3:
+					if(apptAtD.TimeSpan().StartTime().getDay() == d.StartTime().getDay()){
+						apptAtD.setTimeSpan(new TimeSpan(new Timestamp(d.StartTime().getYear(), d.StartTime().getMonth(), d.StartTime().getDay(), apptAtD.TimeSpan().StartTime().getHours(), apptAtD.TimeSpan().StartTime().getMinutes(), apptAtD.TimeSpan().StartTime().getSeconds(), apptAtD.TimeSpan().StartTime().getNanos()), new Timestamp(d.EndTime().getYear(), d.EndTime().getMonth(), d.EndTime().getDay(), apptAtD.TimeSpan().EndTime().getHours(), apptAtD.TimeSpan().EndTime().getMinutes(), apptAtD.TimeSpan().EndTime().getSeconds(), apptAtD.TimeSpan().EndTime().getNanos())));
+						if(apptAtD.TimeSpan().Overlap(d)){
+							tempList.add(apptAtD);
+							apptNum++;
+						}
+					}
+					break;
+				case 4:
+					if(apptAtD.TimeSpan().StartTime().getDate() == d.StartTime().getDate()){
+						apptAtD.setTimeSpan(new TimeSpan(new Timestamp(d.StartTime().getYear(), d.StartTime().getMonth(), apptAtD.TimeSpan().StartTime().getDay(), apptAtD.TimeSpan().StartTime().getHours(), apptAtD.TimeSpan().StartTime().getMinutes(), apptAtD.TimeSpan().StartTime().getSeconds(), apptAtD.TimeSpan().StartTime().getNanos()), new Timestamp(d.EndTime().getYear(), d.EndTime().getMonth(), apptAtD.TimeSpan().EndTime().getDay(), apptAtD.TimeSpan().EndTime().getHours(), apptAtD.TimeSpan().EndTime().getMinutes(), apptAtD.TimeSpan().EndTime().getSeconds(), apptAtD.TimeSpan().EndTime().getNanos())));
+						if(apptAtD.TimeSpan().Overlap(d)){
+							tempList.add(apptAtD);
+							apptNum++;
+						}
+					}
+					break;
 				}
 			}
 		}
@@ -58,6 +89,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 			tempList.toArray(timeAppt);
 			return timeAppt;
 	}
+
 
 	@Override
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
