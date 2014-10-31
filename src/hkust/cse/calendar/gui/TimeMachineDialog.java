@@ -296,6 +296,7 @@ public class TimeMachineDialog extends JFrame implements ActionListener, TimeMac
 		else if(arg0.getSource() == btnReset) {
 			cTimeL.setText("");
 			machine.stop();
+			machine.reset();
 			setEnable(true);
 		}
 		else if(arg0.getSource() == btnRewind) {

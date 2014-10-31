@@ -60,6 +60,12 @@ public class TimeMachine implements ActionListener {
 		this.isStart = true;
 	}
 	
+	public void reset() {
+		this.startTime = new Timestamp(0);
+		this.currentTime = startTime;
+		this.timeDelay = 1000;
+	}
+	
 	public void resume() {
 		this.start();
 	}
