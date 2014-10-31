@@ -483,6 +483,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		sTimeM.setText(Integer.toString(sCal.get(Calendar.MINUTE)));
 		eTimeH.setText(Integer.toString(eCal.get(Calendar.HOUR_OF_DAY)));
 		eTimeM.setText(Integer.toString(eCal.get(Calendar.MINUTE)));
+		freField.setSelectedIndex(appt.getFrequency()-1);
 		titleField.setText(appt.getTitle());
 		detailArea.setText(appt.getInfo());
 		remField.setSelected(appt.needReminder());
