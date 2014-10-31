@@ -13,6 +13,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -34,7 +37,7 @@ import javax.swing.table.TableModel;
 class AppCellRenderer extends DefaultTableCellRenderer {
 	private int r;
 	private int c;
-
+	
 	// public final static int EARLIEST_TIME = 480;
 	//
 	// public final static int LATEST_TIME = 1050;
@@ -414,21 +417,47 @@ public class AppList extends JPanel implements ActionListener {
 
 	private void delete() {
 		Appt apptTitle = getSelectedAppTitle();
-		if (apptTitle == null)
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this,
+					"No Appointments To Delete !", "Delete",
+					JOptionPane.ERROR_MESSAGE);
 			return;
-		else
-			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+		}
+		//check whether the start time of selected appointment is before the current time
+		else {
+			if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+				JOptionPane.showMessageDialog(this,
+						"Cannot Delete Past Events !", "Delete",
+						JOptionPane.ERROR_MESSAGE);
+			else {
+					parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
+					parent.getAppList().clear();
+					parent.getAppList().setTodayAppt(parent.GetTodayAppt());
+					parent.repaint();
+			}
+		}
 	}
 
 	private void modify() {
 		Appt apptTitle = getSelectedAppTitle();
-		if (apptTitle == null)
+		//check whether the start time of selected appointment is before the current time
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this,
+					"No Appointment To Modify !", "Delete",
+					JOptionPane.ERROR_MESSAGE);
 			return;
-		AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
+		}
+		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+			JOptionPane.showMessageDialog(this,
+					"Cannot Modify Past Events !", "Modify",
+					JOptionPane.ERROR_MESSAGE);
+		else {
+			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
 
-		setAppDial.updateSetApp(apptTitle);
-		setAppDial.show();
-		setAppDial.setResizable(false);
+			setAppDial.updateSetApp(apptTitle);
+			setAppDial.show();
+			setAppDial.setResizable(false);
+		}
 
 	}
 

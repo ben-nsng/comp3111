@@ -15,9 +15,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,6 +32,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -77,6 +82,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JTextArea detailArea;
 
 	private JComboBox locField;
+	private JComboBox freField;
+	private JCheckBox remField;
+	private JTextField rTimeH;
+	private JTextField rTimeM;
 	
 	private JSplitPane pDes;
 	JPanel detailPanel;
@@ -135,7 +144,13 @@ public class AppScheduler extends JDialog implements ActionListener,
 		peTime.add(eTimeML);
 		eTimeM = new JTextField(4);
 		peTime.add(eTimeM);
-
+		
+		JLabel frequencyL = new JLabel("FREQUENCY");
+		String[] frequencyType = {"Single", "Daily", "Weekly", "Monthly"};
+		freField = new JComboBox(frequencyType);
+		peTime.add(frequencyL);
+		peTime.add(freField);
+		
 		JPanel pTime = new JPanel();
 		pTime.setLayout(new BorderLayout());
 		pTime.add("West", psTime);
@@ -164,8 +179,26 @@ public class AppScheduler extends JDialog implements ActionListener,
 		titleAndTextPanel.add(locationL);
 		titleAndTextPanel.add(locField);
 		
-		
-			
+		remField = new JCheckBox("REMINDER");
+		titleAndTextPanel.add(remField);
+		rTimeH = new JTextField(4);
+		rTimeM = new JTextField(4);
+		titleAndTextPanel.add(rTimeH);
+		titleAndTextPanel.add(rTimeM);
+		rTimeH.disable();
+		rTimeM.disable();
+		remField.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  if(remField.isSelected()){
+		  			rTimeH.enable();
+		  			rTimeM.enable();
+		  			}
+		  		else{
+		  			rTimeH.disable();
+		  			rTimeM.disable();
+		  			}
+		        }
+		      });
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
@@ -368,20 +401,62 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
-		//System.out.println(NewAppt.getID());
+		boolean rTimeValid=true;
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
+		NewAppt.setReminder(remField.isSelected());
+		if(remField.isSelected()) {
+			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
+				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
+				rTimeValid = true;
+			}
+			else {
+				rTimeValid = false;
+				NewAppt.setReminderTime(0, 0);
+				JOptionPane.showMessageDialog(this, "Invalid Time For Reminder !",
+						"Input Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else
+			rTimeValid = true;
+		switch(freField.getSelectedIndex()){
+			case 0:
+				NewAppt.setFrequency(Appt.SINGLE);
+				break;
+			case 1:
+				NewAppt.setFrequency(Appt.DAILY);
+				break;
+			case 2:
+				NewAppt.setFrequency(Appt.WEEKLY);
+				break;
+			case 3:
+				NewAppt.setFrequency(Appt.MONTHLY);
+		}
+		//check of valid date and time
 		int[] validDate = getValidDate();
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
-		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
-			if(this.getTitle().equals("New"))
+		//check if the appointment is overlapped with other appointments
+		if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
+					"Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+			if(this.getTitle().equals("New")) {
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-			if(this.getTitle().equals("Modify"))
-				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
-			this.setVisible(false);
+				this.setVisible(false);
+			}
+			if(this.getTitle().equals("Modify")) {
+				if(NewAppt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+					JOptionPane.showMessageDialog(this, "Cannot Modify Past Events !",
+							"Modify", JOptionPane.ERROR_MESSAGE);
+				else {
+					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
+					this.setVisible(false);
+				}
+			}
 		}
 	}
 
@@ -397,27 +472,22 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	public void updateSetApp(Appt appt) {
 		// Fix Me!
-		//NewAppt=appt;
-		yearF.setText(Integer.toString(appt.TimeSpan().StartTime().getYear()+1900));
-		monthF.setText(Integer.toString(appt.TimeSpan().StartTime().getMonth()+1));
-		dayF.setText(Integer.toString(appt.TimeSpan().StartTime().getDay()));
-		sTimeH.setText(Integer.toString(appt.TimeSpan().StartTime().getHours()));
-		sTimeM.setText(Integer.toString(appt.TimeSpan().StartTime().getMinutes()));
-		eTimeH.setText(Integer.toString(appt.TimeSpan().EndTime().getHours()));
-		eTimeM.setText(Integer.toString(appt.TimeSpan().EndTime().getMinutes()));
+		Calendar sCal = Calendar.getInstance();
+		sCal.setTime(new Date(appt.TimeSpan().StartTime().getTime()));
+		Calendar eCal = Calendar.getInstance();
+		eCal.setTime(new Date(appt.TimeSpan().EndTime().getTime()));
+		yearF.setText(Integer.toString(sCal.get(Calendar.YEAR)));
+		monthF.setText(Integer.toString(sCal.get(Calendar.MONTH)+1));
+		dayF.setText(Integer.toString(sCal.get(Calendar.DAY_OF_MONTH)));
+		sTimeH.setText(Integer.toString(sCal.get(Calendar.HOUR_OF_DAY)));
+		sTimeM.setText(Integer.toString(sCal.get(Calendar.MINUTE)));
+		eTimeH.setText(Integer.toString(eCal.get(Calendar.HOUR_OF_DAY)));
+		eTimeM.setText(Integer.toString(eCal.get(Calendar.MINUTE)));
 		titleField.setText(appt.getTitle());
 		detailArea.setText(appt.getInfo());
-		/*int[] validDate = getValidDate();
-		int[] validTime = getValidTimeInterval();
-		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[1]), CreateTimeStamp(validDate, validTime[0]));*/
-		//appt.setTimeSpan(appt.TimeSpan());
-		//Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
-		//if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==appt.getID()))) {
-		/*if(this.getTitle()=="New")
-			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.NEW);
-		if(this.getTitle()=="Modify")
-			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY);*/
-		//}
+		remField.setSelected(appt.needReminder());
+		rTimeH.setText(Integer.toString(appt.getReminderTime().getHours()));
+		rTimeM.setText(Integer.toString(appt.getReminderTime().getMinutes()));
 		NewAppt=appt;
 	}
 
