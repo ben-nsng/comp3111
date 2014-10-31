@@ -33,6 +33,9 @@ public class Appt implements Serializable {
 	
 	private int frequency;						// The frequency of the appointment (e.g. WEEKLY)
 	
+	private boolean reminder;	// Whether a reminder is needed
+	
+	private Timestamp reminderTime;	
 	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
@@ -214,5 +217,20 @@ public class Appt implements Serializable {
 		}
 	}
 
+	public boolean needReminder(){
+		return reminder;
+	}
+
+	public void setReminder(boolean r){
+		reminder =r;
+	}	
+	
+	public Timestamp getReminderTime(){
+		return reminderTime;
+	}
+
+	public void setReminderTime(int h, int m){
+		reminderTime = new Timestamp(0, 0, 0, h, m, 0, 0);
+	}
 
 }
