@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-public class Appt implements Serializable {
+public class Appt implements Serializable, Cloneable {
 	
 	public final static int SINGLE = 1;
 	public final static int DAILY = 2;
@@ -231,5 +231,15 @@ public class Appt implements Serializable {
 	
 	public void setReminderTime(int h, int m){
 		reminderTime = new Timestamp(0, 0, 0, h, m, 0, 0);
+	}
+	
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

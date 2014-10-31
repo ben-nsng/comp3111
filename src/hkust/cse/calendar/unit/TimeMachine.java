@@ -20,6 +20,7 @@ public class TimeMachine implements ActionListener {
 	private Timestamp currentTime;
 	private int timeDelay;
 	private Boolean isStart;
+	private Boolean isRewind;
 	//private CalGrid parent;
 	private List<TimeMachineListener> listeners;
 	
@@ -30,6 +31,7 @@ public class TimeMachine implements ActionListener {
 		this.currentTime = startTime;
 		this.timeDelay = 1000;
 		this.isStart = false;
+		this.isRewind = false;
 		//this.parent = parent;
 		this.timer = new Timer(1000 , this);
 		this.listeners = new ArrayList<TimeMachineListener>();
@@ -58,10 +60,20 @@ public class TimeMachine implements ActionListener {
 		this.isStart = true;
 	}
 	
+	public void resume() {
+		this.start();
+	}
+	
+	public void rewind() {
+		this.isRewind = true;
+		this.start();
+	}
+	
 	public void stop() {
 		if(!this.isStart) return;
 		this.timer.stop();
 		this.isStart = false;
+		this.isRewind = false;
 		for(TimeMachineListener l : listeners) {
 			l.timeStopped(this);
 		}
@@ -73,6 +85,10 @@ public class TimeMachine implements ActionListener {
 	
 	public Boolean IsStop() {
 		return !this.isStart;
+	}
+	
+	public Boolean IsRewind() {
+		return this.isRewind;
 	}
 	
 	public String toString() {
@@ -103,10 +119,19 @@ public class TimeMachine implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == this.timer)	{
+			
+			if(this.isRewind) {
+				this.currentTime.setTime(this.currentTime.getTime() - this.timeDelay);
+			}
+			else {
+				this.currentTime.setTime(this.currentTime.getTime() + this.timeDelay);
+			}
+			
 			for(TimeMachineListener l : listeners) {
 				l.timeElapsed(this);
 			}
-			this.currentTime.setTime(this.currentTime.getTime() + this.timeDelay);
+			
+			//check if current time beyond the end time
 			if(this.currentTime.compareTo(this.endTime) > 0) {
 				this.stop();
 			}
