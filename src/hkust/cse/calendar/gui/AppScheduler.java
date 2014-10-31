@@ -368,6 +368,21 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private void saveButtonResponse() {
 		// Fix Me!
 		// Save the appointment to the hard disk
+		//System.out.println(NewAppt.getID());
+		NewAppt.setTitle(titleField.getText());
+		NewAppt.setInfo(detailArea.getText());
+		int[] validDate = getValidDate();
+		int[] validTime = getValidTimeInterval();
+		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
+		NewAppt.setTimeSpan(apptTimeSpan);
+		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+			if(this.getTitle().equals("New"))
+				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+			if(this.getTitle().equals("Modify"))
+				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
+			this.setVisible(false);
+		}
 	}
 
 	private Timestamp CreateTimeStamp(int[] date, int time) {
@@ -382,6 +397,28 @@ public class AppScheduler extends JDialog implements ActionListener,
 
 	public void updateSetApp(Appt appt) {
 		// Fix Me!
+		//NewAppt=appt;
+		yearF.setText(Integer.toString(appt.TimeSpan().StartTime().getYear()+1900));
+		monthF.setText(Integer.toString(appt.TimeSpan().StartTime().getMonth()+1));
+		dayF.setText(Integer.toString(appt.TimeSpan().StartTime().getDay()));
+		sTimeH.setText(Integer.toString(appt.TimeSpan().StartTime().getHours()));
+		sTimeM.setText(Integer.toString(appt.TimeSpan().StartTime().getMinutes()));
+		eTimeH.setText(Integer.toString(appt.TimeSpan().EndTime().getHours()));
+		eTimeM.setText(Integer.toString(appt.TimeSpan().EndTime().getMinutes()));
+		titleField.setText(appt.getTitle());
+		detailArea.setText(appt.getInfo());
+		/*int[] validDate = getValidDate();
+		int[] validTime = getValidTimeInterval();
+		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[1]), CreateTimeStamp(validDate, validTime[0]));*/
+		//appt.setTimeSpan(appt.TimeSpan());
+		//Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan);
+		//if((validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==appt.getID()))) {
+		/*if(this.getTitle()=="New")
+			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.NEW);
+		if(this.getTitle()=="Modify")
+			parent.controller.ManageAppt(appt, ApptStorageControllerImpl.MODIFY);*/
+		//}
+		NewAppt=appt;
 	}
 
 	public void componentHidden(ComponentEvent e) {

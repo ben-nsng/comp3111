@@ -413,7 +413,11 @@ public class AppList extends JPanel implements ActionListener {
 	}
 
 	private void delete() {
-
+		Appt apptTitle = getSelectedAppTitle();
+		if (apptTitle == null)
+			return;
+		else
+			parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
 	}
 
 	private void modify() {
