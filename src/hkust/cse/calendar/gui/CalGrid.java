@@ -126,7 +126,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		currentCol = 0;
 		timeMachine = new TimeMachine();
 		timeMachine.addElpasedListener(this);
-		
+		controller.setTimeMachine(timeMachine);
 
 		applist = new AppList();
 		applist.setParent(this);

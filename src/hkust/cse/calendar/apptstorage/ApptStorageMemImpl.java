@@ -1,17 +1,18 @@
 package hkust.cse.calendar.apptstorage;
 
 import hkust.cse.calendar.unit.Appt;
-
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
-import java.sql.Timestamp;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 public class ApptStorageMemImpl extends ApptStorage {
 
 	private User defaultUser = null;
+	private TimeMachine timeMachine = null;
 	
 	public ApptStorageMemImpl( User user )
 	{
@@ -19,6 +20,10 @@ public class ApptStorageMemImpl extends ApptStorage {
 		mAssignedApptID = 1;
 		mAppts = new HashMap<Integer, Appt>();
 		_locations = new Location[0];
+	}
+	
+	public void setTimeMachine(TimeMachine machine) {
+		this.timeMachine = machine;
 	}
 	
 	public Location[] getLocationList() {
@@ -49,7 +54,8 @@ public class ApptStorageMemImpl extends ApptStorage {
 		int apptNum = 0;
 		for(int num = 0;num < mAssignedApptID;num++){
 			if(mAppts.containsKey(num)){
-				Appt apptAtD = (Appt)mAppts.get(num);
+				Appt apptAtD = (Appt)mAppts.get(num).clone();
+				
 				switch(apptAtD.getFrequency()){
 				case Appt.SINGLE:
 					if(apptAtD.TimeSpan().Overlap(d)){
@@ -58,6 +64,10 @@ public class ApptStorageMemImpl extends ApptStorage {
 					}
 					break;
 				case Appt.DAILY:
+					//check if the input time is before the schedule starting time
+					//if before the schedule starting time, ignore the schedule
+					if(d.EndTime().before(apptAtD.TimeSpan().StartTime())) continue;
+					
 					apptAtD.setTimeSpan(new TimeSpan(
 							new Timestamp(
 									d.StartTime().getYear(),
@@ -80,6 +90,9 @@ public class ApptStorageMemImpl extends ApptStorage {
 							)
 						);
 					
+					//check if the schedule is before the time machine time
+					//if before the time machine time, ignore the schedule
+					if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
 					if(apptAtD.TimeSpan().Overlap(d)){
 						tempList.add(apptAtD);
 						apptNum++;
@@ -87,6 +100,10 @@ public class ApptStorageMemImpl extends ApptStorage {
 					
 					break;
 				case Appt.WEEKLY:
+					//check if the input time is before the schedule starting time
+					//if before the schedule starting time, ignore the schedule
+					if(d.EndTime().before(apptAtD.TimeSpan().StartTime())) continue;
+					
 					if(apptAtD.TimeSpan().StartTime().getDay() == d.StartTime().getDay()){
 						apptAtD.setTimeSpan(
 								new TimeSpan(
@@ -111,6 +128,9 @@ public class ApptStorageMemImpl extends ApptStorage {
 										)
 								);
 						
+						//check if the schedule is before the time machine time
+						//if before the time machine time, ignore the schedule
+						if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
 						if(apptAtD.TimeSpan().Overlap(d)){
 							tempList.add(apptAtD);
 							apptNum++;
@@ -118,6 +138,10 @@ public class ApptStorageMemImpl extends ApptStorage {
 					}
 					break;
 				case Appt.MONTHLY:
+					//check if the input time is before the schedule starting time
+					//if before the schedule starting time, ignore the schedule
+					if(d.EndTime().before(apptAtD.TimeSpan().StartTime())) continue;
+					
 					if(apptAtD.TimeSpan().StartTime().getDate() == d.StartTime().getDate()){
 						apptAtD.setTimeSpan(
 								new TimeSpan(
@@ -142,6 +166,9 @@ public class ApptStorageMemImpl extends ApptStorage {
 									)
 								);
 						
+						//check if the schedule is before the time machine time
+						//if before the time machine time, ignore the schedule
+						if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
 						if(apptAtD.TimeSpan().Overlap(d)){
 							tempList.add(apptAtD);
 							apptNum++;
