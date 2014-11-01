@@ -498,6 +498,14 @@ public class AppList extends JPanel implements ActionListener {
 		
 		if (parent.mCurrUser == null)
 			return;
+		if(hkust.cse.calendar.gui.Utility.createDefaultAppt(
+				parent.currentY, parent.currentM, parent.currentD,
+				parent.mCurrUser).TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime())) {
+			JOptionPane.showMessageDialog(parent, "Cannot Make An Appointment In The Past !",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+			
 		if (currentRow < 0 || currentRow > ROWNUM - 1) {
 			JOptionPane.showMessageDialog(parent, "Please Select Again !",
 					"Error", JOptionPane.ERROR_MESSAGE);

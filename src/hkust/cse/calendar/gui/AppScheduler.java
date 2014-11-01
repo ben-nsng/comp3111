@@ -146,7 +146,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		peTime.add(eTimeM);
 		
 		JLabel frequencyL = new JLabel("FREQUENCY");
-		String[] frequencyType = {"Single", "Daily", "Weekly", "Monthly"};
+		String[] frequencyType = {"One-time", "Daily", "Weekly", "Monthly"};
 		freField = new JComboBox(frequencyType);
 		peTime.add(frequencyL);
 		peTime.add(freField);
