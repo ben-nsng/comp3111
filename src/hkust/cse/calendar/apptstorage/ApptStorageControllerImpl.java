@@ -30,9 +30,9 @@ public class ApptStorageControllerImpl {
 		mApptStorage = storage;
 	}
 	
-	public void setTimeMachine(TimeMachine machine) {
+	/*public void setTimeMachine(TimeMachine machine) {
 		mApptStorage.setTimeMachine(machine);
-	}
+	}*/
 	
 	public Appt[] RetrieveAppts(TimeSpan time) {
 		return mApptStorage.RetrieveAppts(time);

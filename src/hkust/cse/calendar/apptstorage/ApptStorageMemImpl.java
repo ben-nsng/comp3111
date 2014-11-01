@@ -12,7 +12,7 @@ import java.util.*;
 public class ApptStorageMemImpl extends ApptStorage {
 
 	private User defaultUser = null;
-	private TimeMachine timeMachine = null;
+	//private TimeMachine timeMachine = null;
 	
 	public ApptStorageMemImpl( User user )
 	{
@@ -22,9 +22,9 @@ public class ApptStorageMemImpl extends ApptStorage {
 		_locations = new Location[0];
 	}
 	
-	public void setTimeMachine(TimeMachine machine) {
+	/*public void setTimeMachine(TimeMachine machine) {
 		this.timeMachine = machine;
-	}
+	}*/
 	
 	public Location[] getLocationList() {
 		return _locations;
@@ -92,7 +92,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 					
 					//check if the schedule is before the time machine time
 					//if before the time machine time, ignore the schedule
-					if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
+					//if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
 					if(apptAtD.TimeSpan().Overlap(d)){
 						tempList.add(apptAtD);
 						apptNum++;
@@ -130,7 +130,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 						
 						//check if the schedule is before the time machine time
 						//if before the time machine time, ignore the schedule
-						if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
+						//if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
 						if(apptAtD.TimeSpan().Overlap(d)){
 							tempList.add(apptAtD);
 							apptNum++;
@@ -168,7 +168,7 @@ public class ApptStorageMemImpl extends ApptStorage {
 						
 						//check if the schedule is before the time machine time
 						//if before the time machine time, ignore the schedule
-						if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
+						//if(apptAtD.TimeSpan().StartTime().before(this.timeMachine.getCurrentTime())) continue;
 						if(apptAtD.TimeSpan().Overlap(d)){
 							tempList.add(apptAtD);
 							apptNum++;
