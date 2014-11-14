@@ -1,10 +1,12 @@
 package hkust.cse.calendar.apptstorage;//
 
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.User;
 
 import java.util.HashMap;
+
 import hkust.cse.calendar.unit.Location;
 
 
@@ -14,7 +16,13 @@ public abstract class ApptStorage {
 	public User defaultUser;	//a user object, now is single user mode without login
 	public int mAssignedApptID;	//a global appointment ID for each appointment record
 	public Location[] _locations;
+	protected TimeMachine timeMachine;
+	
 	public ApptStorage() {	//default constructor
+	}
+	
+	public void setTimeMachine(TimeMachine machine) {
+		this.timeMachine = machine;
 	}
 	
 	public abstract Location[] getLocationList();

@@ -333,7 +333,7 @@ public class AppList extends JPanel implements ActionListener {
 	// colouring the appointment list
 	public void addAppt(Appt appt) {
 		//when any scheduled event when the event is pasted
-		if(appt.getFrequency() != Appt.SINGLE && appt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime())) return;
+		//if(appt.getFrequency() != Appt.SINGLE && appt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime())) return;
 		
 		Color color;
 		currColor = new Color(0,240-(appt.TimeSpan().StartTime().getHours()-8)*25,255-(appt.TimeSpan().StartTime().getMinutes()*3));

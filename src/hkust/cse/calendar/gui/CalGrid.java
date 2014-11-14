@@ -126,7 +126,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		currentCol = 0;
 		timeMachine = new TimeMachine();
 		timeMachine.addElpasedListener(this);
-		
+		//controller.setTimeMachine(timeMachine);
 
 		applist = new AppList();
 		applist.setParent(this);
@@ -193,21 +193,34 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		tableView = new JTable(dataModel) {
 			public TableCellRenderer getCellRenderer(int row, int col) {
 				String tem = (String) data[row][col];
-
+				CalCellRenderer renderer = null;
+				
 				if (tem.equals("") == false) {
 					try {
 						if (today.get(Calendar.YEAR) == currentY
 								&& today.get(today.MONTH) + 1 == currentM
 								&& today.get(today.DAY_OF_MONTH) == Integer
 										.parseInt(tem)) {
-							return new CalCellRenderer(today);
+							// this renderer is used to mark the current day as red color
+							renderer = new CalCellRenderer(today);
 						}
 					} catch (Throwable e) {
 						System.exit(1);
 					}
 
 				}
-				return new CalCellRenderer(null);
+				
+				// this renderer is used to mark all day or blank column except today
+				renderer = new CalCellRenderer(null);
+				
+				if(!tem.equals("")) {
+					if(controller.RetrieveAppts(new TimeSpan(
+							new Timestamp(currentY, currentM - 1, Integer.parseInt(tem), 0, 0, 0, 0),
+							new Timestamp(currentY, currentM - 1, Integer.parseInt(tem), 23, 59, 59, 0))).length > 0)
+						renderer.setBackground(Color.cyan);
+				}
+				
+				return renderer;
 			}
 		};
 
@@ -421,7 +434,12 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	}
 	
 	public void timeElapsed(TimeMachine sender) {
-		if(sender.IsRewind()) return;
+		if(sender.IsRewind()) {
+			//remove any event that are derived from schedule within the rewind time
+			//Appt[] pastAppts = controller.RetrieveAppts(mCurrUser, new TimeSpan(
+			
+			return;
+		}
 		
 		Timestamp curr = sender.getCurrentTime();
 		Appt[] appts = controller.RetrieveAppts(mCurrUser, new TimeSpan(
@@ -449,9 +467,11 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					
 					// only scheduled appt in the time slot, create an new appt here
 					if(pastAppts.length == 1) {
-						Appt pastAppt = (Appt)appt.clone();
-						pastAppt.setFrequency(Appt.SINGLE);
-						controller.ManageAppt(pastAppt, ApptStorageControllerImpl.NEW);
+						//uncomment this if remove future schedule apply
+						//Appt pastAppt = (Appt)appt.clone();
+						//pastAppt.setFrequency(Appt.SINGLE);
+						//pastAppt.setDerivedFromSchedule(true);
+						//controller.ManageAppt(pastAppt, ApptStorageControllerImpl.NEW);
 					}
 				}
 			}

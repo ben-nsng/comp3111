@@ -37,6 +37,8 @@ public class Appt implements Serializable, Cloneable {
 	
 	private Timestamp reminderTime;				// Time before the appointment to remind
 	
+	private boolean derivedFromSchedule;		// Is this event derived from schedule
+	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
 		mTimeSpan = null;
@@ -49,6 +51,7 @@ public class Appt implements Serializable, Cloneable {
 		joinApptID = -1;
 		frequency = SINGLE;
 		reminder = false;
+		derivedFromSchedule = false;
 		setReminderTime(0, 0);
 	}
 
@@ -231,6 +234,14 @@ public class Appt implements Serializable, Cloneable {
 	
 	public void setReminderTime(int h, int m){
 		reminderTime = new Timestamp(0, 0, 0, h, m, 0, 0);
+	}
+	
+	public void setDerivedFromSchedule(boolean b) {
+		derivedFromSchedule = b;
+	}
+	
+	public boolean getDerivedFromSchedule() {
+		return derivedFromSchedule;
 	}
 	
 	public Object clone() {

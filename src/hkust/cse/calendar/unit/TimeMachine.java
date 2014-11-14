@@ -60,6 +60,12 @@ public class TimeMachine implements ActionListener {
 		this.isStart = true;
 	}
 	
+	public void reset() {
+		this.startTime = new Timestamp(0);
+		this.currentTime = startTime;
+		this.timeDelay = 1000;
+	}
+	
 	public void resume() {
 		this.start();
 	}
@@ -92,7 +98,7 @@ public class TimeMachine implements ActionListener {
 	}
 	
 	public String toString() {
-		return String.format("%04d-%02d-%02d %02d:%02d:%02d", this.currentTime.getYear() + 1900, this.currentTime.getMonth(), this.currentTime.getDate(), this.currentTime.getHours(), this.currentTime.getMinutes(), this.currentTime.getSeconds());
+		return String.format("%04d-%02d-%02d %02d:%02d:%02d", this.currentTime.getYear() + 1900, this.currentTime.getMonth() + 1, this.currentTime.getDate(), this.currentTime.getHours(), this.currentTime.getMinutes(), this.currentTime.getSeconds());
 	}
 	
 	public Timestamp getCurrentTime() {
