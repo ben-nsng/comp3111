@@ -96,7 +96,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			"President's Day (US)\n",
 			"",
 			"Ching Ming Festival\nGood Friday\nThe day following Good Friday\nEaster Monday\n",
-			"Labour Day\nThe Buddhaâ€™s Birthday\nTuen Ng Festival\n",
+			"Labour Day\nThe Buddhaþý™s Birthday\nTuen Ng Festival\n",
 			"",
 			"Hong Kong Special Administrative Region Establishment Day\n",
 			"Civic Holiday(CAN)\n",
@@ -354,6 +354,10 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//tableView.setModel(t);
 					//tableView.repaint();
 				}
+				else if(e.getActionCommand().equals("Create Group Event")) {
+					GroupEventDialog g = new GroupEventDialog(controller);
+					g.show();
+				}
 
 			}
 		};
@@ -420,6 +424,10 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			});
 
 		Appmenu.add(mi); 
+		
+		mi = new JMenuItem("Create Group Event");
+		mi.addActionListener(listener);
+		Appmenu.add(mi);
 		
 		return menuBar;
 	}
@@ -698,6 +706,12 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!
+		//AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
+		//a.show();
+		//AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
+		//b.show();
+		AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
+		c.show();
 	}
 
 }

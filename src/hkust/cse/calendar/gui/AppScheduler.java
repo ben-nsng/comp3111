@@ -90,9 +90,9 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JSplitPane pDes;
 	JPanel detailPanel;
 
-//	private JTextField attendField;
-//	private JTextField rejectField;
-//	private JTextField waitingField;
+  	private JTextField attendField;
+  	private JTextField rejectField;
+  	private JTextField waitingField;
 	private int selectedApptId = -1;
 	
 	private void commonConstructor(String title, CalGrid cal) {
@@ -222,9 +222,9 @@ public class AppScheduler extends JDialog implements ActionListener,
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-//		inviteBut = new JButton("Invite");
-//		inviteBut.addActionListener(this);
-//		panel2.add(inviteBut);
+  		inviteBut = new JButton("Invite");
+  		inviteBut.addActionListener(this);
+  		panel2.add(inviteBut);
 		
 		saveBut = new JButton("Save");
 		saveBut.addActionListener(this);
@@ -528,5 +528,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 		eTimeM.setEditable(false);
 		titleField.setEditable(false);
 		detailArea.setEditable(false);
+		locField.setEnabled(false);
+		freField.setEnabled(false);
+		remField.setEnabled(false);
+		rTimeH.setEditable(false);
+		rTimeM.setEditable(false);
 	}
 }
