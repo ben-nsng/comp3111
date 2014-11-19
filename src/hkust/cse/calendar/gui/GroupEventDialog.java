@@ -28,7 +28,8 @@ public class GroupEventDialog extends JDialog{
 	 
 	private DefaultListModel listModel;
 
-	private JList list;
+	private JList userList;
+	private JList timeList;
 	private JScrollPane listScrollPane;
 	private JPanel apptPane;
 	private JPanel buttonPane;
@@ -57,13 +58,13 @@ public class GroupEventDialog extends JDialog{
 		
 		//new list model
 		listModel = new DefaultListModel();	
-		list = new JList(listModel);	
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
-		list.setSelectedIndex(0);	
-		list.setVisibleRowCount(5);		
+		userList = new JList(listModel);	
+		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+		userList.setSelectedIndex(0);	
+		userList.setVisibleRowCount(5);		
 		
 		
-		listScrollPane = new JScrollPane(list);	 
+		listScrollPane = new JScrollPane(userList);	 
 		
 		//select users
 		availableUsers = new JComboBox();
@@ -81,7 +82,7 @@ public class GroupEventDialog extends JDialog{
 		removeButton = new JButton("Remove");	 
 		removeButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				int index = list.getSelectedIndex();
+				int index = userList.getSelectedIndex();
 				if (index != -1){
 					listModel.removeElementAt(index);
 				}
@@ -126,11 +127,16 @@ public class GroupEventDialog extends JDialog{
 		apptPane.add(eTimeM);
 		
 		//available time panel
-		availableTimePane = new JScrollPane();
+		listModel = new DefaultListModel();	
+		timeList = new JList(listModel);	
+		timeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+		timeList.setSelectedIndex(0);	
+		timeList.setVisibleRowCount(5);
+		availableTimePane = new JScrollPane(timeList);
 		
 		//button panel
 		buttonPane = new JPanel();	
-		buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));	
+		buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
 		buttonPane.add(availableUsers); 
 		buttonPane.add(addButton);			 
 		buttonPane.add(removeButton); 
@@ -139,8 +145,12 @@ public class GroupEventDialog extends JDialog{
 		buttonPane.add(finishButton); 
 		buttonPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));	
 		add(apptPane, BorderLayout.NORTH);
-		add(listScrollPane, BorderLayout.CENTER);	 
-		add(availableTimePane, BorderLayout.WEST);
+		JPanel centerPanel = new JPanel();
+		centerPanel.add(listScrollPane);
+		centerPanel.add(availableTimePane);
+		add(centerPanel, BorderLayout.CENTER);
+		/*add(listScrollPane, BorderLayout.LINE_START);	 
+		add(availableTimePane, BorderLayout.LINE_END);*/
 		add(buttonPane, BorderLayout.PAGE_END); 
 		this.setVisible(true);
 		finishButton.setVisible(false);

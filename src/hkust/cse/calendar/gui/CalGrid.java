@@ -706,12 +706,19 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!
-		//AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
-		//a.show();
-		//AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
-		//b.show();
-		AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
-		c.show();
+		TimeSpan currentTime = new TimeSpan(timeMachine.getCurrentTime(), new Timestamp(2300, 1, 1, 12, 0, 0, 0));
+		Appt[] appts = controller.RetrieveAppts(mCurrUser, currentTime);
+		for(int i=0; i<appts.length; i++) {
+			//AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
+			//a.show();
+			//AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
+			//b.show();
+			if(appts[i].getAttendList().contains(mCurrUser.ID())) {
+				AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
+				c.updateSetApp(appts[i]);
+				c.show();
+			}
+		}
 	}
 
 }

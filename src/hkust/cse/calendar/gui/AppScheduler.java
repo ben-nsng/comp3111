@@ -457,6 +457,12 @@ public class AppScheduler extends JDialog implements ActionListener,
 					this.setVisible(false);
 				}
 			}
+			if(this.getTitle().equals("Join Appointment Invitation")) {
+				NewAppt.addAttendant(getCurrentUser());
+				NewAppt.getWaitingList().remove(getCurrentUser());
+				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
+				this.setVisible(false);
+			}
 		}
 	}
 
