@@ -706,13 +706,25 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!
+		
+		//get non past appointments that involve the current user
 		TimeSpan currentTime = new TimeSpan(timeMachine.getCurrentTime(), new Timestamp(2300, 1, 1, 12, 0, 0, 0));
 		Appt[] appts = controller.RetrieveAppts(mCurrUser, currentTime);
 		for(int i=0; i<appts.length; i++) {
-			//AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
-			//a.show();
-			//AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
-			//b.show();
+			//tell all participant that the appointment has changed
+			if(appts[i].getAllPeople().contains(mCurrUser.ID()) /* && content changed*/) {
+				AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
+				a.show();
+			}
+			
+			//tell initiator if someone responded to the appointment
+			if(appts[i].getinitiator().ID() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
+				AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
+				b.show();
+				//set the appointment back to no one responded
+			}
+			
+			//the current user is still in the waiting list of the appointment
 			if(appts[i].getAttendList().contains(mCurrUser.ID())) {
 				AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
 				c.updateSetApp(appts[i]);

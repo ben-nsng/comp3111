@@ -4,6 +4,7 @@ import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Location;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,7 +28,10 @@ public class GroupEventDialog extends JDialog{
 	private ApptStorageControllerImpl _controller;
 	 
 	private DefaultListModel listModel;
-
+	
+	private JLabel sUser;
+	private JLabel aUser;
+	private JLabel aTime;
 	private JList userList;
 	private JList timeList;
 	private JScrollPane listScrollPane;
@@ -49,23 +53,24 @@ public class GroupEventDialog extends JDialog{
 	private JTextField eTimeH;
 	private JTextField eTimeM;
 	private JScrollPane availableTimePane;
+	private JPanel centerPanel = new JPanel();
+	private FlowLayout flow = new FlowLayout();
 
 	public GroupEventDialog(ApptStorageControllerImpl controller) {
 		_controller = controller;
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
-		this.setSize(800, 500);
+		this.setSize(500, 300);
 		
 		//new list model
 		listModel = new DefaultListModel();	
 		userList = new JList(listModel);	
 		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
 		userList.setSelectedIndex(0);	
-		userList.setVisibleRowCount(5);		
+		userList.setVisibleRowCount(10);		
 		
 		
 		listScrollPane = new JScrollPane(userList);	 
-		
 		//select users
 		availableUsers = new JComboBox();
 		
@@ -98,13 +103,26 @@ public class GroupEventDialog extends JDialog{
 				finishButton.setVisible(true);
 				listScrollPane.setVisible(false);
 				availableUsers.setVisible(false);
-				apptPane.setVisible(true);
 				availableTimePane.setVisible(true);
+				sUser.setVisible(false);
+				dateL.setVisible(true);
+				yearF.setVisible(true);
+				monthF.setVisible(true);
+				dayF.setVisible(true);
+				sTimeL.setVisible(true);
+				sTimeH.setVisible(true);
+				sTimeM.setVisible(true);
+				eTimeL.setVisible(true);
+				eTimeH.setVisible(true);
+				eTimeM.setVisible(true);
+				aTime.setVisible(true);
+				aUser.setVisible(false);
 			}
 		});
 		
 		//appointment panel
 		apptPane = new JPanel();
+		sUser = new JLabel("Selected Users : ");
 		dateL = new JLabel("Appointment Date");
 		yearF = new JTextField(6);
 		monthF = new JTextField(4);
@@ -115,6 +133,7 @@ public class GroupEventDialog extends JDialog{
 		eTimeL = new JLabel("End Time");
 		eTimeH = new JTextField(4);
 		eTimeM = new JTextField(4);
+		apptPane.add(sUser);
 		apptPane.add(dateL);
 		apptPane.add(yearF);
 		apptPane.add(monthF);
@@ -131,12 +150,14 @@ public class GroupEventDialog extends JDialog{
 		timeList = new JList(listModel);	
 		timeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
 		timeList.setSelectedIndex(0);	
-		timeList.setVisibleRowCount(5);
+		timeList.setVisibleRowCount(10);
 		availableTimePane = new JScrollPane(timeList);
 		
 		//button panel
 		buttonPane = new JPanel();	
 		buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+		aUser = new JLabel("Available Users : ");
+		buttonPane.add(aUser); 
 		buttonPane.add(availableUsers); 
 		buttonPane.add(addButton);			 
 		buttonPane.add(removeButton); 
@@ -145,16 +166,28 @@ public class GroupEventDialog extends JDialog{
 		buttonPane.add(finishButton); 
 		buttonPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));	
 		add(apptPane, BorderLayout.NORTH);
-		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(flow);
+		aTime = new JLabel("Available Time : ");
+		centerPanel.add(aTime);
 		centerPanel.add(listScrollPane);
 		centerPanel.add(availableTimePane);
 		add(centerPanel, BorderLayout.CENTER);
-		/*add(listScrollPane, BorderLayout.LINE_START);	 
-		add(availableTimePane, BorderLayout.LINE_END);*/
 		add(buttonPane, BorderLayout.PAGE_END); 
 		this.setVisible(true);
+		this.setTitle("Create Group Event");
+		//hide components of next page
+		dateL.setVisible(false);
+		yearF.setVisible(false);
+		monthF.setVisible(false);
+		dayF.setVisible(false);
+		sTimeL.setVisible(false);
+		sTimeH.setVisible(false);
+		sTimeM.setVisible(false);
+		eTimeL.setVisible(false);
+		eTimeH.setVisible(false);
+		eTimeM.setVisible(false);
 		finishButton.setVisible(false);
-		apptPane.setVisible(false);
 		availableTimePane.setVisible(false);
+		aTime.setVisible(false);
 	}
 }
