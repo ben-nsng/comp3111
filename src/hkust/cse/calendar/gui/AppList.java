@@ -432,6 +432,10 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"Cannot Delete Past Events !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
+			else if(apptTitle.isJoint() && apptTitle.getinitiator().ID()!=parent.mCurrUser.ID())
+				JOptionPane.showMessageDialog(this,
+						"Only The Inintiator Can Delete Group Event !", "Delete",
+						JOptionPane.ERROR_MESSAGE);
 			else {
 					parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
 					parent.getAppList().clear();
@@ -446,7 +450,7 @@ public class AppList extends JPanel implements ActionListener {
 		//check whether the start time of selected appointment is before the current time
 		if (apptTitle == null) {
 			JOptionPane.showMessageDialog(this,
-					"No Appointment To Modify !", "Delete",
+					"No Appointment To Modify !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -459,11 +463,13 @@ public class AppList extends JPanel implements ActionListener {
 					"Only The Ininitator Can Modify The Group Event !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
 		else {
-			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
-
-			setAppDial.updateSetApp(apptTitle);
-			setAppDial.show();
-			setAppDial.setResizable(false);
+			if(!apptTitle.isJoint()) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
+	
+				setAppDial.updateSetApp(apptTitle);
+				setAppDial.show();
+				setAppDial.setResizable(false);
+			}
 		}
 
 	}

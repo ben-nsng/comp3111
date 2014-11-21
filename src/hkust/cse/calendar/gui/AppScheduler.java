@@ -86,6 +86,9 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JCheckBox remField;
 	private JTextField rTimeH;
 	private JTextField rTimeM;
+	private JCheckBox gEvent;
+	private JButton addUser;
+	private JButton availableTime;
 	
 	private JSplitPane pDes;
 	JPanel detailPanel;
@@ -199,6 +202,28 @@ public class AppScheduler extends JDialog implements ActionListener,
 		  			}
 		        }
 		      });
+		gEvent = new JCheckBox("Group Event");
+		titleAndTextPanel.add(gEvent);
+		addUser = new JButton("Add Participants");
+		titleAndTextPanel.add(addUser);
+		addUser.addActionListener(this);
+		availableTime = new JButton("Available Time List");
+		titleAndTextPanel.add(availableTime);
+		addUser.setEnabled(false);
+		availableTime.setEnabled(false);
+		availableTime.addActionListener(this);
+		gEvent.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  if(gEvent.isSelected()){
+		  			addUser.setEnabled(true);
+		  			availableTime.setEnabled(true);
+		  			}
+		  		else{
+		  			addUser.setEnabled(false);
+		  			availableTime.setEnabled(false);
+		  			}
+		        }
+		      });
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
@@ -288,6 +313,11 @@ public class AppScheduler extends JDialog implements ActionListener,
 				this.setVisible(false);
 				dispose();
 			}
+		} else if (e.getSource() == addUser){
+			//show dialog to add/remove participant
+			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
+		} else if (e.getSource() == availableTime){
+			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller);
 		}
 		parent.getAppList().clear();
 		parent.getAppList().setTodayAppt(parent.GetTodayAppt());
@@ -539,5 +569,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		remField.setEnabled(false);
 		rTimeH.setEditable(false);
 		rTimeM.setEditable(false);
+		gEvent.setEnabled(false);
+		addUser.setEnabled(false);
+		availableTime.setEnabled(false);
 	}
 }

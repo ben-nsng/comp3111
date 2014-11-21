@@ -1,12 +1,15 @@
 package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -55,12 +58,16 @@ public class GroupEventDialog extends JDialog{
 	private JScrollPane availableTimePane;
 	private JPanel centerPanel = new JPanel();
 	private FlowLayout flow = new FlowLayout();
+	private JTextField titleField;
+	private JTextField detailArea;
+	private int nextCount = 0;
+	
 
 	public GroupEventDialog(ApptStorageControllerImpl controller) {
 		_controller = controller;
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
-		this.setSize(500, 300);
+		this.setSize(700, 300);
 		
 		//new list model
 		listModel = new DefaultListModel();	
@@ -97,26 +104,46 @@ public class GroupEventDialog extends JDialog{
 		finishButton = new JButton("Finish");
 		nextButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				addButton.setVisible(false);
-				removeButton.setVisible(false);
-				nextButton.setVisible(false);
-				finishButton.setVisible(true);
-				listScrollPane.setVisible(false);
-				availableUsers.setVisible(false);
-				availableTimePane.setVisible(true);
-				sUser.setVisible(false);
-				dateL.setVisible(true);
-				yearF.setVisible(true);
-				monthF.setVisible(true);
-				dayF.setVisible(true);
-				sTimeL.setVisible(true);
-				sTimeH.setVisible(true);
-				sTimeM.setVisible(true);
-				eTimeL.setVisible(true);
-				eTimeH.setVisible(true);
-				eTimeM.setVisible(true);
-				aTime.setVisible(true);
-				aUser.setVisible(false);
+				System.out.println("nextCount = "+nextCount);
+				if(nextCount == 0) {
+					addButton.setVisible(false);
+					removeButton.setVisible(false);
+					//nextButton.setVisible(false);
+					//finishButton.setVisible(true);
+					listScrollPane.setVisible(false);
+					availableUsers.setVisible(false);
+					availableTimePane.setVisible(true);
+					sUser.setVisible(false);
+					dateL.setVisible(true);
+					yearF.setVisible(true);
+					monthF.setVisible(true);
+					dayF.setVisible(true);
+					sTimeL.setVisible(true);
+					sTimeH.setVisible(true);
+					sTimeM.setVisible(true);
+					eTimeL.setVisible(true);
+					eTimeH.setVisible(true);
+					eTimeM.setVisible(true);
+					aTime.setVisible(true);
+					aUser.setVisible(false);
+					nextCount = 1;
+				}
+				else if(nextCount == 1) {
+					nextButton.setVisible(false);
+					finishButton.setVisible(true);
+					availableTimePane.setVisible(false);
+					dateL.setVisible(false);
+					yearF.setVisible(false);
+					monthF.setVisible(false);
+					dayF.setVisible(false);
+					sTimeL.setVisible(false);
+					sTimeH.setVisible(false);
+					sTimeM.setVisible(false);
+					eTimeL.setVisible(false);
+					eTimeH.setVisible(false);
+					eTimeM.setVisible(false);
+					aTime.setVisible(false);
+				}
 			}
 		});
 		
@@ -189,5 +216,22 @@ public class GroupEventDialog extends JDialog{
 		finishButton.setVisible(false);
 		availableTimePane.setVisible(false);
 		aTime.setVisible(false);
+	}
+
+	public void updateSetApp(Appt appt) {
+		// Fix Me!
+		Calendar sCal = Calendar.getInstance();
+		sCal.setTime(new Date(appt.TimeSpan().StartTime().getTime()));
+		Calendar eCal = Calendar.getInstance();
+		eCal.setTime(new Date(appt.TimeSpan().EndTime().getTime()));
+		yearF.setText(Integer.toString(sCal.get(Calendar.YEAR)));
+		monthF.setText(Integer.toString(sCal.get(Calendar.MONTH)+1));
+		dayF.setText(Integer.toString(sCal.get(Calendar.DAY_OF_MONTH)));
+		sTimeH.setText(Integer.toString(sCal.get(Calendar.HOUR_OF_DAY)));
+		sTimeM.setText(Integer.toString(sCal.get(Calendar.MINUTE)));
+		eTimeH.setText(Integer.toString(eCal.get(Calendar.HOUR_OF_DAY)));
+		eTimeM.setText(Integer.toString(eCal.get(Calendar.MINUTE)));
+		titleField.setText(appt.getTitle());
+		detailArea.setText(appt.getInfo());
 	}
 }
