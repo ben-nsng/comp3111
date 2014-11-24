@@ -7,6 +7,8 @@ import hkust.cse.calendar.unit.Location;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -59,6 +61,7 @@ public class AddUserDialog extends JFrame{
 		centerPanel.add(removeBut);
 		centerPanel.add(confirmBut);
 		add(centerPanel, BorderLayout.CENTER);
+		clearAllList();
 		this.setSize(300, 300);
 		this.show();
 	}
@@ -67,6 +70,7 @@ public class AddUserDialog extends JFrame{
 		currAppt.getWaitingList().clear();
 		currAppt.getRejectList().clear();
 		currAppt.getAttendList().clear();
+		currAppt.addAttendant(_controller.getDefaultUser().ID());
 	}
 	
 	//select user and place them into waiting list

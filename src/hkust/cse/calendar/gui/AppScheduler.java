@@ -217,13 +217,16 @@ public class AppScheduler extends JDialog implements ActionListener,
 		    	  if(gEvent.isSelected()){
 		    		  	isJoint = true;
 		    		  	inviteBut.setVisible(true);
-			  			addUser.setEnabled(true);
-			  			availableTime.setEnabled(true);
+			  			//addUser.setEnabled(true);
+		    		  	if(NewAppt.getWaitingList().size() !=0)
+		    		  		availableTime.setEnabled(true);
+		    		  	else
+		    		  		availableTime.setEnabled(false);
 		  			}
 		  		else{
 		  				isJoint = false;
 		  				inviteBut.setVisible(false);
-			  			addUser.setEnabled(false);
+			  			//addUser.setEnabled(false);
 			  			availableTime.setEnabled(false);
 		  			}
 		        }
@@ -441,6 +444,15 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setReminder(remField.isSelected());
 		NewAppt.setJoint(isJoint);
+		if(isJoint == false)
+			NewAppt.setScheduled(true);
+		else {
+			//joint appointment is scheduled only when no one is in waiting and reject list
+			if(NewAppt.getWaitingList().size() == 0 && NewAppt.getRejectList().size() == 0)
+				NewAppt.setScheduled(true);
+			else
+				NewAppt.setScheduled(false);
+		}
 		if(remField.isSelected()) {
 			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
 				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
@@ -532,6 +544,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		rTimeH.setText(Integer.toString(appt.getReminderTime().getHours()));
 		rTimeM.setText(Integer.toString(appt.getReminderTime().getMinutes()));
 		NewAppt=appt;
+		isJoint = appt.isJoint();
+		
 	}
 
 	public void componentHidden(ComponentEvent e) {
