@@ -39,8 +39,6 @@ public class Appt implements Serializable, Cloneable {
 	
 	private boolean derivedFromSchedule;		// Is this event derived from schedule
 	
-	private User initiator;
-	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
 		mTimeSpan = null;
@@ -254,13 +252,5 @@ public class Appt implements Serializable, Cloneable {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public void setInitiator(User u) {
-		initiator = u;
-	}
-	
-	public User getinitiator() {
-		return initiator;
 	}
 }

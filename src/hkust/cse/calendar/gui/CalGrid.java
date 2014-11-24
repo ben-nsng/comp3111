@@ -708,7 +708,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		// Fix Me!
 		
 		//get non past appointments that involve the current user
-		TimeSpan currentTime = new TimeSpan(timeMachine.getCurrentTime(), new Timestamp(2300, 1, 1, 12, 0, 0, 0));
+		TimeSpan currentTime = new TimeSpan(timeMachine.getCurrentTime(), new Timestamp(2300, 9, 9, 12, 0, 0, 0));
 		Appt[] appts = controller.RetrieveAppts(mCurrUser, currentTime);
 		for(int i=0; i<appts.length; i++) {
 			//tell all participant that the appointment has changed
@@ -718,7 +718,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			}
 			
 			//tell initiator if someone responded to the appointment
-			if(appts[i].getinitiator().ID() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
+			if(appts[i].getAttendList().getFirst() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
 				AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
 				b.show();
 				//set the appointment back to no one responded
