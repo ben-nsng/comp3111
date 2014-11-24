@@ -7,6 +7,8 @@ public class User implements Serializable {
 	private String mPassword;				// User password
 	private String mID;						// User id
 	private String mEmail;
+	private String mFirstName;
+	private String mLastName;
 	protected Boolean isAdmin;
 	
 	// Getter of the user id
@@ -19,6 +21,24 @@ public class User implements Serializable {
 		mID = id;
 		mPassword = pass;
 		isAdmin = false;
+		mFirstName = "";
+		mLastName = "";
+	}
+
+	public String getFirstName() {
+		return mFirstName;
+	}
+
+	public void setFirstName(String mFirstName) {
+		this.mFirstName = mFirstName;
+	}
+
+	public String getLastName() {
+		return mLastName;
+	}
+
+	public void setLastName(String mLastName) {
+		this.mLastName = mLastName;
 	}
 
 	// Another getter of the user id
@@ -37,12 +57,12 @@ public class User implements Serializable {
 	}
 	
 	// Getter of the email
-	public String Email() {
+	public String getEmail() {
 		return mEmail;
 	}
 	
 	// Setter of user email
-	public void Email(String email) {
+	public void setEmail(String email) {
 		mEmail = email;
 	}
 	

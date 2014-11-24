@@ -355,7 +355,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//tableView.repaint();
 				}
 				else if(e.getActionCommand().equals("Settings")) {
-					UserSettings a = new UserSettings();
+					UserSettings a = new UserSettings(mCurrUser);
 					a.setLocationRelativeTo(null);
 					a.show();
 				}

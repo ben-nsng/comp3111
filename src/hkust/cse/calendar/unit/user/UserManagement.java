@@ -1,8 +1,9 @@
 package hkust.cse.calendar.unit.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserManagement {
+public class UserManagement implements Serializable {
 
 	public static UserManagement getInstance() {
 		if(um == null) {
@@ -94,14 +95,30 @@ public class UserManagement {
 		return this.lastAuthUser;
 	}
 	
+	public Boolean removeUser(User tobeRemoved, User submitter) {
+		if(submitter.IsAdmin()) {
+			this.users.remove(tobeRemoved);
+			return true;
+		}
+		return false;
+	}
+	
 	public ArrayList<String> getAllUserIDs() {
 		ArrayList<String> lists = new ArrayList<String>();
 		
 		for(User user : this.users) {
-			lists.add(user.ID());
+			if(!user.IsAdmin())
+				lists.add(user.ID());
 		}
 		
 		return lists;
+	}
+	
+	public User getUser(String ID) {
+		for(User user : this.users) {
+			if(user.ID().equals(ID)) return user;
+		}
+		return null;
 	}
 	
 }

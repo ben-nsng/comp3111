@@ -1,7 +1,9 @@
 package hkust.cse.calendar.unit.user;
 
+import java.io.Serializable;
 
-public class RegularUser extends User {
+
+public class RegularUser extends User implements Serializable {
 
 	public RegularUser(String id, String pass) {
 		super(id, pass);
