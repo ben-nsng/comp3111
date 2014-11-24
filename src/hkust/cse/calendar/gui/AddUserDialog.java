@@ -3,12 +3,16 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -38,6 +42,9 @@ public class AddUserDialog extends JFrame{
 	private JButton addBut;
 	private JButton removeBut;
 	private JButton confirmBut;
+	private UserManagement um;
+	private ArrayList<String> arrayList;
+	private ArrayList<String> selectedUsers;
 	
 	public AddUserDialog(Appt a, ApptStorageControllerImpl controller) {
 		setLayout(new BorderLayout());
@@ -51,8 +58,38 @@ public class AddUserDialog extends JFrame{
 		aUserL = new JLabel("Available Users : ");
 		aUserCB = new JComboBox();
 		addBut = new JButton("Add");
+		addBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = aUserCB.getSelectedIndex();
+		        model.addElement(aUserCB.getSelectedItem());
+		        //selectedUsers.add(aUserCB.getSelectedItem());
+		        aUserCB.removeItemAt(index);
+		      }
+		});
 		removeBut = new JButton("Remove");
+		removeBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = list.getSelectedIndex();
+				if (index != -1){
+					aUserCB.addItem(model.get(index));
+					model.removeElementAt(index);
+					//selectedUsers.remove(index);
+				}
+		      }
+		});
 		confirmBut = new JButton("Confirm");
+		confirmBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//currAppt.setWaitingList(new LinkedList<String>(selectedUsers));
+				
+				//not yet completed so add all user to waiting list for testing
+				currAppt.setWaitingList(new LinkedList<String>(arrayList));
+				
+				setVisible(false);
+				dispose();
+		      }
+		});
+		um = UserManagement.getInstance();
 		centerPanel.add(sUserL);
 		centerPanel.add(sPane);
 		centerPanel.add(aUserL);
@@ -64,6 +101,10 @@ public class AddUserDialog extends JFrame{
 		clearAllList();
 		this.setSize(300, 300);
 		this.show();
+		arrayList = um.getAllUserIDs();
+		for(int i=0; i<arrayList.size(); i++) {
+			aUserCB.addItem(arrayList.get(i));
+		}
 	}
 	
 	public void clearAllList() {
@@ -74,4 +115,5 @@ public class AddUserDialog extends JFrame{
 	}
 	
 	//select user and place them into waiting list
+	
 }
