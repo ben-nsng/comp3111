@@ -205,7 +205,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		gEvent = new JCheckBox("Group Event");
 		titleAndTextPanel.add(gEvent);
 		addUser = new JButton("Add Participants");
-		titleAndTextPanel.add(addUser);
+		//titleAndTextPanel.add(addUser);
 		addUser.addActionListener(this);
 		availableTime = new JButton("Available Time List");
 		titleAndTextPanel.add(availableTime);
@@ -215,12 +215,16 @@ public class AppScheduler extends JDialog implements ActionListener,
 		gEvent.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
 		    	  if(gEvent.isSelected()){
-		  			addUser.setEnabled(true);
-		  			availableTime.setEnabled(true);
+		    		  	isJoint = true;
+		    		  	inviteBut.setVisible(true);
+			  			addUser.setEnabled(true);
+			  			availableTime.setEnabled(true);
 		  			}
 		  		else{
-		  			addUser.setEnabled(false);
-		  			availableTime.setEnabled(false);
+		  				isJoint = false;
+		  				inviteBut.setVisible(false);
+			  			addUser.setEnabled(false);
+			  			availableTime.setEnabled(false);
 		  			}
 		        }
 		      });
@@ -250,6 +254,7 @@ public class AppScheduler extends JDialog implements ActionListener,
   		inviteBut = new JButton("Invite");
   		inviteBut.addActionListener(this);
   		panel2.add(inviteBut);
+  		inviteBut.setVisible(false);
 		
 		saveBut = new JButton("Save");
 		saveBut.addActionListener(this);
@@ -313,7 +318,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 				this.setVisible(false);
 				dispose();
 			}
-		} else if (e.getSource() == addUser){
+		} else if (e.getSource() == inviteBut){
 			//show dialog to add/remove participant
 			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
 		} else if (e.getSource() == availableTime){
@@ -435,6 +440,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setReminder(remField.isSelected());
+		NewAppt.setJoint(isJoint);
 		if(remField.isSelected()) {
 			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
 				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
