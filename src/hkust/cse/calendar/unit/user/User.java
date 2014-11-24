@@ -1,4 +1,4 @@
-package hkust.cse.calendar.unit;
+package hkust.cse.calendar.unit.user;
 
 import java.io.Serializable;
 
@@ -6,7 +6,9 @@ public class User implements Serializable {
 
 	private String mPassword;				// User password
 	private String mID;						// User id
-
+	private String mEmail;
+	private Boolean isAdmin;
+	
 	// Getter of the user id
 	public String ID() {		
 		return mID;
@@ -16,6 +18,7 @@ public class User implements Serializable {
 	public User(String id, String pass) {
 		mID = id;
 		mPassword = pass;
+		isAdmin = false;
 	}
 
 	// Another getter of the user id
@@ -31,5 +34,15 @@ public class User implements Serializable {
 	// Setter of the user password
 	public void Password(String pass) {
 		mPassword = pass;
+	}
+	
+	// Getter of the email
+	public String Email() {
+		return mEmail;
+	}
+	
+	// Setter of user email
+	public void Email(String email) {
+		mEmail = email;
 	}
 }
