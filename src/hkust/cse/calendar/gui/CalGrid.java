@@ -354,6 +354,11 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//tableView.setModel(t);
 					//tableView.repaint();
 				}
+				else if(e.getActionCommand().equals("Settings")) {
+					UserSettings a = new UserSettings();
+					a.setLocationRelativeTo(null);
+					a.show();
+				}
 
 			}
 		};
@@ -366,6 +371,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		Access.getAccessibleContext().setAccessibleDescription(
 				"Account Access Management");
 
+		mi = (JMenuItem) Access.add(new JMenuItem("Settings"));
+		mi.addActionListener(listener);
+		
 		mi = (JMenuItem) Access.add(new JMenuItem("Logout"));	//adding a Logout menu button for user to logout
 		mi.setMnemonic('L');
 		mi.getAccessibleContext().setAccessibleDescription("For user logout");

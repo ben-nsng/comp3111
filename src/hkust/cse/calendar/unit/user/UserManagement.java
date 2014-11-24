@@ -94,4 +94,14 @@ public class UserManagement {
 		return this.lastAuthUser;
 	}
 	
+	public ArrayList<String> getAllUserIDs() {
+		ArrayList<String> lists = new ArrayList<String>();
+		
+		for(User user : this.users) {
+			lists.add(user.ID());
+		}
+		
+		return lists;
+	}
+	
 }

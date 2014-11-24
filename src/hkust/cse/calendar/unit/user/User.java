@@ -7,7 +7,7 @@ public class User implements Serializable {
 	private String mPassword;				// User password
 	private String mID;						// User id
 	private String mEmail;
-	private Boolean isAdmin;
+	protected Boolean isAdmin;
 	
 	// Getter of the user id
 	public String ID() {		
@@ -44,5 +44,9 @@ public class User implements Serializable {
 	// Setter of user email
 	public void Email(String email) {
 		mEmail = email;
+	}
+	
+	public Boolean IsAdmin() {
+		return this.isAdmin;
 	}
 }
