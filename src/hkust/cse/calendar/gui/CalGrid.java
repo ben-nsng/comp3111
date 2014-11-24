@@ -6,7 +6,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
 import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
@@ -96,7 +96,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			"President's Day (US)\n",
 			"",
 			"Ching Ming Festival\nGood Friday\nThe day following Good Friday\nEaster Monday\n",
-			"Labour Day\nThe Buddhaþý™s Birthday\nTuen Ng Festival\n",
+			"Labour Day\nThe Buddha¡¦s Birthday\nTuen Ng Festival\n",
 			"",
 			"Hong Kong Special Administrative Region Establishment Day\n",
 			"Civic Holiday(CAN)\n",
@@ -354,6 +354,11 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//tableView.setModel(t);
 					//tableView.repaint();
 				}
+				else if(e.getActionCommand().equals("Settings")) {
+					UserSettings a = new UserSettings();
+					a.setLocationRelativeTo(null);
+					a.show();
+				}
 				else if(e.getActionCommand().equals("Create Group Event")) {
 					GroupEventDialog g = new GroupEventDialog(controller);
 					g.show();
@@ -370,6 +375,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		Access.getAccessibleContext().setAccessibleDescription(
 				"Account Access Management");
 
+		mi = (JMenuItem) Access.add(new JMenuItem("Settings"));
+		mi.addActionListener(listener);
+		
 		mi = (JMenuItem) Access.add(new JMenuItem("Logout"));	//adding a Logout menu button for user to logout
 		mi.setMnemonic('L');
 		mi.getAccessibleContext().setAccessibleDescription("For user logout");
