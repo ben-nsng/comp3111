@@ -218,10 +218,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 		    		  	isJoint = true;
 		    		  	inviteBut.setVisible(true);
 			  			//addUser.setEnabled(true);
-		    		  	if(NewAppt.getWaitingList().size() !=0)
-		    		  		availableTime.setEnabled(true);
-		    		  	else
-		    		  		availableTime.setEnabled(false);
+		    		  	//if(NewAppt.getWaitingList().size() !=0)
+		    		  	//	availableTime.setEnabled(true);
+		    		  	//else
+		    		  	//	availableTime.setEnabled(false);
 		  			}
 		  		else{
 		  				isJoint = false;
@@ -493,19 +493,34 @@ public class AppScheduler extends JDialog implements ActionListener,
 		}
 		if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 			if(this.getTitle().equals("New")) {
-				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-				this.setVisible(false);
+				if(NewAppt.isJoint() && NewAppt.getWaitingList().size()==0)
+					JOptionPane.showMessageDialog(this, "Please Select Participants For Group Event !",
+							"Input Error", JOptionPane.ERROR_MESSAGE);
+				else {
+					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+					this.setVisible(false);
+				}
 			}
 			if(this.getTitle().equals("Modify")) {
 				if(NewAppt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 					JOptionPane.showMessageDialog(this, "Cannot Modify Past Events !",
 							"Modify", JOptionPane.ERROR_MESSAGE);
 				else {
+					//add all people in attend list to waiting list except initiator
+					for(int i = 1; i<NewAppt.getAttendList().size(); i++) {
+						NewAppt.getWaitingList().add(NewAppt.getAttendList().get(i));
+						NewAppt.getAttendList().remove(i);
+					}
+					//add all people in reject list to waiting list
+					for(int i = 0; i<NewAppt.getRejectList().size(); i++) {
+						NewAppt.getWaitingList().add(NewAppt.getRejectList().get(i));
+						NewAppt.getRejectList().remove(i);
+					}
 					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
 					this.setVisible(false);
 				}
 			}
-			if(this.getTitle().equals("Join Appointment Invitation")) {
+			if(this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join Appointment Invitation")) {
 				NewAppt.addAttendant(getCurrentUser());
 				NewAppt.getWaitingList().remove(getCurrentUser());
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
@@ -545,7 +560,13 @@ public class AppScheduler extends JDialog implements ActionListener,
 		rTimeM.setText(Integer.toString(appt.getReminderTime().getMinutes()));
 		NewAppt=appt;
 		isJoint = appt.isJoint();
-		
+		gEvent.setSelected(isJoint);
+		if(appt.getID()!=0) {
+			//cannot add/remove participant in modify
+			gEvent.setEnabled(false);
+			availableTime.setEnabled(true);
+			inviteBut.setVisible(false);
+		}
 	}
 
 	public void componentHidden(ComponentEvent e) {

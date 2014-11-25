@@ -733,7 +733,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			}
 			
 			//the current user is still in the waiting list of the appointment
-			if(appts[i].getAttendList().contains(mCurrUser.ID())) {
+			if(appts[i].getWaitingList().contains(mCurrUser.ID())) {
 				AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
 				c.updateSetApp(appts[i]);
 				c.show();

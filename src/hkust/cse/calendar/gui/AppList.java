@@ -463,13 +463,13 @@ public class AppList extends JPanel implements ActionListener {
 					"Only The Ininitator Can Modify The Group Event !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
 		else {
-			if(!apptTitle.isJoint()) {
+			//if(!apptTitle.isJoint()) {
 				AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
 	
 				setAppDial.updateSetApp(apptTitle);
 				setAppDial.show();
 				setAppDial.setResizable(false);
-			}
+			//}
 		}
 
 	}

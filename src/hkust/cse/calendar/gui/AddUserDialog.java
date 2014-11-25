@@ -48,6 +48,7 @@ public class AddUserDialog extends JFrame{
 	
 	public AddUserDialog(Appt a, ApptStorageControllerImpl controller) {
 		setLayout(new BorderLayout());
+		selectedUsers = new ArrayList();
 		currAppt = a;
 		_controller = controller;
 		centerPanel = new JPanel();
@@ -62,7 +63,7 @@ public class AddUserDialog extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				int index = aUserCB.getSelectedIndex();
 		        model.addElement(aUserCB.getSelectedItem());
-		        //selectedUsers.add(aUserCB.getSelectedItem());
+		        selectedUsers.add((String) aUserCB.getSelectedItem());
 		        aUserCB.removeItemAt(index);
 		      }
 		});
@@ -73,17 +74,17 @@ public class AddUserDialog extends JFrame{
 				if (index != -1){
 					aUserCB.addItem(model.get(index));
 					model.removeElementAt(index);
-					//selectedUsers.remove(index);
+					selectedUsers.remove(index);
 				}
 		      }
 		});
 		confirmBut = new JButton("Confirm");
 		confirmBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//currAppt.setWaitingList(new LinkedList<String>(selectedUsers));
+				currAppt.setWaitingList(new LinkedList<String>(selectedUsers));
 				
 				//not yet completed so add all user to waiting list for testing
-				currAppt.setWaitingList(new LinkedList<String>(arrayList));
+				//currAppt.setWaitingList(new LinkedList<String>(arrayList));
 				
 				setVisible(false);
 				dispose();
