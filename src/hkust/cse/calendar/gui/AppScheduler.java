@@ -444,6 +444,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setReminder(remField.isSelected());
 		NewAppt.setJoint(isJoint);
+		NewAppt.setLocation((Location)locField.getSelectedItem());
 		if(isJoint == false)
 			NewAppt.setScheduled(true);
 		else {
@@ -563,6 +564,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		gEvent.setSelected(isJoint);
 		if(appt.getID()!=0) {
 			//cannot add/remove participant in modify
+			locField.setSelectedItem(NewAppt.getLocation());
 			gEvent.setEnabled(false);
 			availableTime.setEnabled(true);
 			inviteBut.setVisible(false);
