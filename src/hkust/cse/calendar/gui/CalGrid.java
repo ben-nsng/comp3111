@@ -429,6 +429,29 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		Appmenu.add(mi); 
 		
+		if(this.controller.getDefaultUser().IsAdmin()) {
+			
+			JMenu Admin = (JMenu) menuBar.add(new JMenu("Administration"));
+			mi = (JMenuItem) Admin.add(new JMenuItem("Inspect User"));
+			mi.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0){
+					UserList list = new UserList(CalGrid.this);
+					list.show();
+				}
+			
+				});
+			
+			mi = (JMenuItem) Admin.add(new JMenuItem("Pending Request"));
+			mi.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0){
+					
+					
+				}
+			
+				});
+			
+		}
+		
 		return menuBar;
 	}
 

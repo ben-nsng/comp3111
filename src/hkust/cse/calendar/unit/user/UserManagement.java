@@ -29,10 +29,11 @@ public class UserManagement implements Serializable {
 	private String lastError;
 	private User lastAuthUser;
 	
-	public UserManagement() {
+	private UserManagement() {
 		this.users = new ArrayList<User>();
 		this.lastError = "";
 	}
+	
 	
 	private Boolean AddUser(User user) {
 		if(!DuplicateID(user.ID())) {
@@ -88,7 +89,9 @@ public class UserManagement implements Serializable {
 	}
 	
 	public String getLastError() {
-		return this.lastError;
+		String err = this.lastError;
+		this.lastError = "";
+		return err;
 	}
 	
 	public User getLastAuthUser() {
@@ -96,11 +99,22 @@ public class UserManagement implements Serializable {
 	}
 	
 	public Boolean removeUser(User tobeRemoved, User submitter) {
-		if(submitter.IsAdmin()) {
-			this.users.remove(tobeRemoved);
-			return true;
+		if(!submitter.IsAdmin()) {
+			this.setLastError("No permission to remove user.");
+			return false;
 		}
-		return false;
+		
+		if(tobeRemoved == submitter) {
+			this.setLastError("You cannot remove yourself.");
+			return false;
+		}
+		
+		if(!this.users.remove(tobeRemoved)) {
+			this.setLastError("No specific user in collection.");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public ArrayList<String> getAllUserIDs() {
@@ -108,6 +122,17 @@ public class UserManagement implements Serializable {
 		
 		for(User user : this.users) {
 			if(!user.IsAdmin())
+				lists.add(user.ID());
+		}
+		
+		return lists;
+	}
+	
+	public ArrayList<String> getAllAdminUserIDs() {
+		ArrayList<String> lists = new ArrayList<String>();
+		
+		for(User user : this.users) {
+			if(user.IsAdmin())
 				lists.add(user.ID());
 		}
 		

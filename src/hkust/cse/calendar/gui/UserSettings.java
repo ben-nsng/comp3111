@@ -31,9 +31,15 @@ public class UserSettings extends JFrame implements ActionListener {
 	private JButton button;
 	private JButton closeButton;
 	private JButton signupButton;
+	private Boolean adminMode = false;
 	
 	public UserSettings(User user) {
+		this(user, false);
+	}
+	
+	public UserSettings(User user, Boolean admin) {
 		this.mUser = user;
+		this.adminMode = admin;
 		
 		setTitle("Settings");
 		
@@ -54,11 +60,15 @@ public class UserSettings extends JFrame implements ActionListener {
 		namePanel.add(userName);
 		top.add(namePanel);
 		
-		JPanel pwPanel = new JPanel();
-		pwPanel.add(new JLabel("Password:       "));
-		password = new JPasswordField(15);
-		pwPanel.add(password);
-		top.add(pwPanel);
+		if(!adminMode) {
+		
+			JPanel pwPanel = new JPanel();
+			pwPanel.add(new JLabel("Password:       "));
+			password = new JPasswordField(15);
+			pwPanel.add(password);
+			top.add(pwPanel);
+		
+		}
 		
 		JPanel firstnamePanel = new JPanel();
 		firstnamePanel.add(new JLabel("First Name:     "));
@@ -114,10 +124,14 @@ public class UserSettings extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		if(arg0.getSource() == button) {
 			
-			if(!mUser.Password().equals(password.getText())) {
-				JOptionPane.showMessageDialog(this, "The Password is not matched to the original one.",
-						"Error", JOptionPane.ERROR_MESSAGE);
-				return;
+			if(!adminMode) {
+				
+				if(!mUser.Password().equals(password.getText())) {
+					JOptionPane.showMessageDialog(this, "The Password is not matched to the original one.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 			}
 			
 			mUser.setFirstName(firstName.getText());
