@@ -336,12 +336,17 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Manual Scheduling")) {
-					AppScheduler a = new AppScheduler("New", CalGrid.this);
-					a.updateSetApp(hkust.cse.calendar.gui.Utility
-							.createDefaultAppt(currentY, currentM, currentD,
-									mCurrUser));
-					a.setLocationRelativeTo(null);
-					a.show();
+					if(controller.getLocationList().length==0)
+						JOptionPane.showMessageDialog(null, "Cannot Make An Appointment Because Of No Locations !",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					else{
+						AppScheduler a = new AppScheduler("New", CalGrid.this);
+						a.updateSetApp(hkust.cse.calendar.gui.Utility
+								.createDefaultAppt(currentY, currentM, currentD,
+										mCurrUser));
+						a.setLocationRelativeTo(null);
+						a.show();
+					}
 					TableModel t = prepareTableModel();
 					tableView.setModel(t);
 					tableView.repaint();

@@ -490,16 +490,16 @@ public class AppScheduler extends JDialog implements ActionListener,
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
-		
-		
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
 		for(int i=0; i<retrivedAppts.length; i++) {
 			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()==NewAppt.getID())
 				noTimeConflict = false;
 		}
-		Appt[] retriedAppts = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
-		if(retrivedAppts.length!=0)
-			noLocationConflict = false;
+		System.out.println(NewAppt.getLocation().toString());
+		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
+		for(int i=0; i<retriedAppts2.length; i++)
+			if(retriedAppts2[i].IsScheduled())
+				noLocationConflict = false;
 		//check if the appointment is overlapped with other appointments
 		//if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 		if(!noTimeConflict) {
@@ -510,6 +510,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments in that location!",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 		}
+		System.out.println(7);
 		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 		if(rTimeValid==true && noTimeConflict && noLocationConflict) {
 			if(this.getTitle().equals("New")) {
@@ -545,6 +546,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 				NewAppt.addAttendant(getCurrentUser());
 				NewAppt.getWaitingList().remove(getCurrentUser());
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
+				if(NewAppt.getWaitingList().size()==0 && NewAppt.getRejectList().size()==0)
+					NewAppt.setScheduled(true);
+				else
+					NewAppt.setScheduled(false);
 				this.setVisible(false);
 			}
 		}

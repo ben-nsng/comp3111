@@ -515,6 +515,12 @@ public class AppList extends JPanel implements ActionListener {
 					"Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		
+		if(parent.controller.getLocationList().length==0) {
+			JOptionPane.showMessageDialog(parent, "Cannot Make An Appointment Because Of No Locations !",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 			
 		if (currentRow < 0 || currentRow > ROWNUM - 1) {
 			JOptionPane.showMessageDialog(parent, "Please Select Again !",
