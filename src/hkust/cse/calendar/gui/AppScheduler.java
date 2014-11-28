@@ -210,7 +210,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		availableTime = new JButton("Available Time List");
 		titleAndTextPanel.add(availableTime);
 		addUser.setEnabled(false);
-		availableTime.setEnabled(false);
+		availableTime.setEnabled(true);
 		availableTime.addActionListener(this);
 		gEvent.addItemListener(new ItemListener() {
 		      public void itemStateChanged(ItemEvent e) {
@@ -440,6 +440,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		// Fix Me!
 		// Save the appointment to the hard disk
 		boolean rTimeValid=true;
+		boolean noTimeConflict = true;
+		boolean noLocationConflict = true;
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setReminder(remField.isSelected());
@@ -488,13 +490,28 @@ public class AppScheduler extends JDialog implements ActionListener,
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
+		
+		
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
+		for(int i=0; i<retrivedAppts.length; i++) {
+			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()==NewAppt.getID())
+				noTimeConflict = false;
+		}
+		Appt[] retriedAppts = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
+		if(retrivedAppts.length!=0)
+			noLocationConflict = false;
 		//check if the appointment is overlapped with other appointments
-		if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		//if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(!noTimeConflict) {
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 		}
-		if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(!noLocationConflict) {
+			JOptionPane.showMessageDialog(this, "Overlap with other appointments in that location!",
+					"Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(rTimeValid==true && noTimeConflict && noLocationConflict) {
 			if(this.getTitle().equals("New")) {
 				if(NewAppt.isJoint() && NewAppt.getWaitingList().size()==0)
 					JOptionPane.showMessageDialog(this, "Please Select Participants For Group Event !",
@@ -524,6 +541,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 				}
 			}
 			if(this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join Appointment Invitation")) {
+				//move current user from waiting list to attend list after pressed accept button
 				NewAppt.addAttendant(getCurrentUser());
 				NewAppt.getWaitingList().remove(getCurrentUser());
 				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
