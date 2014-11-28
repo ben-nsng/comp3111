@@ -445,6 +445,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setReminder(remField.isSelected());
 		NewAppt.setJoint(isJoint);
 		NewAppt.setLocation((Location)locField.getSelectedItem());
+		if(NewAppt.getWaitingList().size()==0)
+			NewAppt.addAttendant(getCurrentUser());
 		if(isJoint == false)
 			NewAppt.setScheduled(true);
 		else {
