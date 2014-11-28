@@ -299,6 +299,29 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			return outApptList;
 		}
 	}
+
+	@Override
+	public Appt[] RetrieveAppts(Location location, TimeSpan time) {
+		// TODO Auto-generated method stub
+		Appt[] tempList=RetrieveAppts(time);
+		List<Appt> tempList2 = new ArrayList<Appt>();
+		int userApptNum=0;
+		for(int i=0;i<tempList.length;i++){
+			if(tempList[i].getLocation().equals(location)){
+				userApptNum++;
+				tempList2.add(tempList[i]);
+			}
+		}
+		if(userApptNum!=0){
+			Appt[] outApptList=new Appt[userApptNum];
+			tempList2.toArray(outApptList);
+			return outApptList;
+		}
+		else{
+			Appt[] outApptList=new Appt[0];
+			return outApptList;
+		}
+	}
 	
 	@Override
 	public Appt RetrieveAppts(int joinApptID) {
