@@ -4,7 +4,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -277,7 +277,25 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
 		// TODO Auto-generated method stub
-			return RetrieveAppts(time);
+		Appt[] tempList=RetrieveAppts(time);
+		List<Appt> tempList2 = new ArrayList<Appt>();
+		int userApptNum=0;
+		for(int i=0;i<tempList.length;i++){
+			if(tempList[i].getAllPeople().contains(entity.ID())){
+				userApptNum++;
+				tempList2.add(tempList[i]);
+			}
+		}
+		if(userApptNum!=0){
+			Appt[] outApptList=new Appt[userApptNum];
+			tempList2.toArray(outApptList);
+			return outApptList;
+		}
+		else{
+			Appt[] outApptList=new Appt[0];
+			return outApptList;
+		}
+		//return RetrieveAppts(time);
 	}
 
 	@Override
@@ -287,6 +305,29 @@ public class ApptStorageMemImpl extends ApptStorage {
 			return (Appt)mAppts.get(joinApptID);
 		else
 			return null;
+	}
+	
+	@Override
+	public Appt[] RetrieveAppts(Location location, TimeSpan time) {
+		// TODO Auto-generated method stub
+		Appt[] tempList=RetrieveAppts(time);
+		List<Appt> tempList2 = new ArrayList<Appt>();
+		int userApptNum=0;
+		for(int i=0;i<tempList.length;i++){
+			if(tempList[i].getLocation().equals(location)){
+				userApptNum++;
+				tempList2.add(tempList[i]);
+			}
+		}
+		if(userApptNum!=0){
+			Appt[] outApptList=new Appt[userApptNum];
+			tempList2.toArray(outApptList);
+			return outApptList;
+		}
+		else{
+			Appt[] outApptList=new Appt[0];
+			return outApptList;
+		}
 	}
 
 	@Override

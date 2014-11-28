@@ -2,8 +2,8 @@ package hkust.cse.calendar.apptstorage;
 
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.user.User;
 
 public class ApptStorageNullImpl extends ApptStorage {
 
@@ -53,6 +53,12 @@ public class ApptStorageNullImpl extends ApptStorage {
 
 	@Override
 	public Appt RetrieveAppts(int joinApptID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Appt[] RetrieveAppts(Location location, TimeSpan time) {
 		// TODO Auto-generated method stub
 		return null;
 	}

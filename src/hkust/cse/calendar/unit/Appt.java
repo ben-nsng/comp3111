@@ -39,6 +39,10 @@ public class Appt implements Serializable, Cloneable {
 	
 	private boolean derivedFromSchedule;		// Is this event derived from schedule
 	
+	private boolean isScheduled;
+	
+	private Location location;
+	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
 		mTimeSpan = null;
@@ -252,5 +256,21 @@ public class Appt implements Serializable, Cloneable {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void setScheduled(boolean s) {
+		isScheduled = s;
+	}
+	
+	public boolean IsScheduled() {
+		return isScheduled;
+	}
+	
+	public void setLocation(Location l) {
+		location = l;
+	}
+	
+	public Location getLocation() {
+		return location;
 	}
 }

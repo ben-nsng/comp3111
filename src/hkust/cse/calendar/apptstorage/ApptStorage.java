@@ -3,13 +3,13 @@ package hkust.cse.calendar.apptstorage;//
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
 
 import java.util.HashMap;
 
 import com.thoughtworks.xstream.XStream;
 
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.user.User;
 
 
 public abstract class ApptStorage {
@@ -41,6 +41,8 @@ public abstract class ApptStorage {
 	
 	public abstract Appt RetrieveAppts(int joinApptID);					// overload method to retrieve appointment with the given joint appointment id
 
+	public abstract Appt[] RetrieveAppts(Location location, TimeSpan time);
+	
 	public abstract void UpdateAppt(Appt appt);	//abstract method to update an appointment record
 
 	public abstract void RemoveAppt(Appt appt);	//abstract method to remove an appointment record

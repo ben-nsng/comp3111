@@ -3,7 +3,10 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.apptstorage.ApptStorageMemImpl;
 import hkust.cse.calendar.apptstorage.ApptStorageNullImpl;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.AdminUser;
+import hkust.cse.calendar.unit.user.RegularUser;
+import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -29,6 +32,7 @@ public class LoginDialog extends JFrame implements ActionListener
 	private JButton button;
 	private JButton closeButton;
 	private JButton signupButton;
+	private UserManagement um;
 	
 	public LoginDialog()		// Create a dialog to log in
 	{
@@ -76,7 +80,7 @@ public class LoginDialog extends JFrame implements ActionListener
 		JPanel butPanel = new JPanel();
 		butPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-		button = new JButton("Log in (No user name and password required)");
+		button = new JButton("Log in");
 		button.addActionListener(this);
 		butPanel.add(button);
 		
@@ -90,6 +94,9 @@ public class LoginDialog extends JFrame implements ActionListener
 		setLocationRelativeTo(null);
 		setVisible(true);	
 		
+		um = UserManagement.getInstance();
+		userName.setText("user");
+		password.setText("user");
 	}
 	
 
@@ -98,15 +105,55 @@ public class LoginDialog extends JFrame implements ActionListener
 		if(e.getSource() == button)
 		{
 			// When the button is clicked, check the user name and password, and try to log the user in
+			Boolean success = um.Auth(
+					userName.getText().trim(),
+					password.getText().trim()
+					);
+			
+			if(success) {
+				CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageMemImpl(um.getLastAuthUser())));
+				setVisible( false );
+			}
+			else {
+				JOptionPane.showMessageDialog(this, um.getLastError(),
+						"Auth", JOptionPane.ERROR_MESSAGE);
+			}
 			
 			//login();
+			/*
 			User user = new User( "noname", "nopass");
 			CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageMemImpl(user)));
 			setVisible( false );
+			*/
 		}
 		else if(e.getSource() == signupButton)
 		{
 			// Create a new account
+			
+			//check if id is duplicated
+			if(!um.DuplicateID(userName.getText().trim())) {
+				
+				//check if signup process is completed
+				if(um.Signup(userName.getText().trim(), password.getText().trim())) {
+				
+					JOptionPane.showMessageDialog(this, "The sign up process is completed!",
+							"OK", JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+				else {
+					JOptionPane.showMessageDialog(this, um.getLastError(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				userName.setText("");
+				password.setText("");
+				
+			}
+			else {
+				JOptionPane.showMessageDialog(this, um.getLastError(),
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+			
 		}
 		else if(e.getSource() == closeButton)
 		{

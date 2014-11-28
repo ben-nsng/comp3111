@@ -4,7 +4,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
 
 /* This class is for managing the Appt Storage according to different actions */
 public class ApptStorageControllerImpl {
@@ -50,6 +50,10 @@ public class ApptStorageControllerImpl {
 	// overload method to retrieve appointment with the given joint appointment id
 	public Appt RetrieveAppts(int joinApptID) {
 		return mApptStorage.RetrieveAppts(joinApptID);
+	}
+	
+	public Appt[] RetrieveAppt(Location location, TimeSpan time) {
+		return mApptStorage.RetrieveAppts(location, time);
 	}
 	
 	/* Manage the Appt in the storage

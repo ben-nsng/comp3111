@@ -86,13 +86,16 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JCheckBox remField;
 	private JTextField rTimeH;
 	private JTextField rTimeM;
+	private JCheckBox gEvent;
+	private JButton addUser;
+	private JButton availableTime;
 	
 	private JSplitPane pDes;
 	JPanel detailPanel;
 
-//	private JTextField attendField;
-//	private JTextField rejectField;
-//	private JTextField waitingField;
+  	private JTextField attendField;
+  	private JTextField rejectField;
+  	private JTextField waitingField;
 	private int selectedApptId = -1;
 	
 	private void commonConstructor(String title, CalGrid cal) {
@@ -146,7 +149,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		peTime.add(eTimeM);
 		
 		JLabel frequencyL = new JLabel("FREQUENCY");
-		String[] frequencyType = {"Single", "Daily", "Weekly", "Monthly"};
+		String[] frequencyType = {"One-time", "Daily", "Weekly", "Monthly"};
 		freField = new JComboBox(frequencyType);
 		peTime.add(frequencyL);
 		peTime.add(freField);
@@ -199,6 +202,35 @@ public class AppScheduler extends JDialog implements ActionListener,
 		  			}
 		        }
 		      });
+		gEvent = new JCheckBox("Group Event");
+		titleAndTextPanel.add(gEvent);
+		addUser = new JButton("Add Participants");
+		//titleAndTextPanel.add(addUser);
+		addUser.addActionListener(this);
+		availableTime = new JButton("Available Time List");
+		titleAndTextPanel.add(availableTime);
+		addUser.setEnabled(false);
+		availableTime.setEnabled(true);
+		availableTime.addActionListener(this);
+		gEvent.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  if(gEvent.isSelected()){
+		    		  	isJoint = true;
+		    		  	inviteBut.setVisible(true);
+			  			//addUser.setEnabled(true);
+		    		  	//if(NewAppt.getWaitingList().size() !=0)
+		    		  	//	availableTime.setEnabled(true);
+		    		  	//else
+		    		  	//	availableTime.setEnabled(false);
+		  			}
+		  		else{
+		  				isJoint = false;
+		  				inviteBut.setVisible(false);
+			  			//addUser.setEnabled(false);
+			  			availableTime.setEnabled(false);
+		  			}
+		        }
+		      });
 		detailPanel = new JPanel();
 		detailPanel.setLayout(new BorderLayout());
 		Border detailBorder = new TitledBorder(null, "Appointment Description");
@@ -222,9 +254,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-//		inviteBut = new JButton("Invite");
-//		inviteBut.addActionListener(this);
-//		panel2.add(inviteBut);
+  		inviteBut = new JButton("Invite");
+  		inviteBut.addActionListener(this);
+  		panel2.add(inviteBut);
+  		inviteBut.setVisible(false);
 		
 		saveBut = new JButton("Save");
 		saveBut.addActionListener(this);
@@ -288,6 +321,11 @@ public class AppScheduler extends JDialog implements ActionListener,
 				this.setVisible(false);
 				dispose();
 			}
+		} else if (e.getSource() == inviteBut){
+			//show dialog to add/remove participant
+			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
+		} else if (e.getSource() == availableTime){
+			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller);
 		}
 		parent.getAppList().clear();
 		parent.getAppList().setTodayAppt(parent.GetTodayAppt());
@@ -402,9 +440,24 @@ public class AppScheduler extends JDialog implements ActionListener,
 		// Fix Me!
 		// Save the appointment to the hard disk
 		boolean rTimeValid=true;
+		boolean noTimeConflict = true;
+		boolean noLocationConflict = true;
 		NewAppt.setTitle(titleField.getText());
 		NewAppt.setInfo(detailArea.getText());
 		NewAppt.setReminder(remField.isSelected());
+		NewAppt.setJoint(isJoint);
+		NewAppt.setLocation((Location)locField.getSelectedItem());
+		if(NewAppt.getWaitingList().size()==0)
+			NewAppt.addAttendant(getCurrentUser());
+		if(isJoint == false)
+			NewAppt.setScheduled(true);
+		else {
+			//joint appointment is scheduled only when no one is in waiting and reject list
+			if(NewAppt.getWaitingList().size() == 0 && NewAppt.getRejectList().size() == 0)
+				NewAppt.setScheduled(true);
+			else
+				NewAppt.setScheduled(false);
+		}
 		if(remField.isSelected()) {
 			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
 				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
@@ -437,25 +490,62 @@ public class AppScheduler extends JDialog implements ActionListener,
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
+		
+		
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
+		for(int i=0; i<retrivedAppts.length; i++) {
+			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()==NewAppt.getID())
+				noTimeConflict = false;
+		}
+		Appt[] retriedAppts = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
+		if(retrivedAppts.length!=0)
+			noLocationConflict = false;
 		//check if the appointment is overlapped with other appointments
-		if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		//if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(!noTimeConflict) {
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 		}
-		if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(!noLocationConflict) {
+			JOptionPane.showMessageDialog(this, "Overlap with other appointments in that location!",
+					"Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		if(rTimeValid==true && noTimeConflict && noLocationConflict) {
 			if(this.getTitle().equals("New")) {
-				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-				this.setVisible(false);
+				if(NewAppt.isJoint() && NewAppt.getWaitingList().size()==0)
+					JOptionPane.showMessageDialog(this, "Please Select Participants For Group Event !",
+							"Input Error", JOptionPane.ERROR_MESSAGE);
+				else {
+					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+					this.setVisible(false);
+				}
 			}
 			if(this.getTitle().equals("Modify")) {
 				if(NewAppt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
 					JOptionPane.showMessageDialog(this, "Cannot Modify Past Events !",
 							"Modify", JOptionPane.ERROR_MESSAGE);
 				else {
+					//add all people in attend list to waiting list except initiator
+					for(int i = 1; i<NewAppt.getAttendList().size(); i++) {
+						NewAppt.getWaitingList().add(NewAppt.getAttendList().get(i));
+						NewAppt.getAttendList().remove(i);
+					}
+					//add all people in reject list to waiting list
+					for(int i = 0; i<NewAppt.getRejectList().size(); i++) {
+						NewAppt.getWaitingList().add(NewAppt.getRejectList().get(i));
+						NewAppt.getRejectList().remove(i);
+					}
 					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
 					this.setVisible(false);
 				}
+			}
+			if(this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join Appointment Invitation")) {
+				//move current user from waiting list to attend list after pressed accept button
+				NewAppt.addAttendant(getCurrentUser());
+				NewAppt.getWaitingList().remove(getCurrentUser());
+				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.MODIFY);
+				this.setVisible(false);
 			}
 		}
 	}
@@ -490,6 +580,15 @@ public class AppScheduler extends JDialog implements ActionListener,
 		rTimeH.setText(Integer.toString(appt.getReminderTime().getHours()));
 		rTimeM.setText(Integer.toString(appt.getReminderTime().getMinutes()));
 		NewAppt=appt;
+		isJoint = appt.isJoint();
+		gEvent.setSelected(isJoint);
+		if(appt.getID()!=0) {
+			//cannot add/remove participant in modify
+			locField.setSelectedItem(NewAppt.getLocation());
+			gEvent.setEnabled(false);
+			availableTime.setEnabled(true);
+			inviteBut.setVisible(false);
+		}
 	}
 
 	public void componentHidden(ComponentEvent e) {
@@ -528,5 +627,13 @@ public class AppScheduler extends JDialog implements ActionListener,
 		eTimeM.setEditable(false);
 		titleField.setEditable(false);
 		detailArea.setEditable(false);
+		locField.setEnabled(false);
+		freField.setEnabled(false);
+		remField.setEnabled(false);
+		rTimeH.setEditable(false);
+		rTimeM.setEditable(false);
+		gEvent.setEnabled(false);
+		addUser.setEnabled(false);
+		availableTime.setEnabled(false);
 	}
 }

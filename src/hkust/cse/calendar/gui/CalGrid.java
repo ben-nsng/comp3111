@@ -6,7 +6,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
 import hkust.cse.calendar.gui.LocationsDialog;
 
 import java.awt.BorderLayout;
@@ -96,7 +96,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			"President's Day (US)\n",
 			"",
 			"Ching Ming Festival\nGood Friday\nThe day following Good Friday\nEaster Monday\n",
-			"Labour Day\nThe Buddhaâ€™s Birthday\nTuen Ng Festival\n",
+			"Labour Day\nThe Buddha¡¦s Birthday\nTuen Ng Festival\n",
 			"",
 			"Hong Kong Special Administrative Region Establishment Day\n",
 			"Civic Holiday(CAN)\n",
@@ -354,6 +354,15 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//tableView.setModel(t);
 					//tableView.repaint();
 				}
+				else if(e.getActionCommand().equals("Settings")) {
+					UserSettings a = new UserSettings();
+					a.setLocationRelativeTo(null);
+					a.show();
+				}
+				else if(e.getActionCommand().equals("Create Group Event")) {
+					GroupEventDialog g = new GroupEventDialog(controller);
+					g.show();
+				}
 
 			}
 		};
@@ -366,6 +375,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		Access.getAccessibleContext().setAccessibleDescription(
 				"Account Access Management");
 
+		mi = (JMenuItem) Access.add(new JMenuItem("Settings"));
+		mi.addActionListener(listener);
+		
 		mi = (JMenuItem) Access.add(new JMenuItem("Logout"));	//adding a Logout menu button for user to logout
 		mi.setMnemonic('L');
 		mi.getAccessibleContext().setAccessibleDescription("For user logout");
@@ -420,6 +432,10 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			});
 
 		Appmenu.add(mi); 
+		
+		mi = new JMenuItem("Create Group Event");
+		mi.addActionListener(listener);
+		Appmenu.add(mi);
 		
 		return menuBar;
 	}
@@ -698,6 +714,31 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!
+		
+		//get non past appointments that involve the current user
+		TimeSpan currentTime = new TimeSpan(timeMachine.getCurrentTime(), new Timestamp(2300, 9, 9, 12, 0, 0, 0));
+		Appt[] appts = controller.RetrieveAppts(mCurrUser, currentTime);
+		for(int i=0; i<appts.length; i++) {
+			//tell all participant that the appointment has changed
+			if(appts[i].getAllPeople().contains(mCurrUser.ID()) /* && content changed*/) {
+				AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
+				a.show();
+			}
+			
+			//tell initiator if someone responded to the appointment
+			if(appts[i].getAttendList().getFirst() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
+				AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
+				b.show();
+				//set the appointment back to no one responded
+			}
+			
+			//the current user is still in the waiting list of the appointment
+			if(appts[i].getWaitingList().contains(mCurrUser.ID())) {
+				AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
+				c.updateSetApp(appts[i]);
+				c.show();
+			}
+		}
 	}
 
 }
