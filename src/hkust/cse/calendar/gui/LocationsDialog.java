@@ -2,27 +2,17 @@ package hkust.cse.calendar.gui;
 
 
 import java.awt.BorderLayout;
-
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-
 import javax.swing.BoxLayout;
-
 import javax.swing.DefaultListModel;
-
 import javax.swing.JButton;
-
 import javax.swing.JList;
-
 import javax.swing.JOptionPane;
-
 import javax.swing.JPanel;
-
 import javax.swing.JScrollPane;
-
 import javax.swing.ListSelectionModel;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
@@ -30,13 +20,16 @@ import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import javax.swing.JFrame;
 
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.PendingEngine;
+import hkust.cse.calendar.unit.PendingRequest;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import javax.swing.JTextField;
-
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -94,7 +87,20 @@ public class LocationsDialog extends JFrame {
 				}
 				
 				//add the item to the list
-				listModel.addElement(new Location(locNameText.getText()));
+				
+				//request admin to approve if user is not an admin
+				if(!_controller.getDefaultUser().IsAdmin()) {
+					PendingEngine.getInstance().addPendingRequest(
+							PendingRequest.TYPE_LOCATION,
+							_controller.getDefaultUser(),
+							UserManagement.getInstance().getAdminUser(),
+							new Location(locNameText.getText())
+							);
+					
+					JOptionPane.showMessageDialog(null, "The request has been sent to administrator and waiting for approval." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+				}
+				else
+					listModel.addElement(new Location(locNameText.getText()));
 				
 				//save the location into storage
 				saveLocations();

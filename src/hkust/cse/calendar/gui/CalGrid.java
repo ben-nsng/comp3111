@@ -3,6 +3,8 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.Main.CalendarMain;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.PendingEngine;
+import hkust.cse.calendar.unit.PendingRequest;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.unit.TimeSpan;
@@ -20,6 +22,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -48,6 +52,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.tools.JavaFileManager.Location;
 
 
 public class CalGrid extends JFrame implements ActionListener, TimeMachineListener {
@@ -255,6 +260,49 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		initializeSystem(); // for you to add.
 		//mCurrUser = getCurrUser(); // totally meaningless code
 		Appmenu.setEnabled(true);
+		
+		//Pending Engine
+		for(PendingRequest request: PendingEngine.getInstance().checkPendingRequest(mCurrUser)) {
+			
+			if(request.getType() == PendingRequest.TYPE_LOCATION) {
+				
+				hkust.cse.calendar.unit.Location loc = (hkust.cse.calendar.unit.Location)request.getObj();
+    			int n = JOptionPane.showConfirmDialog(null, "The user \"" + request.getFrom().ID() + "\" is requested to add a location \"" + loc.getName() + "\". Do you accept the request?",
+    					"Confirm", JOptionPane.YES_NO_OPTION);
+    			if (n == JOptionPane.YES_OPTION) {
+    				
+    				hkust.cse.calendar.unit.Location[] locations = controller.getLocationList();
+    				ArrayList<hkust.cse.calendar.unit.Location> locations_arr = new ArrayList<hkust.cse.calendar.unit.Location>(Arrays.asList(locations));
+    				
+    				Boolean found = false;
+    				for(hkust.cse.calendar.unit.Location tmp : locations_arr) {
+    					if(tmp.getName().equals(loc.getName()))
+    						found = true;
+    				}
+    				
+    				if(!found) {
+    					locations_arr.add(loc);
+    					
+    					
+    					controller.setLocationList(locations_arr.toArray(locations));
+    					
+    					JOptionPane.showMessageDialog(null, "The location \"" + loc.getName() + "\" has been added." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+    				}
+    				else {
+    					
+    					JOptionPane.showMessageDialog(null, "The location \"" + loc.getName() + "\" exists. No change has been made." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+    					
+    				}
+    				
+    			}
+    			else {
+    				
+    				JOptionPane.showMessageDialog(null, "You have declined the request." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+    			}
+				
+			}
+			
+		}
 
 		UpdateCal();
 		pack();				// sized the window to a preferred size

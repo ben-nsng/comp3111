@@ -13,7 +13,6 @@ public class UserManagement implements Serializable {
 			
 			//init and hard code some users
 			um.AddUser(new AdminUser("admin", "admin"));
-			um.AddUser(new AdminUser("admin2", "admin2"));
 			
 			um.AddUser(new RegularUser("user", "user"));
 			um.AddUser(new RegularUser("user2", "user2"));
@@ -148,11 +147,11 @@ public class UserManagement implements Serializable {
 		return null;
 	}
 	
-	public void AddPendingRequest(Appt appt) {
-		
-	}
-	
-	public void RemovePendingRequest(Appt appt) {
+	public User getAdminUser() {
+		for(User user : this.users) {
+			if(user.IsAdmin()) return user;
+		}
+		return null;
 	}
 	
 }
