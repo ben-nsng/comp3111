@@ -447,7 +447,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setReminder(remField.isSelected());
 		NewAppt.setJoint(isJoint);
 		NewAppt.setLocation((Location)locField.getSelectedItem());
-		if(NewAppt.getWaitingList().size()==0)
+		if(NewAppt.getAttendList().size()==0)
 			NewAppt.addAttendant(getCurrentUser());
 		if(isJoint == false)
 			NewAppt.setScheduled(true);
@@ -495,7 +495,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()==NewAppt.getID())
 				noTimeConflict = false;
 		}
-		System.out.println(NewAppt.getLocation().toString());
 		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
 		for(int i=0; i<retriedAppts2.length; i++)
 			if(retriedAppts2[i].IsScheduled())
@@ -510,7 +509,6 @@ public class AppScheduler extends JDialog implements ActionListener,
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments in that location!",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 		}
-		System.out.println(7);
 		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 		if(rTimeValid==true && noTimeConflict && noLocationConflict) {
 			if(this.getTitle().equals("New")) {
@@ -594,6 +592,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 			availableTime.setEnabled(true);
 			inviteBut.setVisible(false);
 		}
+		if(appt.getAttendList().size()==0)
+			appt.addAttendant(getCurrentUser());
 	}
 
 	public void componentHidden(ComponentEvent e) {

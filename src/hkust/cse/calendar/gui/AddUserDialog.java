@@ -104,7 +104,8 @@ public class AddUserDialog extends JFrame{
 		this.show();
 		arrayList = um.getAllUserIDs();
 		for(int i=0; i<arrayList.size(); i++) {
-			aUserCB.addItem(arrayList.get(i));
+			if(!arrayList.get(i).equals(a.getAttendList().getFirst()))
+				aUserCB.addItem(arrayList.get(i));
 		}
 	}
 	
