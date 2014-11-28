@@ -38,6 +38,8 @@ public class UserList extends JFrame {
 	public UserList(CalGrid cal) {
 		parent = cal;
 		
+		setTitle("User List");
+		
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
 		this.setSize(300, 200);
@@ -82,7 +84,7 @@ public class UserList extends JFrame {
             	
             	String ID = listModel.getElementAt(list.getSelectedIndex()).toString();
             	
-            	UserInfo info = new UserInfo(um.getUser(ID));
+            	UserSettings info = new UserSettings(um.getUser(ID), true, true);
             	
             }
         });

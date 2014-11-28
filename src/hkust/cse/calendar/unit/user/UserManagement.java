@@ -1,5 +1,7 @@
 package hkust.cse.calendar.unit.user;
 
+import hkust.cse.calendar.unit.Appt;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -144,6 +146,13 @@ public class UserManagement implements Serializable {
 			if(user.ID().equals(ID)) return user;
 		}
 		return null;
+	}
+	
+	public void AddPendingRequest(Appt appt) {
+		
+	}
+	
+	public void RemovePendingRequest(Appt appt) {
 	}
 	
 }

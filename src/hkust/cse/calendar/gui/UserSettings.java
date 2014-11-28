@@ -32,14 +32,20 @@ public class UserSettings extends JFrame implements ActionListener {
 	private JButton closeButton;
 	private JButton signupButton;
 	private Boolean adminMode = false;
+	private Boolean inspect = false;
 	
 	public UserSettings(User user) {
-		this(user, false);
+		this(user, false, false);
 	}
 	
 	public UserSettings(User user, Boolean admin) {
+		this(user, admin, false);
+	}
+	
+	public UserSettings(User user, Boolean admin, Boolean inspect) {
 		this.mUser = user;
 		this.adminMode = admin;
+		this.inspect = inspect;
 		
 		setTitle("Settings");
 		
@@ -88,26 +94,42 @@ public class UserSettings extends JFrame implements ActionListener {
 		emailPanel.add(email);
 		top.add(emailPanel);
 		
-		JPanel newpwPanel = new JPanel();
-		newpwPanel.add(new JLabel("New Password:"));
-		newpassword = new JPasswordField(15);
-		newpwPanel.add(newpassword);
-		top.add(newpwPanel);
+		if(!inspect) {
+			
+			JPanel newpwPanel = new JPanel();
+			newpwPanel.add(new JLabel("New Password:"));
+			newpassword = new JPasswordField(15);
+			newpwPanel.add(newpassword);
+			top.add(newpwPanel);
+			
+		}
 		
 		contentPane.add("North", top);
 		
-		JPanel butPanel = new JPanel();
-		butPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-		button = new JButton("OK");
-		button.addActionListener(this);
-		butPanel.add(button);
+		if(!inspect) {
+			
+			JPanel butPanel = new JPanel();
+			butPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+			
+			button = new JButton("OK");
+			button.addActionListener(this);
+			butPanel.add(button);
+			
+			closeButton = new JButton("Cancel");
+			closeButton.addActionListener(this);
+			butPanel.add(closeButton);
+			
+			contentPane.add("South", butPanel);
+		}
 		
-		closeButton = new JButton("Cancel");
-		closeButton.addActionListener(this);
-		butPanel.add(closeButton);
-		
-		contentPane.add("South", butPanel);
+		if(inspect) {
+			
+			messPanel.hide();
+			firstName.disable();
+			lastName.disable();
+			email.disable();
+			
+		}
 		
 		pack();
 		setLocationRelativeTo(null);

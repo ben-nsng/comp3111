@@ -23,6 +23,7 @@ public class User implements Serializable {
 		isAdmin = false;
 		mFirstName = "";
 		mLastName = "";
+		mEmail = "";
 	}
 
 	public String getFirstName() {
