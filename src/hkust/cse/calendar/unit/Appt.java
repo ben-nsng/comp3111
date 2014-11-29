@@ -43,6 +43,10 @@ public class Appt implements Serializable, Cloneable {
 	
 	private Location location;
 	
+	private boolean sendEmail;
+	
+	private boolean sendSms;
+	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
 		mTimeSpan = null;
@@ -272,5 +276,21 @@ public class Appt implements Serializable, Cloneable {
 	
 	public Location getLocation() {
 		return location;
+	}
+	
+	public void setSendEmail(boolean b) {
+		sendEmail = b;
+	}
+	
+	public boolean sendEmail() {
+		return sendEmail;
+	}
+	
+	public void setSendSms(boolean b) {
+		sendSms = b;
+	}
+	
+	public boolean sendSms() {
+		return sendSms;
 	}
 }

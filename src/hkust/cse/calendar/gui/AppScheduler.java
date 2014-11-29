@@ -482,6 +482,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setReminder(remField.isSelected());
 		NewAppt.setJoint(isJoint);
 		NewAppt.setLocation((Location)locField.getSelectedItem());
+		NewAppt.setSendEmail(sEmailCB.isSelected());
+		NewAppt.setSendSms(sSmsCB.isSelected());
 		if(NewAppt.getAttendList().size()==0)
 			NewAppt.addAttendant(getCurrentUser());
 		if(isJoint == false)
@@ -620,6 +622,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt=appt;
 		isJoint = appt.isJoint();
 		gEvent.setSelected(isJoint);
+		sEmailCB.setSelected(appt.sendEmail());
+		sSmsCB.setSelected(appt.sendSms());
 		if(appt.getID()!=0) {
 			//cannot add/remove participant in modify
 			locField.setSelectedItem(NewAppt.getLocation());
