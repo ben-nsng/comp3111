@@ -9,8 +9,17 @@ public class User implements Serializable {
 	private String mEmail;
 	private String mFirstName;
 	private String mLastName;
+	private String mPhoneNum;
 	protected Boolean isAdmin;
 	
+	public String getPhoneNum() {
+		return mPhoneNum;
+	}
+
+	public void setPhoneNum(String mPhoneNum) {
+		this.mPhoneNum = mPhoneNum;
+	}
+
 	// Getter of the user id
 	public String ID() {		
 		return mID;

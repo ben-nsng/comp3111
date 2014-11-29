@@ -26,6 +26,7 @@ public class UserSettings extends JFrame implements ActionListener {
 	private JTextField firstName;
 	private JTextField lastName;
 	private JTextField email;
+	private JTextField phoneNum;
 	private JPasswordField password;
 	private JPasswordField newpassword;
 	private JButton button;
@@ -94,6 +95,12 @@ public class UserSettings extends JFrame implements ActionListener {
 		emailPanel.add(email);
 		top.add(emailPanel);
 		
+		JPanel phoneNumPanel = new JPanel();
+		phoneNumPanel.add(new JLabel("Phone Number:"));
+		phoneNum = new JTextField(15);
+		phoneNumPanel.add(phoneNum);
+		top.add(phoneNumPanel);
+		
 		if(!inspect) {
 			
 			JPanel newpwPanel = new JPanel();
@@ -128,6 +135,7 @@ public class UserSettings extends JFrame implements ActionListener {
 			firstName.disable();
 			lastName.disable();
 			email.disable();
+			phoneNum.disable();
 			
 		}
 		
@@ -138,6 +146,7 @@ public class UserSettings extends JFrame implements ActionListener {
 		firstName.setText(user.getFirstName());
 		lastName.setText(user.getLastName());
 		email.setText(user.getEmail());
+		phoneNum.setText(user.getPhoneNum());
 		userName.setText(user.ID());
 	}
 	
@@ -159,6 +168,7 @@ public class UserSettings extends JFrame implements ActionListener {
 			mUser.setFirstName(firstName.getText());
 			mUser.setLastName(lastName.getText());
 			mUser.setEmail(email.getText());
+			mUser.setPhoneNum(phoneNum.getText());
 			
 			if(!newpassword.getText().equals(""))
 				mUser.Password(newpassword.getText());
