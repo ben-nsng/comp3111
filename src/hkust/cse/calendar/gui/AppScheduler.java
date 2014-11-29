@@ -64,6 +64,11 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JTextField eTimeH;
 	private JLabel eTimeML;
 	private JTextField eTimeM;
+	
+	private JLabel sEmailL;
+	private JCheckBox sEmailCB;
+	private JLabel sSmsL;
+	private JCheckBox sSmsCB;
 
 	private DefaultListModel model;
 	private JTextField titleField;
@@ -78,6 +83,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private boolean isNew = true;
 	private boolean isChanged = true;
 	private boolean isJoint = false;
+	private boolean sendEmail = false;
+	private boolean sendSms = false;
 
 	private JTextArea detailArea;
 
@@ -153,6 +160,34 @@ public class AppScheduler extends JDialog implements ActionListener,
 		freField = new JComboBox(frequencyType);
 		peTime.add(frequencyL);
 		peTime.add(freField);
+		sEmailL = new JLabel("Send Email");
+		peTime.add(sEmailL);
+		sEmailCB = new JCheckBox();
+		sEmailCB.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  if(sEmailCB.isSelected()){
+		    		  	sendEmail = true;
+		  			}
+		  		else{
+		  				sendEmail = false;
+		  			}
+		        }
+		      });
+		peTime.add(sEmailCB);
+		sSmsL = new JLabel("Send SMS");
+		peTime.add(sSmsL);
+		sSmsCB = new JCheckBox();
+		sSmsCB.addItemListener(new ItemListener() {
+		      public void itemStateChanged(ItemEvent e) {
+		    	  if(sSmsCB.isSelected()){
+		    		  	sendSms = true;
+		  			}
+		  		else{
+		  				sendSms = false;
+		  			}
+		        }
+		      });
+		peTime.add(sSmsCB);
 		
 		JPanel pTime = new JPanel();
 		pTime.setLayout(new BorderLayout());
