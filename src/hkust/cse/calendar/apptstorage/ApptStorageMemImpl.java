@@ -351,7 +351,14 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void LoadApptFromXml() {
 		// TODO Auto-generated method stub
-
+		String xml=null;
+		HashMap<Integer, Appt> newmAppts = (HashMap<Integer, Appt>)xstream.fromXML(xml);
+	}
+	
+	@Override
+	public void PutApptToXml() {
+		// TODO Auto-generated method stub
+		String xml = xstream.toXML(mAppts);
 	}
 
 }

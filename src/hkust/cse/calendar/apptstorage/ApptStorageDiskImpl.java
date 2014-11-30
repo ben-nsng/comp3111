@@ -4,10 +4,13 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -353,15 +356,25 @@ public class ApptStorageDiskImpl extends ApptStorage {
 	@Override
 	public void LoadApptFromXml() {
 		// TODO Auto-generated method stub
-		String xml=null;
-		HashMap<Integer, Appt> newmAppts = (HashMap<Integer, Appt>)xstream.fromXML(xml);
+		try{	
+			File f = new File("Apptfile.xml");
+			if (f.exists() && f.isFile()){
+				mAppts = (HashMap<Integer, Appt>) xstream.fromXML(f);
+			}
+		}catch(Exception e){
+			System.err.println("Error in XML Read: " + e.getMessage());
+		}
 	}
-
 
 	@Override
 	public void PutApptToXml() {
 		// TODO Auto-generated method stub
-		String xml = xstream.toXML(mAppts);
+		try {
+			xstream.toXML(mAppts, new FileWriter("Apptfile.xml"));
+		} catch (IOException e) {
+			 //TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

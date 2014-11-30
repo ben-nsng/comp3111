@@ -1,6 +1,7 @@
 package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+import hkust.cse.calendar.apptstorage.ApptStorageDiskImpl;
 import hkust.cse.calendar.apptstorage.ApptStorageMemImpl;
 import hkust.cse.calendar.apptstorage.ApptStorageNullImpl;
 import hkust.cse.calendar.unit.user.AdminUser;
@@ -111,7 +112,7 @@ public class LoginDialog extends JFrame implements ActionListener
 					);
 			
 			if(success) {
-				CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageMemImpl(um.getLastAuthUser())));
+				CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageDiskImpl(um.getLastAuthUser())));
 				setVisible( false );
 			}
 			else {
@@ -122,7 +123,7 @@ public class LoginDialog extends JFrame implements ActionListener
 			//login();
 			/*
 			User user = new User( "noname", "nopass");
-			CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageMemImpl(user)));
+			CalGrid grid = new CalGrid(new ApptStorageControllerImpl(new ApptStorageDiskImpl(user)));
 			setVisible( false );
 			*/
 		}
