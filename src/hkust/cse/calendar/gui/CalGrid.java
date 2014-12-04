@@ -122,6 +122,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				CalGrid.this.controller.PutApptToXml();
+				CalGrid.this.controller.PutLocToXml();
 				System.exit(0);
 			}
 		});
@@ -449,6 +450,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//controller.dumpStorageToFile();
 					//System.out.println("closed");
 					CalGrid.this.controller.PutApptToXml();
+					CalGrid.this.controller.PutLocToXml();
 					dispose();
 					CalendarMain.logOut = true;
 					return;	//return to CalendarMain()
@@ -465,6 +467,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 						"Comfirm", JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION){
 					CalGrid.this.controller.PutApptToXml();
+					CalGrid.this.controller.PutLocToXml();
 					System.exit(0);
 				}
 
@@ -533,6 +536,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		mCurrUser = this.controller.getDefaultUser();	//get User from controller
 		controller.LoadApptFromXml();
+		controller.LoadLocFromXml();
 		// Fix Me !
 		// Load the saved appointments from disk
 		checkUpdateJoinAppt();

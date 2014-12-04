@@ -41,7 +41,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 	public void setLocationList(Location[] locations) {
 		_locations = locations.clone();
 	}
-	
+
 	@Override
 	public void SaveAppt(Appt appt) {
 		// TODO Auto-generated method stub
@@ -54,7 +54,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			mAssignedApptID++;
 		//}
 	}
-
+	
 	@Override
 	public Appt[] RetrieveAppts(TimeSpan d) {
 		// TODO Auto-generated method stub
@@ -380,6 +380,29 @@ public class ApptStorageDiskImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 		try {
 			xstream.toXML(mAppts, new FileWriter("Apptfile.xml"));
+		} catch (IOException e) {
+			 //TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void LoadLocFromXml() {
+		// TODO Auto-generated method stub
+		try{	
+			File f = new File("Locfile.xml");
+			if (f.exists() && f.isFile()){
+				_locations = (Location[]) xstream.fromXML(f);
+			} 
+		}catch(Exception e){
+			System.err.println("Error in XML Read: " + e.getMessage());
+		}
+	}
+	
+	public void PutLocToXml() {
+		// TODO Auto-generated method stub
+		try {
+			xstream.toXML(_locations, new FileWriter("Locfile.xml"));
 		} catch (IOException e) {
 			 //TODO Auto-generated catch block
 			e.printStackTrace();
