@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import com.thoughtworks.xstream.XStream;
 
+
+
 public class ApptStorageDiskImpl extends ApptStorage {
 
 	private User defaultUser = null;
@@ -58,10 +60,13 @@ public class ApptStorageDiskImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 		List<Appt> tempList = new ArrayList<Appt>();
 		int apptNum = 0;
-		for(int num = 0;num < mAssignedApptID;num++){
-			if(mAppts.containsKey(num)){
-				Appt apptAtD = (Appt)mAppts.get(num).clone();
-				
+		Iterator<Map.Entry<Integer, Appt>> entries = mAppts.entrySet().iterator();
+		//for(int num = 0;num < mAssignedApptID;num++){
+		while(entries.hasNext()){
+			Map.Entry<Integer, Appt> entry = entries.next();
+			//if(mAppts.containsKey(num)){
+				//Appt apptAtD = (Appt)mAppts.get(num).clone();
+				Appt apptAtD = entry.getValue();
 				switch(apptAtD.getFrequency()){
 				case Appt.SINGLE:
 					if(apptAtD.TimeSpan().Overlap(d)){
@@ -181,7 +186,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 						}
 					}
 					break;
-				}
+				//}
 			}
 		}
 			Appt[] timeAppt = new Appt[apptNum];
@@ -194,9 +199,13 @@ public class ApptStorageDiskImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 		List<Appt> tempList = new ArrayList<Appt>();
 		int apptNum = 0;
-		for(int num = 0;num < mAssignedApptID;num++){
-			if(mAppts.containsKey(num)){
-				Appt apptAtD = (Appt)mAppts.get(num);
+		//for(int num = 0;num < mAssignedApptID;num++){
+			//if(mAppts.containsKey(num)){		
+		Iterator<Map.Entry<Integer, Appt>> entries = mAppts.entrySet().iterator();
+		while(entries.hasNext()){
+			Map.Entry<Integer, Appt> entry = entries.next();
+				Appt apptAtD = entry.getValue();
+				//Appt apptAtD = (Appt)mAppts.get(num);
 				int apptsLen = 0;
 				
 				switch(f) {
@@ -273,7 +282,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 					tempList.add(apptAtD);
 					apptNum++;
 				}
-			}
+			//}
 		}
 			Appt[] timeAppt = new Appt[apptNum];
 			tempList.toArray(timeAppt);
@@ -287,7 +296,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 		List<Appt> tempList2 = new ArrayList<Appt>();
 		int userApptNum=0;
 		for(int i=0;i<tempList.length;i++){
-			if(tempList[i].getAllPeople().contains(entity)){
+			if(tempList[i].getAllPeople().contains(entity.ID())){
 				userApptNum++;
 				tempList2.add(tempList[i]);
 			}
@@ -360,7 +369,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			File f = new File("Apptfile.xml");
 			if (f.exists() && f.isFile()){
 				mAppts = (HashMap<Integer, Appt>) xstream.fromXML(f);
-			}
+			} 
 		}catch(Exception e){
 			System.err.println("Error in XML Read: " + e.getMessage());
 		}
