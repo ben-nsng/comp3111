@@ -83,6 +83,10 @@ public class ApptStorageControllerImpl {
 		mApptStorage.LoadApptFromXml();
 	}
 	
+	public void PutApptToXml() {
+		mApptStorage.PutApptToXml();
+	}
+	
 	public Location[] getLocationList() {
 		return mApptStorage.getLocationList();
 	}

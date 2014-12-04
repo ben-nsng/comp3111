@@ -1,0 +1,74 @@
+<map>
+  <entry>
+    <int>1</int>
+    <hkust.cse.calendar.unit.Appt>
+      <mTimeSpan>
+        <mStartTime>2014-12-29 01:00:00.0</mStartTime>
+        <mEndTime>2014-12-29 01:30:00.0</mEndTime>
+      </mTimeSpan>
+      <mTitle>Untitled</mTitle>
+      <mInfo>Input description of this appointment</mInfo>
+      <mApptID>1</mApptID>
+      <joinApptID>-1</joinApptID>
+      <isjoint>false</isjoint>
+      <attend>
+        <string>user</string>
+      </attend>
+      <reject/>
+      <waiting/>
+      <frequency>1</frequency>
+      <reminder>false</reminder>
+      <reminderTime>1899-12-30 16:00:00.0</reminderTime>
+      <derivedFromSchedule>false</derivedFromSchedule>
+      <isScheduled>true</isScheduled>
+    </hkust.cse.calendar.unit.Appt>
+  </entry>
+  <entry>
+    <int>2</int>
+    <hkust.cse.calendar.unit.Appt>
+      <mTimeSpan>
+        <mStartTime>2014-12-25 01:00:00.0</mStartTime>
+        <mEndTime>2014-12-25 01:30:00.0</mEndTime>
+      </mTimeSpan>
+      <mTitle>Untitled</mTitle>
+      <mInfo>Input description of this appointment</mInfo>
+      <mApptID>2</mApptID>
+      <joinApptID>-1</joinApptID>
+      <isjoint>false</isjoint>
+      <attend>
+        <string>user</string>
+      </attend>
+      <reject/>
+      <waiting/>
+      <frequency>4</frequency>
+      <reminder>false</reminder>
+      <reminderTime>1899-12-30 16:00:00.0</reminderTime>
+      <derivedFromSchedule>false</derivedFromSchedule>
+      <isScheduled>true</isScheduled>
+    </hkust.cse.calendar.unit.Appt>
+  </entry>
+  <entry>
+    <int>3</int>
+    <hkust.cse.calendar.unit.Appt>
+      <mTimeSpan>
+        <mStartTime>2014-12-09 01:00:00.0</mStartTime>
+        <mEndTime>2014-12-09 01:30:00.0</mEndTime>
+      </mTimeSpan>
+      <mTitle>Untitled</mTitle>
+      <mInfo>Input description of this appointment</mInfo>
+      <mApptID>3</mApptID>
+      <joinApptID>-1</joinApptID>
+      <isjoint>false</isjoint>
+      <attend>
+        <string>user</string>
+      </attend>
+      <reject/>
+      <waiting/>
+      <frequency>3</frequency>
+      <reminder>false</reminder>
+      <reminderTime>1899-12-30 16:00:00.0</reminderTime>
+      <derivedFromSchedule>false</derivedFromSchedule>
+      <isScheduled>true</isScheduled>
+    </hkust.cse.calendar.unit.Appt>
+  </entry>
+</map>

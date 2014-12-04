@@ -121,6 +121,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				CalGrid.this.controller.PutApptToXml();
 				System.exit(0);
 			}
 		});
@@ -447,6 +448,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				if (n == JOptionPane.YES_OPTION){
 					//controller.dumpStorageToFile();
 					//System.out.println("closed");
+					CalGrid.this.controller.PutApptToXml();
 					dispose();
 					CalendarMain.logOut = true;
 					return;	//return to CalendarMain()
@@ -461,8 +463,10 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			public void actionPerformed(ActionEvent e) {
 				int n = JOptionPane.showConfirmDialog(null, "Exit Program ?",
 						"Comfirm", JOptionPane.YES_NO_OPTION);
-				if (n == JOptionPane.YES_OPTION)
+				if (n == JOptionPane.YES_OPTION){
+					CalGrid.this.controller.PutApptToXml();
 					System.exit(0);
+				}
 
 			}
 		});

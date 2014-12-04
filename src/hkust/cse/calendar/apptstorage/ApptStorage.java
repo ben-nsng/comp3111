@@ -6,20 +6,22 @@ import hkust.cse.calendar.unit.TimeSpan;
 
 import java.util.HashMap;
 
+import com.thoughtworks.xstream.XStream;
+
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.user.User;
 
 
 public abstract class ApptStorage {
-
-	public HashMap<Integer, Appt> mAppts;		//a hashmap to save every thing to it, write to memory by the memory based storage implementation	
+	public HashMap<Integer, Appt> mAppts;	//a hashmap to save every thing to it, write to memory by the memory based storage implementation
 	public User defaultUser;	//a user object, now is single user mode without login
+	public HashMap<Integer, User> mUsers;
 	public int mAssignedApptID;	//a global appointment ID for each appointment record
 	public Location[] _locations;
+	public XStream xstream;
 	protected TimeMachine timeMachine;
-	
 	public ApptStorage() {	//default constructor
-	}
+}
 	
 	public void setTimeMachine(TimeMachine machine) {
 		this.timeMachine = machine;
@@ -46,9 +48,10 @@ public abstract class ApptStorage {
 	public abstract void RemoveAppt(Appt appt);	//abstract method to remove an appointment record
 	
 	public abstract User getDefaultUser();		//abstract method to return the current user object
+
+	public abstract void LoadApptFromXml();	//abstract method to load appointment from xml record into hash map
 	
-	public abstract void LoadApptFromXml();		//abstract method to load appointment from xml reocrd into hash map
-	
+	public abstract void PutApptToXml();	//abstract method to put appointment from hash map into xml record
 	/*
 	 * Add other methods if necessary
 	 */

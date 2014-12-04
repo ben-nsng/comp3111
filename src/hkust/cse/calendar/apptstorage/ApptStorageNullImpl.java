@@ -86,5 +86,10 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void PutApptToXml() {
+		//TODO Auto-generated method stub
+	}
 
 }
