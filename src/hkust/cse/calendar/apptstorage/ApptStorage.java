@@ -39,6 +39,8 @@ public abstract class ApptStorage {
 	
 	public abstract Appt RetrieveAppts(int joinApptID);					// overload method to retrieve appointment with the given joint appointment id
 
+	public abstract Appt[] RetrieveAppts(Location location, TimeSpan time);
+	
 	public abstract void UpdateAppt(Appt appt);	//abstract method to update an appointment record
 
 	public abstract void RemoveAppt(Appt appt);	//abstract method to remove an appointment record

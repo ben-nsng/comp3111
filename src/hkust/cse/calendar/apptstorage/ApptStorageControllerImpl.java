@@ -52,6 +52,10 @@ public class ApptStorageControllerImpl {
 		return mApptStorage.RetrieveAppts(joinApptID);
 	}
 	
+	public Appt[] RetrieveAppt(Location location, TimeSpan time) {
+		return mApptStorage.RetrieveAppts(location, time);
+	}
+	
 	/* Manage the Appt in the storage
 	 * parameters: the Appt involved, the action to take on the Appt */
 	public void ManageAppt(Appt appt, int action) {

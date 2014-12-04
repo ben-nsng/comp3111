@@ -432,6 +432,10 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"Cannot Delete Past Events !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
+			else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst() !=parent.mCurrUser.ID())
+				JOptionPane.showMessageDialog(this,
+						"Only The Inintiator Can Delete Group Event !", "Delete",
+						JOptionPane.ERROR_MESSAGE);
 			else {
 					parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
 					parent.getAppList().clear();
@@ -446,7 +450,7 @@ public class AppList extends JPanel implements ActionListener {
 		//check whether the start time of selected appointment is before the current time
 		if (apptTitle == null) {
 			JOptionPane.showMessageDialog(this,
-					"No Appointment To Modify !", "Delete",
+					"No Appointment To Modify !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -454,12 +458,18 @@ public class AppList extends JPanel implements ActionListener {
 			JOptionPane.showMessageDialog(this,
 					"Cannot Modify Past Events !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
+		else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst()!=parent.mCurrUser.ID())
+			JOptionPane.showMessageDialog(this,
+					"Only The Ininitator Can Modify The Group Event !", "Modify",
+					JOptionPane.ERROR_MESSAGE);
 		else {
-			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
-
-			setAppDial.updateSetApp(apptTitle);
-			setAppDial.show();
-			setAppDial.setResizable(false);
+			//if(!apptTitle.isJoint()) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
+	
+				setAppDial.updateSetApp(apptTitle);
+				setAppDial.show();
+				setAppDial.setResizable(false);
+			//}
 		}
 
 	}
@@ -498,6 +508,20 @@ public class AppList extends JPanel implements ActionListener {
 		
 		if (parent.mCurrUser == null)
 			return;
+		if(hkust.cse.calendar.gui.Utility.createDefaultAppt(
+				parent.currentY, parent.currentM, parent.currentD,
+				parent.mCurrUser).TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime())) {
+			JOptionPane.showMessageDialog(parent, "Cannot Make An Appointment In The Past !",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(parent.controller.getLocationList().length==0) {
+			JOptionPane.showMessageDialog(parent, "Cannot Make An Appointment Because Of No Locations !",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+			
 		if (currentRow < 0 || currentRow > ROWNUM - 1) {
 			JOptionPane.showMessageDialog(parent, "Please Select Again !",
 					"Error", JOptionPane.ERROR_MESSAGE);

@@ -56,6 +56,12 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public Appt[] RetrieveAppts(Location location, TimeSpan time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public void UpdateAppt(Appt appt) {
