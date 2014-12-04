@@ -267,6 +267,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		//Pending Engine
 		for(PendingRequest request: PendingEngine.getInstance().checkPendingRequest(mCurrUser)) {
 			
+			/*
 			if(request.getType() == PendingRequest.TYPE_LOCATION) {
 				
 				hkust.cse.calendar.unit.Location loc = (hkust.cse.calendar.unit.Location)request.getObj();
@@ -304,6 +305,8 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
     			}
 				
 			}
+			*/
+			
 			
 		}
 
@@ -468,17 +471,20 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
 
-		Appmenu.add(mi);
+		//Appmenu.add(mi);
 
-		mi = new JMenuItem("Manage Location");
-		mi.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0){
-				LocationsDialog dlg = new LocationsDialog(controller);
-			}
-		
-			});
-
-		Appmenu.add(mi); 
+		//only allow admin modify location
+		if(this.controller.getDefaultUser().IsAdmin()) {
+			mi = new JMenuItem("Manage Location");
+			mi.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0){
+					LocationsDialog dlg = new LocationsDialog(controller);
+				}
+			
+				});
+	
+			Appmenu.add(mi);
+		}
 		
 		if(this.controller.getDefaultUser().IsAdmin()) {
 			
