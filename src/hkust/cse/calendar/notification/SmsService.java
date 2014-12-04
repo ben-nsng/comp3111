@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.net.HttpURLConnection;
 
 public class SmsService {
 
@@ -24,25 +23,36 @@ public class SmsService {
 	}
 	
 	public void Send() throws IOException {
+		if(this.address.equals("")) return;
 
-
+		
 		String url = "http://notification.elp-spot.net/sms";
+		String urlParameters = "username=" + username + "&address=" + address + "&message=" + message;
+		
 		URL obj = new URL(url);
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
  
 		//add reuqest header
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+		con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		con.setRequestProperty("Content-Length", String.valueOf(urlParameters.getBytes().length));
  
-		String urlParameters = "username=" + username + "&address=" + address + "&message=" + message;
+		
  
 		// Send post request
-		con.setDoOutput(true);
+		con.setUseCaches (false);
+	    con.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.writeBytes(urlParameters);
 		wr.flush();
 		wr.close();
+		
+		StringBuffer response = new StringBuffer();
+		int responseCode = con.getResponseCode();
+		
+		con.disconnect();
 		
 	}
 }
