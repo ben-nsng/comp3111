@@ -7,6 +7,8 @@ import hkust.cse.calendar.unit.PendingEngine;
 import hkust.cse.calendar.unit.PendingRequest;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
+import hkust.cse.calendar.notification.EmailService;
+import hkust.cse.calendar.notification.SmsService;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.User;
 import hkust.cse.calendar.gui.LocationsDialog;
@@ -21,6 +23,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -525,6 +528,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				new Timestamp(curr.getYear(), curr.getMonth(), curr.getDate(), 0, 0, 0, 0),
 				new Timestamp(curr.getYear(), curr.getMonth(), curr.getDate(), 23, 59, 59, 0)));
 		String info = "";
+		String infosms = "";
+		String infoemail = "";
+		String message = "";
 
 		//the timestamp to check next occurrence event (if no reminder need)
 		Timestamp next = (Timestamp)sender.getCurrentTime().clone();
@@ -560,7 +566,14 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				//offset start time by reminder time
 				next2.setTime(appt.TimeSpan().StartTime().getTime() - (reminderTime.getHours() * 60 + reminderTime.getMinutes()) * 60000);
 				if(curr.compareTo(next2) <= 0 && next2.compareTo(next) < 0) {
-					info += appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getTitle() + "\n";
+					message = appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getTitle() + "\n";
+					info += message;
+					
+					if(appt.sendSms())
+						infosms += message;
+					
+					if(appt.sendEmail())
+						infoemail += message;
 				}
 			}
 		}
@@ -570,6 +583,35 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		 			    "The following appointment(s) will be happened:" + "\n" + info,
 		 			    "Appointment!",
 		 			    JOptionPane.INFORMATION_MESSAGE);
+		
+		if(!infosms.equals("")) {
+			SmsService sms = new SmsService(
+					mCurrUser.getFirstName() + " " + mCurrUser.getLastName(),
+					mCurrUser.getPhoneNum(),
+					infosms
+					);
+			try {
+				sms.Send();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(!infoemail.equals("")) {
+			EmailService email = new EmailService(
+					mCurrUser.getFirstName() + " " + mCurrUser.getLastName(),
+					mCurrUser.getEmail(),
+					"[COMP3111 Calendar] Notification of the following events",
+					infoemail
+					);
+			try {
+				email.Send();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void timeStopped(TimeMachine sender) {

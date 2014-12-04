@@ -39,6 +39,14 @@ public class Appt implements Serializable, Cloneable {
 	
 	private boolean derivedFromSchedule;		// Is this event derived from schedule
 	
+	private boolean isScheduled;
+	
+	private Location location;
+	
+	private boolean sendEmail;
+	
+	private boolean sendSms;
+	
 	public Appt() {								// A default constructor used to set all the attribute to default values
 		mApptID = 0;
 		mTimeSpan = null;
@@ -252,5 +260,37 @@ public class Appt implements Serializable, Cloneable {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void setScheduled(boolean s) {
+		isScheduled = s;
+	}
+	
+	public boolean IsScheduled() {
+		return isScheduled;
+	}
+	
+	public void setLocation(Location l) {
+		location = l;
+	}
+	
+	public Location getLocation() {
+		return location;
+	}
+	
+	public void setSendEmail(boolean b) {
+		sendEmail = b;
+	}
+	
+	public boolean sendEmail() {
+		return sendEmail;
+	}
+	
+	public void setSendSms(boolean b) {
+		sendSms = b;
+	}
+	
+	public boolean sendSms() {
+		return sendSms;
 	}
 }
