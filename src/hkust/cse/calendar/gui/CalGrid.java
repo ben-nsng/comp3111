@@ -104,7 +104,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			"President's Day (US)\n",
 			"",
 			"Ching Ming Festival\nGood Friday\nThe day following Good Friday\nEaster Monday\n",
-			"Labour Day\nThe Buddha¡¦s Birthday\nTuen Ng Festival\n",
+			"Labour Day\nThe Buddhaï¿½ï¿½s Birthday\nTuen Ng Festival\n",
 			"",
 			"Hong Kong Special Administrative Region Establishment Day\n",
 			"Civic Holiday(CAN)\n",
@@ -223,7 +223,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				renderer = new CalCellRenderer(null);
 				
 				if(!tem.equals("")) {
-					if(controller.RetrieveAppts(new TimeSpan(
+					if(controller.RetrieveAppts(mCurrUser, new TimeSpan(
 							new Timestamp(currentY, currentM - 1, Integer.parseInt(tem), 0, 0, 0, 0),
 							new Timestamp(currentY, currentM - 1, Integer.parseInt(tem), 23, 59, 59, 0))).length > 0)
 						renderer.setBackground(Color.cyan);
