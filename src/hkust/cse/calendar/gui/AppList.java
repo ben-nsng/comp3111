@@ -115,6 +115,10 @@ public class AppList extends JPanel implements ActionListener {
 	private Color[][] cellColor = new Color[20][2];
 	public Appt selectedAppt=null;
 	private MouseEvent tempe;
+	private Appt dragAppt=null;
+	private int dragRow;
+	private int dragCol;
+	
 	public AppList() {
 		setLayout(new BorderLayout());
 		currentRow = 0;
@@ -548,6 +552,13 @@ public class AppList extends JPanel implements ActionListener {
 		pressCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
+		//start dragging appt
+		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+			dragAppt = getSelectedAppTitle();
+			dragRow = pressRow;
+			dragCol = pressCol;
+		}
 	}
 	private void releaseResponse(MouseEvent e) {
 		
@@ -555,6 +566,7 @@ public class AppList extends JPanel implements ActionListener {
 		releaseCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
 	}
 	private void calculateDrag(MouseEvent e){
 		
@@ -571,6 +583,18 @@ public class AppList extends JPanel implements ActionListener {
 			currentCol = releaseCol;
 		}
 		
+		//end dragging appt
+		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+			if(dragAppt != null) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, dragAppt.getID());
+				setAppDial.updateSetApp(dragAppt);
+				setAppDial.setStartTime(getHour(currentRow, currentCol), getMinute(currentRow, currentCol));
+				setAppDial.modifyAppt();
+				setAppDial.dispose();
+				
+				dragAppt = null;
+			}
+		}
 	}
 	public void setParent(CalGrid grid) {
 		parent = grid;
@@ -582,6 +606,23 @@ public class AppList extends JPanel implements ActionListener {
 
 		}
 		
+	}
+	
+	public int getHour(int row, int col) {
+		int hour = 8;
+		hour += Math.floor(row / 4);
+		if(col > 2)
+			hour += 5;
+		
+		return hour;
+	}
+	
+	public int getMinute(int row, int col) {
+		int min = 0;
+		
+		min = row % 4 * 15;
+		
+		return min;
 	}
 
 }
