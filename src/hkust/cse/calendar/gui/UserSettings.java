@@ -73,7 +73,7 @@ public class UserSettings extends JFrame implements ActionListener {
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		
 		JPanel messPanel = new JPanel();
-		messPanel.add(new JLabel("Please fill in your infomation below and tyoe password to confirm your changed."));
+		messPanel.add(new JLabel("Please fill in your infomation below and type password to confirm your changed."));
 		top.add(messPanel);
 
 
