@@ -5,8 +5,12 @@ import hkust.cse.calendar.unit.user.User;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -34,6 +38,8 @@ public class UserSettings extends JFrame implements ActionListener {
 	private JButton signupButton;
 	private Boolean adminMode = false;
 	private Boolean inspect = false;
+	private Font font;
+	private JLabel fontLabel;
 	
 	public UserSettings(User user) {
 		this(user, false, false);
@@ -44,6 +50,16 @@ public class UserSettings extends JFrame implements ActionListener {
 	}
 	
 	public UserSettings(User user, Boolean admin, Boolean inspect) {
+		try {
+			File fontFile = new File("fontawesome-webfont.ttf");
+			font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+			font = font.deriveFont(Font.PLAIN, 24f);
+			
+		} catch (/*ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | */FontFormatException | IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} 
+		
 		this.mUser = user;
 		this.adminMode = admin;
 		this.inspect = inspect;
@@ -62,6 +78,9 @@ public class UserSettings extends JFrame implements ActionListener {
 
 
 		JPanel namePanel = new JPanel();
+		fontLabel = new JLabel("\uf183");
+		fontLabel.setFont(font);
+		namePanel.add(fontLabel);
 		namePanel.add(new JLabel("User Name:     "));
 		JLabel userName = new JLabel();
 		namePanel.add(userName);
@@ -70,6 +89,9 @@ public class UserSettings extends JFrame implements ActionListener {
 		if(!adminMode) {
 		
 			JPanel pwPanel = new JPanel();
+			fontLabel = new JLabel("\uf084");
+			fontLabel.setFont(font);
+			pwPanel.add(fontLabel);
 			pwPanel.add(new JLabel("Password:       "));
 			password = new JPasswordField(15);
 			pwPanel.add(password);
@@ -78,24 +100,36 @@ public class UserSettings extends JFrame implements ActionListener {
 		}
 		
 		JPanel firstnamePanel = new JPanel();
+		fontLabel = new JLabel("\uf183");
+		fontLabel.setFont(font);
+		firstnamePanel.add(fontLabel);
 		firstnamePanel.add(new JLabel("First Name:     "));
 		firstName = new JTextField(15);
 		firstnamePanel.add(firstName);
 		top.add(firstnamePanel);
 		
 		JPanel lastnamePanel = new JPanel();
+		fontLabel = new JLabel("\uf183");
+		fontLabel.setFont(font);
+		lastnamePanel.add(fontLabel);
 		lastnamePanel.add(new JLabel("Last Name:     "));
 		lastName = new JTextField(15);
 		lastnamePanel.add(lastName);
 		top.add(lastnamePanel);
 
 		JPanel emailPanel = new JPanel();
+		fontLabel = new JLabel("\uf0c6");
+		fontLabel.setFont(font);
+		emailPanel.add(fontLabel);
 		emailPanel.add(new JLabel("Email:              "));
 		email = new JTextField(15);
 		emailPanel.add(email);
 		top.add(emailPanel);
 		
 		JPanel phoneNumPanel = new JPanel();
+		fontLabel = new JLabel("\uf095");
+		fontLabel.setFont(font);
+		phoneNumPanel.add(fontLabel);
 		phoneNumPanel.add(new JLabel("Phone Number:"));
 		phoneNum = new JTextField(15);
 		phoneNumPanel.add(phoneNum);
@@ -104,6 +138,9 @@ public class UserSettings extends JFrame implements ActionListener {
 		if(!inspect) {
 			
 			JPanel newpwPanel = new JPanel();
+			fontLabel = new JLabel("\uf084");
+			fontLabel.setFont(font);
+			newpwPanel.add(fontLabel);
 			newpwPanel.add(new JLabel("New Password:"));
 			newpassword = new JPasswordField(15);
 			newpwPanel.add(newpassword);

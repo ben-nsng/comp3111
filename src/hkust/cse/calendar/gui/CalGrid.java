@@ -514,6 +514,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			
 				});
 			
+			/*
 			mi = (JMenuItem) Admin.add(new JMenuItem("Pending Request"));
 			mi.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent arg0){
@@ -522,7 +523,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				}
 			
 				});
-			
+			*/
 		}
 		
 		mi = new JMenuItem("Create Group Event");
