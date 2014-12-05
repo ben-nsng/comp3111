@@ -393,7 +393,14 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			File f = new File("Locfile.xml");
 			if (f.exists() && f.isFile()){
 				_locations = (Location[]) xstream.fromXML(f);
-			} 
+				Iterator<Map.Entry<Integer, Appt>> IDloop = mAppts.entrySet().iterator();
+				int temp = 0;
+				while(IDloop.hasNext()){
+					Map.Entry<Integer, Appt> IDtemp = IDloop.next();
+						temp = IDtemp.getKey();
+				}
+				mAssignedApptID = temp+1;
+			}
 		}catch(Exception e){
 			System.err.println("Error in XML Read: " + e.getMessage());
 		}
