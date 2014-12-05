@@ -122,6 +122,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				CalGrid.this.controller.PutApptToXml();
+				CalGrid.this.controller.PutLocToXml();
 				System.exit(0);
 			}
 		});
@@ -305,8 +306,8 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
     				JOptionPane.showMessageDialog(null, "You have declined the request." ,"Info", JOptionPane.INFORMATION_MESSAGE);
     			}
 				
-			}
-			*/
+			}*/
+			
 			
 			
 		}
@@ -449,6 +450,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//controller.dumpStorageToFile();
 					//System.out.println("closed");
 					CalGrid.this.controller.PutApptToXml();
+					CalGrid.this.controller.PutLocToXml();
 					dispose();
 					CalendarMain.logOut = true;
 					return;	//return to CalendarMain()
@@ -465,6 +467,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 						"Comfirm", JOptionPane.YES_NO_OPTION);
 				if (n == JOptionPane.YES_OPTION){
 					CalGrid.this.controller.PutApptToXml();
+					CalGrid.this.controller.PutLocToXml();
 					System.exit(0);
 				}
 
@@ -533,6 +536,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		mCurrUser = this.controller.getDefaultUser();	//get User from controller
 		controller.LoadApptFromXml();
+		controller.LoadLocFromXml();
 		// Fix Me !
 		// Load the saved appointments from disk
 		checkUpdateJoinAppt();
@@ -848,17 +852,17 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		Appt[] appts = controller.RetrieveAppts(mCurrUser, currentTime);
 		for(int i=0; i<appts.length; i++) {
 			//tell all participant that the appointment has changed
-			if(appts[i].getAllPeople().contains(mCurrUser.ID()) /* && content changed*/) {
-				AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
-				a.show();
-			}
+			//if(appts[i].getAllPeople().contains(mCurrUser.ID()) /* && content changed*/) {
+			//	AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
+			//	a.show();
+			//}
 			
 			//tell initiator if someone responded to the appointment
-			if(appts[i].getAttendList().getFirst() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
-				AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
-				b.show();
-				//set the appointment back to no one responded
-			}
+			//if(appts[i].getAttendList().getFirst() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
+			//	AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
+			//	b.show();
+			//	//set the appointment back to no one responded
+			//}
 			
 			//the current user is still in the waiting list of the appointment
 			if(appts[i].getWaitingList().contains(mCurrUser.ID())) {
