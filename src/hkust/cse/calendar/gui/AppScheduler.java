@@ -472,11 +472,11 @@ public class AppScheduler extends JDialog implements ActionListener,
 	}
 	
 	public void modifyAppt() {
-		int[] validDate = getValidDate();
-		int[] validTime = getValidTimeInterval();
-		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
+		//int[] validDate = getValidDate();
+		//int[] validTime = getValidTimeInterval();
+		//TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		
-		if(apptTimeSpan.Overlap(NewAppt.TimeSpan())) return;
+		//if(apptTimeSpan.Overlap(NewAppt.TimeSpan())) return;
 		
 		saveButtonResponse();
 	}

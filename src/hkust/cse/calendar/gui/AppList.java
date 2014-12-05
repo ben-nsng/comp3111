@@ -555,7 +555,18 @@ public class AppList extends JPanel implements ActionListener {
 		
 		//start dragging appt
 		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
-			dragAppt = getSelectedAppTitle();
+			Object apptTitle;
+			
+			if(pressCol < 3)
+				apptTitle = tableView.getModel().getValueAt(pressRow, 1);
+			else
+				apptTitle = tableView.getModel().getValueAt(pressRow, 4);
+			
+			if (apptTitle instanceof Appt)
+				dragAppt = (Appt)apptTitle;
+			else
+				dragAppt = null;
+			
 			dragRow = pressRow;
 			dragCol = pressCol;
 		}
@@ -566,6 +577,7 @@ public class AppList extends JPanel implements ActionListener {
 		releaseCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
 		
 	}
 	private void calculateDrag(MouseEvent e){
@@ -591,8 +603,11 @@ public class AppList extends JPanel implements ActionListener {
 				setAppDial.setStartTime(getHour(currentRow, currentCol), getMinute(currentRow, currentCol));
 				setAppDial.modifyAppt();
 				setAppDial.dispose();
+				parent.updateAppList();
 				
 				dragAppt = null;
+				tableView.getSelectionModel().clearSelection();
+				tableView.clearSelection();
 			}
 		}
 	}
@@ -603,7 +618,6 @@ public class AppList extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == tableView) {
 			pop.show(tableView, currentRow * 20, currentRow * 20);
-
 		}
 		
 	}
