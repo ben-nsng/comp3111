@@ -42,6 +42,7 @@ public class LoginDialog extends JFrame implements ActionListener
 	private JButton closeButton;
 	private JButton signupButton;
 	private UserManagement um;
+	public ApptStorageControllerImpl controller;
 	private Font font;
 	private JLabel fontLabel;
 	
@@ -125,6 +126,9 @@ public class LoginDialog extends JFrame implements ActionListener
 		um = UserManagement.getInstance();
 		userName.setText("user");
 		password.setText("user");
+		
+		controller = new ApptStorageControllerImpl(new ApptStorageDiskImpl(null));
+		
 	}
 	
 
@@ -187,8 +191,10 @@ public class LoginDialog extends JFrame implements ActionListener
 		{
 			int n = JOptionPane.showConfirmDialog(null, "Exit Program ?",
 					"Confirm", JOptionPane.YES_NO_OPTION);
-			if (n == JOptionPane.YES_OPTION)
+			if (n == JOptionPane.YES_OPTION){
+				controller.PutUserToXml();
 				System.exit(0);			
+			}
 		}
 	}
 	
