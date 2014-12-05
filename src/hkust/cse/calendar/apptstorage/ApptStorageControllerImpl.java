@@ -5,6 +5,7 @@ import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 /* This class is for managing the Appt Storage according to different actions */
 public class ApptStorageControllerImpl {
@@ -101,5 +102,13 @@ public class ApptStorageControllerImpl {
 	
 	public void setLocationList(Location[] locations) {
 		mApptStorage.setLocationList(locations);
+	}
+	
+	public UserManagement LoadUserFromXml() {
+		return mApptStorage.LoadUserFromXml();
+	}
+	
+	public void PutUserToXml() {
+		mApptStorage.PutUserToXml();
 	}
 }

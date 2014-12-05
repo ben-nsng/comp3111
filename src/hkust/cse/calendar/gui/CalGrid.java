@@ -12,6 +12,7 @@ import hkust.cse.calendar.notification.SmsService;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.User;
 import hkust.cse.calendar.gui.LocationsDialog;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -123,6 +124,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			public void windowClosing(WindowEvent e) {
 				CalGrid.this.controller.PutApptToXml();
 				CalGrid.this.controller.PutLocToXml();
+				controller.PutUserToXml();
 				System.exit(0);
 			}
 		});
@@ -451,6 +453,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//System.out.println("closed");
 					CalGrid.this.controller.PutApptToXml();
 					CalGrid.this.controller.PutLocToXml();
+					controller.PutUserToXml();
 					dispose();
 					CalendarMain.logOut = true;
 					return;	//return to CalendarMain()
@@ -468,6 +471,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				if (n == JOptionPane.YES_OPTION){
 					CalGrid.this.controller.PutApptToXml();
 					CalGrid.this.controller.PutLocToXml();
+					controller.PutUserToXml();
 					System.exit(0);
 				}
 

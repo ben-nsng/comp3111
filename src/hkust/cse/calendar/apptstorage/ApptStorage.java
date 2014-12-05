@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.XStream;
 
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 
 public abstract class ApptStorage {
@@ -55,6 +56,10 @@ public abstract class ApptStorage {
 	public abstract void LoadLocFromXml();
 	
 	public abstract void PutLocToXml();
+	
+	public abstract UserManagement LoadUserFromXml();
+	
+	public abstract void PutUserToXml();
 	
 	/*
 	 * Add other methods if necessary

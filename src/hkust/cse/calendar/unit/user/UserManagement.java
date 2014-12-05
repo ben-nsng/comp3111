@@ -1,15 +1,29 @@
 package hkust.cse.calendar.unit.user;
 
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+import hkust.cse.calendar.apptstorage.ApptStorageDiskImpl;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
+import com.thoughtworks.xstream.XStream;
 
 public class UserManagement implements Serializable {
 
 	public static UserManagement getInstance() {
 		if(um == null) {
-			um = new UserManagement();
+			
+			ApptStorageControllerImpl controller = new ApptStorageControllerImpl(new ApptStorageDiskImpl(null));
+			um = controller.LoadUserFromXml();
+			
+			if(um == null) um = new UserManagement();
 			
 			//init and hard code some users
 			um.AddUser(new AdminUser("admin", "admin"));
@@ -39,6 +53,7 @@ public class UserManagement implements Serializable {
 	private Boolean AddUser(User user) {
 		if(!DuplicateID(user.ID())) {
 			users.add(user);
+			//um.controller.PutUserToXml();
 			return true;
 		}
 		return false;

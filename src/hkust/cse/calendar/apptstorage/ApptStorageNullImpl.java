@@ -8,6 +8,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 public class ApptStorageNullImpl extends ApptStorage {
 
@@ -105,4 +106,14 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	public UserManagement LoadUserFromXml() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void PutUserToXml() {
+		// TODO Auto-generated method stub
+	}
 }

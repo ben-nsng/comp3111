@@ -5,6 +5,7 @@ import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -369,6 +370,13 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			File f = new File("Apptfile.xml");
 			if (f.exists() && f.isFile()){
 				mAppts = (HashMap<Integer, Appt>) xstream.fromXML(f);
+				Iterator<Map.Entry<Integer, Appt>> IDloop = mAppts.entrySet().iterator();
+				int temp = 0;
+				while(IDloop.hasNext()){
+					Map.Entry<Integer, Appt> IDtemp = IDloop.next();
+						temp = IDtemp.getKey();
+				}
+				mAssignedApptID = temp+1;
 			} 
 		}catch(Exception e){
 			System.err.println("Error in XML Read: " + e.getMessage());
@@ -393,23 +401,42 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			File f = new File("Locfile.xml");
 			if (f.exists() && f.isFile()){
 				_locations = (Location[]) xstream.fromXML(f);
-				Iterator<Map.Entry<Integer, Appt>> IDloop = mAppts.entrySet().iterator();
-				int temp = 0;
-				while(IDloop.hasNext()){
-					Map.Entry<Integer, Appt> IDtemp = IDloop.next();
-						temp = IDtemp.getKey();
-				}
-				mAssignedApptID = temp+1;
 			}
 		}catch(Exception e){
 			System.err.println("Error in XML Read: " + e.getMessage());
 		}
 	}
 	
+	@Override
 	public void PutLocToXml() {
 		// TODO Auto-generated method stub
 		try {
 			xstream.toXML(_locations, new FileWriter("Locfile.xml"));
+		} catch (IOException e) {
+			 //TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public UserManagement LoadUserFromXml() {
+		// TODO Auto-generated method stub
+		try{	
+			File f = new File("Userfile.xml");
+			if (f.exists() && f.isFile()){
+				return (UserManagement) xstream.fromXML(f);
+			}
+		}catch(Exception e){
+			System.err.println("Error in XML Read: " + e.getMessage());
+		}
+		return null;
+	}
+	
+	@Override
+	public void PutUserToXml() {
+		// TODO Auto-generated method stub
+		try {
+			xstream.toXML(UserManagement.getInstance(), new FileWriter("Userfile.xml"));
 		} catch (IOException e) {
 			 //TODO Auto-generated catch block
 			e.printStackTrace();
