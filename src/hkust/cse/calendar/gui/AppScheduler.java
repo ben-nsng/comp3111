@@ -529,12 +529,12 @@ public class AppScheduler extends JDialog implements ActionListener,
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
 		for(int i=0; i<retrivedAppts.length; i++) {
-			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()==NewAppt.getID())
+			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()!=NewAppt.getID())
 				noTimeConflict = false;
 		}
 		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
 		for(int i=0; i<retriedAppts2.length; i++)
-			if(retriedAppts2[i].IsScheduled())
+			if(retriedAppts2[i].IsScheduled()&&retriedAppts2[i].getID()!=NewAppt.getID())
 				noLocationConflict = false;
 		//check if the appointment is overlapped with other appointments
 		//if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
