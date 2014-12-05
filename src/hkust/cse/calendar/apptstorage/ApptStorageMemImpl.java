@@ -6,6 +6,9 @@ import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.User;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -361,4 +364,26 @@ public class ApptStorageMemImpl extends ApptStorage {
 		String xml = xstream.toXML(mAppts);
 	}
 
+	@Override
+	public void LoadLocFromXml() {
+		// TODO Auto-generated method stub
+		try{	
+			File f = new File("Locfile.xml");
+			if (f.exists() && f.isFile()){
+				_locations = (Location[]) xstream.fromXML(f);
+			} 
+		}catch(Exception e){
+			System.err.println("Error in XML Read: " + e.getMessage());
+		}
+	}
+	
+	public void PutLocToXml() {
+		// TODO Auto-generated method stub
+		try {
+			xstream.toXML(_locations, new FileWriter("Locfile.xml"));
+		} catch (IOException e) {
+			 //TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
