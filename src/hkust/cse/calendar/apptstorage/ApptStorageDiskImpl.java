@@ -192,11 +192,26 @@ public class ApptStorageDiskImpl extends ApptStorage {
 		}
 			Appt[] timeAppt = new Appt[apptNum];
 			tempList.toArray(timeAppt);
+			
 			return timeAppt;
 	}
 	
 	@Override
 	public Appt[] RetrieveAppts(TimeSpan d, int f) {
+		
+		Appt[] appts = RetrieveAppts(d);
+		ArrayList<Appt> newappts = new ArrayList<Appt>();
+		
+		for(Appt appt : appts) {
+			if(appt.getFrequency() == f) {
+				newappts.add(appt);
+			}
+		}
+		
+		appts = new Appt[newappts.size()];
+		return newappts.toArray(appts);
+		
+		/*
 		// TODO Auto-generated method stub
 		List<Appt> tempList = new ArrayList<Appt>();
 		int apptNum = 0;
@@ -288,6 +303,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			Appt[] timeAppt = new Appt[apptNum];
 			tempList.toArray(timeAppt);
 			return timeAppt;
+			*/
 	}
 
 	@Override
