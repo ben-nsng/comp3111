@@ -271,6 +271,12 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		//Pending Engine
 		for(PendingRequest request: PendingEngine.getInstance().checkPendingRequest(mCurrUser)) {
 			
+			if(request.getType() == PendingRequest.REMOVE_LOCATION) {
+				String loc = (String)request.getObj();
+				
+				JOptionPane.showMessageDialog(null, "The location \"" + loc + "\" has been removed by admin " + request.getFrom().ID() + "." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
 			/*
 			if(request.getType() == PendingRequest.TYPE_LOCATION) {
 				
