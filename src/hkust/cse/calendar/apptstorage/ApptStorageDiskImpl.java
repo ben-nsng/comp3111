@@ -320,7 +320,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 		List<Appt> tempList2 = new ArrayList<Appt>();
 		int userApptNum=0;
 		for(int i=0;i<tempList.length;i++){
-			if(tempList[i].getLocation().equals(location)){
+			if(tempList[i].getLocation().getName().equals(location.getName())){
 				userApptNum++;
 				tempList2.add(tempList[i]);
 			}

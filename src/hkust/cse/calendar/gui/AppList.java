@@ -373,8 +373,8 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED_TITLE;
 					cellColor[pos[0]][1] = color;
-					cellCMD[pos[0]][2] = COLORED_TITLE;
-					cellColor[pos[0]][2] = color;
+					//cellCMD[pos[0]][2] = COLORED_TITLE;
+					//cellColor[pos[0]][2] = color;
 				}
 			} else {
 				tableView.getModel().setValueAt(appt, pos[0], pos[1]);
@@ -385,8 +385,8 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED;
 					cellColor[pos[0]][1] = color;
-					cellCMD[pos[0]][2] = COLORED;
-					cellColor[pos[0]][2] = color;
+					//cellCMD[pos[0]][2] = COLORED;
+					//cellColor[pos[0]][2] = color;
 				}
 
 			}
