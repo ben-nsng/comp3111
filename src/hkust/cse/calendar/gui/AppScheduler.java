@@ -526,8 +526,10 @@ public class AppScheduler extends JDialog implements ActionListener,
 		//check other attendants' time conflict
 		UserManagement um = UserManagement.getInstance();
 		for(int i=0; i<NewAppt.getWaitingList().size(); i++) {
-			if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan).length!=0)
-					noTimeConflict = false;
+			//if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan).length!=0)
+				for(int j =0; j<parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan).length; j++)
+						if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan)[j].getID()!=NewAppt.getID())
+								noTimeConflict = false;
 		}
 		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
 		for(int i=0; i<retriedAppts2.length; i++)
