@@ -137,6 +137,8 @@ public class LocationsDialog extends JFrame {
 									new Timestamp(2030, 0, 0, 0, 0, 0, 0)
 									)
 							);
+					//System.out.println(loc.getName());
+					//System.out.println(appts.length);
 					for(Appt appt : appts) {
 						LinkedList<String> people = appt.getAllPeople();
 						for(String person : people) {

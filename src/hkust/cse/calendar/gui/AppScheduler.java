@@ -362,7 +362,14 @@ public class AppScheduler extends JDialog implements ActionListener,
 			//show dialog to add/remove participant
 			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
 		} else if (e.getSource() == availableTime){
-			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller);
+			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller, parent.timeMachine.getCurrentTime()); 
+			yearF.setText(Integer.toString(aTimeD.firstTime.StartTime().getYear()));
+			monthF.setText(Integer.toString(aTimeD.firstTime.StartTime().getMonth()));
+			dayF.setText(Integer.toString(aTimeD.firstTime.StartTime().getDate()));
+			sTimeH.setText(Integer.toString(aTimeD.firstTime.StartTime().getHours()));
+			sTimeM.setText(Integer.toString(aTimeD.firstTime.StartTime().getMinutes()));
+			eTimeH.setText(Integer.toString(aTimeD.firstTime.EndTime().getHours()));
+			eTimeM.setText(Integer.toString(aTimeD.firstTime.EndTime().getMinutes()));
 		}
 		parent.getAppList().clear();
 		parent.getAppList().setTodayAppt(parent.GetTodayAppt());
