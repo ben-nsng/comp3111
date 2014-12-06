@@ -67,7 +67,7 @@ public class ApptStorageDiskImpl extends ApptStorage {
 			Map.Entry<Integer, Appt> entry = entries.next();
 			//if(mAppts.containsKey(num)){
 				//Appt apptAtD = (Appt)mAppts.get(num).clone();
-				Appt apptAtD = entry.getValue();
+				Appt apptAtD = (Appt)entry.getValue().clone();
 				switch(apptAtD.getFrequency()){
 				case Appt.SINGLE:
 					if(apptAtD.TimeSpan().Overlap(d)){
