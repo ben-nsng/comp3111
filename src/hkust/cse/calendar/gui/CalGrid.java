@@ -8,6 +8,9 @@ import hkust.cse.calendar.unit.PendingRequest;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
 import hkust.cse.calendar.notification.EmailService;
+import hkust.cse.calendar.notification.INotification;
+import hkust.cse.calendar.notification.NotificationFactory;
+import hkust.cse.calendar.notification.NotificationService;
 import hkust.cse.calendar.notification.SmsService;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.User;
@@ -116,6 +119,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	private AppScheduler setAppDial;
 	public TimeMachine timeMachine;
 	private TimeMachineDialog tm;
+	private NotificationFactory nfactory;
 
 	public CalGrid(ApptStorageControllerImpl con) {
 		super();
@@ -131,6 +135,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		controller = con;
 		mCurrUser = null;
+		nfactory = new NotificationFactory();
 
 		previousRow = 0;
 		previousCol = 0;
@@ -558,6 +563,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		checkUpdateJoinAppt();
 	}
 	
+	
 	public void timeElapsed(TimeMachine sender) {
 		if(sender.IsRewind()) {
 			//remove any event that are derived from schedule within the rewind time
@@ -621,39 +627,31 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			}
 		}
 		
-		if(!info.equals(""))
-			JOptionPane.showMessageDialog(null,
-		 			    "The following appointment(s) will be happened:" + "\n" + info,
-		 			    "Appointment!",
-		 			    JOptionPane.INFORMATION_MESSAGE);
+		if(!info.equals("")) {
+			INotification alert = nfactory.GetNotificationService(NotificationService.Alert,
+					"",
+					"",
+					"The following appointment(s) will be happened:" + "\n" + info
+					);
+			alert.Send();
+		}
 		
 		if(!infosms.equals("")) {
-			SmsService sms = new SmsService(
+			INotification sms = nfactory.GetNotificationService(NotificationService.Sms,
 					mCurrUser.getFirstName() + " " + mCurrUser.getLastName(),
 					mCurrUser.getPhoneNum(),
 					infosms
 					);
-			try {
-				sms.Send();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			sms.Send();
 		}
 		
 		if(!infoemail.equals("")) {
-			EmailService email = new EmailService(
+			INotification email = nfactory.GetNotificationService(NotificationService.Email,
 					mCurrUser.getFirstName() + " " + mCurrUser.getLastName(),
 					mCurrUser.getEmail(),
-					"[COMP3111 Calendar] Notification of the following events",
 					infoemail
 					);
-			try {
-				email.Send();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			email.Send();
 		}
 	}
 	
