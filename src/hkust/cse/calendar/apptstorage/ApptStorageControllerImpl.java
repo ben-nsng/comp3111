@@ -4,7 +4,8 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 /* This class is for managing the Appt Storage according to different actions */
 public class ApptStorageControllerImpl {
@@ -52,6 +53,10 @@ public class ApptStorageControllerImpl {
 		return mApptStorage.RetrieveAppts(joinApptID);
 	}
 	
+	public Appt[] RetrieveAppt(Location location, TimeSpan time) {
+		return mApptStorage.RetrieveAppts(location, time);
+	}
+	
 	/* Manage the Appt in the storage
 	 * parameters: the Appt involved, the action to take on the Appt */
 	public void ManageAppt(Appt appt, int action) {
@@ -79,11 +84,31 @@ public class ApptStorageControllerImpl {
 		mApptStorage.LoadApptFromXml();
 	}
 	
+	public void PutApptToXml() {
+		mApptStorage.PutApptToXml();
+	}
+	
+	public void LoadLocFromXml() {
+		mApptStorage.LoadLocFromXml();
+	}
+	
+	public void PutLocToXml() {
+		mApptStorage.PutLocToXml();
+	}
+	
 	public Location[] getLocationList() {
 		return mApptStorage.getLocationList();
 	}
 	
 	public void setLocationList(Location[] locations) {
 		mApptStorage.setLocationList(locations);
+	}
+	
+	public UserManagement LoadUserFromXml() {
+		return mApptStorage.LoadUserFromXml();
+	}
+	
+	public void PutUserToXml() {
+		mApptStorage.PutUserToXml();
 	}
 }

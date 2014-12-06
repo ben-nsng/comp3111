@@ -3,11 +3,16 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.Main.CalendarMain;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.PendingEngine;
+import hkust.cse.calendar.unit.PendingRequest;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.listener.TimeMachineListener;
+import hkust.cse.calendar.notification.EmailService;
+import hkust.cse.calendar.notification.SmsService;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
 import hkust.cse.calendar.gui.LocationsDialog;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,7 +24,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -48,6 +56,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.tools.JavaFileManager.Location;
 
 
 public class CalGrid extends JFrame implements ActionListener, TimeMachineListener {
@@ -96,7 +105,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			"President's Day (US)\n",
 			"",
 			"Ching Ming Festival\nGood Friday\nThe day following Good Friday\nEaster Monday\n",
-			"Labour Day\nThe Buddha’s Birthday\nTuen Ng Festival\n",
+			"Labour Day\nThe Buddha��s Birthday\nTuen Ng Festival\n",
 			"",
 			"Hong Kong Special Administrative Region Establishment Day\n",
 			"Civic Holiday(CAN)\n",
@@ -113,6 +122,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				CalGrid.this.controller.PutApptToXml();
+				CalGrid.this.controller.PutLocToXml();
+				controller.PutUserToXml();
 				System.exit(0);
 			}
 		});
@@ -214,7 +226,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				renderer = new CalCellRenderer(null);
 				
 				if(!tem.equals("")) {
-					if(controller.RetrieveAppts(new TimeSpan(
+					if(controller.RetrieveAppts(mCurrUser, new TimeSpan(
 							new Timestamp(currentY, currentM - 1, Integer.parseInt(tem), 0, 0, 0, 0),
 							new Timestamp(currentY, currentM - 1, Integer.parseInt(tem), 23, 59, 59, 0))).length > 0)
 						renderer.setBackground(Color.cyan);
@@ -255,6 +267,52 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		initializeSystem(); // for you to add.
 		//mCurrUser = getCurrUser(); // totally meaningless code
 		Appmenu.setEnabled(true);
+		
+		//Pending Engine
+		for(PendingRequest request: PendingEngine.getInstance().checkPendingRequest(mCurrUser)) {
+			
+			/*
+			if(request.getType() == PendingRequest.TYPE_LOCATION) {
+				
+				hkust.cse.calendar.unit.Location loc = (hkust.cse.calendar.unit.Location)request.getObj();
+    			int n = JOptionPane.showConfirmDialog(null, "The user \"" + request.getFrom().ID() + "\" is requested to add a location \"" + loc.getName() + "\". Do you accept the request?",
+    					"Confirm", JOptionPane.YES_NO_OPTION);
+    			if (n == JOptionPane.YES_OPTION) {
+    				
+    				hkust.cse.calendar.unit.Location[] locations = controller.getLocationList();
+    				ArrayList<hkust.cse.calendar.unit.Location> locations_arr = new ArrayList<hkust.cse.calendar.unit.Location>(Arrays.asList(locations));
+    				
+    				Boolean found = false;
+    				for(hkust.cse.calendar.unit.Location tmp : locations_arr) {
+    					if(tmp.getName().equals(loc.getName()))
+    						found = true;
+    				}
+    				
+    				if(!found) {
+    					locations_arr.add(loc);
+    					
+    					
+    					controller.setLocationList(locations_arr.toArray(locations));
+    					
+    					JOptionPane.showMessageDialog(null, "The location \"" + loc.getName() + "\" has been added." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+    				}
+    				else {
+    					
+    					JOptionPane.showMessageDialog(null, "The location \"" + loc.getName() + "\" exists. No change has been made." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+    					
+    				}
+    				
+    			}
+    			else {
+    				
+    				JOptionPane.showMessageDialog(null, "You have declined the request." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+    			}
+				
+			}*/
+			
+			
+			
+		}
 
 		UpdateCal();
 		pack();				// sized the window to a preferred size
@@ -336,12 +394,17 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		ActionListener listener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("Manual Scheduling")) {
-					AppScheduler a = new AppScheduler("New", CalGrid.this);
-					a.updateSetApp(hkust.cse.calendar.gui.Utility
-							.createDefaultAppt(currentY, currentM, currentD,
-									mCurrUser));
-					a.setLocationRelativeTo(null);
-					a.show();
+					if(controller.getLocationList().length==0)
+						JOptionPane.showMessageDialog(null, "Cannot Make An Appointment Because Of No Locations !",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					else{
+						AppScheduler a = new AppScheduler("New", CalGrid.this);
+						a.updateSetApp(hkust.cse.calendar.gui.Utility
+								.createDefaultAppt(currentY, currentM, currentD,
+										mCurrUser));
+						a.setLocationRelativeTo(null);
+						a.show();
+					}
 					TableModel t = prepareTableModel();
 					tableView.setModel(t);
 					tableView.repaint();
@@ -353,6 +416,15 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					//TableModel t = prepareTableModel();
 					//tableView.setModel(t);
 					//tableView.repaint();
+				}
+				else if(e.getActionCommand().equals("Settings")) {
+					UserSettings a = new UserSettings(mCurrUser);
+					a.setLocationRelativeTo(null);
+					a.show();
+				}
+				else if(e.getActionCommand().equals("Create Group Event")) {
+					GroupEventDialog g = new GroupEventDialog(controller);
+					g.show();
 				}
 
 			}
@@ -366,6 +438,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		Access.getAccessibleContext().setAccessibleDescription(
 				"Account Access Management");
 
+		mi = (JMenuItem) Access.add(new JMenuItem("Settings"));
+		mi.addActionListener(listener);
+		
 		mi = (JMenuItem) Access.add(new JMenuItem("Logout"));	//adding a Logout menu button for user to logout
 		mi.setMnemonic('L');
 		mi.getAccessibleContext().setAccessibleDescription("For user logout");
@@ -376,6 +451,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				if (n == JOptionPane.YES_OPTION){
 					//controller.dumpStorageToFile();
 					//System.out.println("closed");
+					CalGrid.this.controller.PutApptToXml();
+					CalGrid.this.controller.PutLocToXml();
+					controller.PutUserToXml();
 					dispose();
 					CalendarMain.logOut = true;
 					return;	//return to CalendarMain()
@@ -390,8 +468,12 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 			public void actionPerformed(ActionEvent e) {
 				int n = JOptionPane.showConfirmDialog(null, "Exit Program ?",
 						"Comfirm", JOptionPane.YES_NO_OPTION);
-				if (n == JOptionPane.YES_OPTION)
+				if (n == JOptionPane.YES_OPTION){
+					CalGrid.this.controller.PutApptToXml();
+					CalGrid.this.controller.PutLocToXml();
+					controller.PutUserToXml();
 					System.exit(0);
+				}
 
 			}
 		});
@@ -409,17 +491,48 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
 
-		Appmenu.add(mi);
+		//Appmenu.add(mi);
 
-		mi = new JMenuItem("Manage Location");
-		mi.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0){
-				LocationsDialog dlg = new LocationsDialog(controller);
-			}
+		//only allow admin modify location
+		if(this.controller.getDefaultUser().IsAdmin()) {
+			mi = new JMenuItem("Manage Location");
+			mi.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0){
+					LocationsDialog dlg = new LocationsDialog(controller);
+				}
+			
+				});
+	
+			Appmenu.add(mi);
+		}
 		
-			});
-
-		Appmenu.add(mi); 
+		if(this.controller.getDefaultUser().IsAdmin()) {
+			
+			JMenu Admin = (JMenu) menuBar.add(new JMenu("Administration"));
+			mi = (JMenuItem) Admin.add(new JMenuItem("Inspect User"));
+			mi.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+					UserList list = new UserList(CalGrid.this);
+					list.show();
+				}
+			
+				});
+			
+			/*
+			mi = (JMenuItem) Admin.add(new JMenuItem("Pending Request"));
+			mi.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0){
+					
+					
+				}
+			
+				});
+			*/
+		}
+		
+		mi = new JMenuItem("Create Group Event");
+		mi.addActionListener(listener);
+		Appmenu.add(mi);
 		
 		return menuBar;
 	}
@@ -428,6 +541,7 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 
 		mCurrUser = this.controller.getDefaultUser();	//get User from controller
 		controller.LoadApptFromXml();
+		controller.LoadLocFromXml();
 		// Fix Me !
 		// Load the saved appointments from disk
 		checkUpdateJoinAppt();
@@ -446,6 +560,9 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				new Timestamp(curr.getYear(), curr.getMonth(), curr.getDate(), 0, 0, 0, 0),
 				new Timestamp(curr.getYear(), curr.getMonth(), curr.getDate(), 23, 59, 59, 0)));
 		String info = "";
+		String infosms = "";
+		String infoemail = "";
+		String message = "";
 
 		//the timestamp to check next occurrence event (if no reminder need)
 		Timestamp next = (Timestamp)sender.getCurrentTime().clone();
@@ -481,7 +598,14 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				//offset start time by reminder time
 				next2.setTime(appt.TimeSpan().StartTime().getTime() - (reminderTime.getHours() * 60 + reminderTime.getMinutes()) * 60000);
 				if(curr.compareTo(next2) <= 0 && next2.compareTo(next) < 0) {
-					info += appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getTitle() + "\n";
+					message = appt.TimeSpan().StartTime().getHours() + ":" + appt.TimeSpan().StartTime().getMinutes() + "  " + appt.getTitle() + "\n";
+					info += message;
+					
+					if(appt.sendSms())
+						infosms += message;
+					
+					if(appt.sendEmail())
+						infoemail += message;
 				}
 			}
 		}
@@ -491,6 +615,35 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		 			    "The following appointment(s) will be happened:" + "\n" + info,
 		 			    "Appointment!",
 		 			    JOptionPane.INFORMATION_MESSAGE);
+		
+		if(!infosms.equals("")) {
+			SmsService sms = new SmsService(
+					mCurrUser.getFirstName() + " " + mCurrUser.getLastName(),
+					mCurrUser.getPhoneNum(),
+					infosms
+					);
+			try {
+				sms.Send();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(!infoemail.equals("")) {
+			EmailService email = new EmailService(
+					mCurrUser.getFirstName() + " " + mCurrUser.getLastName(),
+					mCurrUser.getEmail(),
+					"[COMP3111 Calendar] Notification of the following events",
+					infoemail
+					);
+			try {
+				email.Send();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void timeStopped(TimeMachine sender) {
@@ -698,6 +851,31 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 	// check for any invite or update from join appointment
 	public void checkUpdateJoinAppt(){
 		// Fix Me!
+		
+		//get non past appointments that involve the current user
+		TimeSpan currentTime = new TimeSpan(timeMachine.getCurrentTime(), new Timestamp(2300, 9, 9, 12, 0, 0, 0));
+		Appt[] appts = controller.RetrieveAppts(mCurrUser, currentTime);
+		for(int i=0; i<appts.length; i++) {
+			//tell all participant that the appointment has changed
+			//if(appts[i].getAllPeople().contains(mCurrUser.ID()) /* && content changed*/) {
+			//	AppScheduler a = new AppScheduler("Join Appointment Content Change", CalGrid.this);
+			//	a.show();
+			//}
+			
+			//tell initiator if someone responded to the appointment
+			//if(appts[i].getAttendList().getFirst() == mCurrUser.ID() /*&& someone responded to the appointment(either accept or reject)*/) {
+			//	AppScheduler b = new AppScheduler("Someone has responded to your Joint Appointment invitation", CalGrid.this);
+			//	b.show();
+			//	//set the appointment back to no one responded
+			//}
+			
+			//the current user is still in the waiting list of the appointment
+			if(appts[i].getWaitingList().contains(mCurrUser.ID())) {
+				AppScheduler c = new AppScheduler("Join Appointment Invitation", CalGrid.this);
+				c.updateSetApp(appts[i]);
+				c.show();
+			}
+		}
 	}
 
 }

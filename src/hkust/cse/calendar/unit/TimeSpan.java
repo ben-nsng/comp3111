@@ -55,8 +55,8 @@ public class TimeSpan implements Serializable {
 			return -1;
 
 		/* Calculate the number of minutes within the time span */
-		int result = mStartTime.getHours() * 60 + mStartTime.getMinutes()
-				- mEndTime.getHours() * 60 - mEndTime.getMinutes();
+		int result = - mStartTime.getHours() * 60 - mStartTime.getMinutes()
+				+ mEndTime.getHours() * 60 + mEndTime.getMinutes();
 		if (result < 0)
 			return -1;
 		else

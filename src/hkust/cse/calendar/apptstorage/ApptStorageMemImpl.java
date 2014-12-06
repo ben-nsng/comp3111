@@ -4,8 +4,12 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.TimeMachine;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
+import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -277,7 +281,25 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public Appt[] RetrieveAppts(User entity, TimeSpan time) {
 		// TODO Auto-generated method stub
-			return RetrieveAppts(time);
+		Appt[] tempList=RetrieveAppts(time);
+		List<Appt> tempList2 = new ArrayList<Appt>();
+		int userApptNum=0;
+		for(int i=0;i<tempList.length;i++){
+			if(tempList[i].getAllPeople().contains(entity.ID())){
+				userApptNum++;
+				tempList2.add(tempList[i]);
+			}
+		}
+		if(userApptNum!=0){
+			Appt[] outApptList=new Appt[userApptNum];
+			tempList2.toArray(outApptList);
+			return outApptList;
+		}
+		else{
+			Appt[] outApptList=new Appt[0];
+			return outApptList;
+		}
+		//return RetrieveAppts(time);
 	}
 
 	@Override
@@ -287,6 +309,29 @@ public class ApptStorageMemImpl extends ApptStorage {
 			return (Appt)mAppts.get(joinApptID);
 		else
 			return null;
+	}
+	
+	@Override
+	public Appt[] RetrieveAppts(Location location, TimeSpan time) {
+		// TODO Auto-generated method stub
+		Appt[] tempList=RetrieveAppts(time);
+		List<Appt> tempList2 = new ArrayList<Appt>();
+		int userApptNum=0;
+		for(int i=0;i<tempList.length;i++){
+			if(tempList[i].getLocation().equals(location)){
+				userApptNum++;
+				tempList2.add(tempList[i]);
+			}
+		}
+		if(userApptNum!=0){
+			Appt[] outApptList=new Appt[userApptNum];
+			tempList2.toArray(outApptList);
+			return outApptList;
+		}
+		else{
+			Appt[] outApptList=new Appt[0];
+			return outApptList;
+		}
 	}
 
 	@Override
@@ -310,7 +355,61 @@ public class ApptStorageMemImpl extends ApptStorage {
 	@Override
 	public void LoadApptFromXml() {
 		// TODO Auto-generated method stub
-
+		String xml=null;
+		HashMap<Integer, Appt> newmAppts = (HashMap<Integer, Appt>)xstream.fromXML(xml);
+	}
+	
+	@Override
+	public void PutApptToXml() {
+		// TODO Auto-generated method stub
+		String xml = xstream.toXML(mAppts);
 	}
 
+	@Override
+	public void LoadLocFromXml() {
+		// TODO Auto-generated method stub
+		try{	
+			File f = new File("Locfile.xml");
+			if (f.exists() && f.isFile()){
+				_locations = (Location[]) xstream.fromXML(f);
+			} 
+		}catch(Exception e){
+			System.err.println("Error in XML Read: " + e.getMessage());
+		}
+	}
+	
+	public void PutLocToXml() {
+		// TODO Auto-generated method stub
+		try {
+			xstream.toXML(_locations, new FileWriter("Locfile.xml"));
+		} catch (IOException e) {
+			 //TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public UserManagement LoadUserFromXml() {
+		// TODO Auto-generated method stub
+		try{	
+			File f = new File("Userfile.xml");
+			if (f.exists() && f.isFile()){
+				return (UserManagement) xstream.fromXML(f);
+			}
+		}catch(Exception e){
+			System.err.println("Error in XML Read: " + e.getMessage());
+		}
+		return null;
+	}
+	
+	@Override
+	public void PutUserToXml() {
+		// TODO Auto-generated method stub
+		try {
+			xstream.toXML(UserManagement.getInstance(), new FileWriter("Userfile.xml"));
+		} catch (IOException e) {
+			 //TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

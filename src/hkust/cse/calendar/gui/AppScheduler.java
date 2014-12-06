@@ -79,7 +79,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 	private JButton rejectBut;
 	
 	private Appt NewAppt;
-	public CalGrid parent;
+	private CalGrid parent;
 	private boolean isNew = true;
 	private boolean isChanged = true;
 	private boolean isJoint = false;
@@ -310,9 +310,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		contentPane.add("South", panel2);
 		NewAppt = new Appt();
 
-		if (this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join Appointment 
-
-Invitation")){
+		if (this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join Appointment Invitation")){
 			inviteBut.show(false);
 			rejectBut.show(true);
 			CancelBut.setText("Consider Later");
@@ -324,9 +322,7 @@ Invitation")){
 			CancelBut.show(false);
 			saveBut.setText("confirmed");
 		}
-		if (this.getTitle().equals("Join Appointment Invitation") || this.getTitle().equals("Someone has responded 
-
-to your Joint Appointment invitation") || this.getTitle().equals("Join Appointment Content Change")){
+		if (this.getTitle().equals("Join Appointment Invitation") || this.getTitle().equals("Someone has responded to your Joint Appointment invitation") || this.getTitle().equals("Join Appointment Content Change")){
 			allDisableEdit();
 		}
 		pack();
@@ -353,9 +349,7 @@ to your Joint Appointment invitation") || this.getTitle().equals("Join Appointme
 			saveButtonResponse();
 
 		} else if (e.getSource() == rejectBut){
-			if (JOptionPane.showConfirmDialog(this, "Reject this joint appointment?", "Confirmation", 
-
-JOptionPane.YES_NO_OPTION) == 0){
+			if (JOptionPane.showConfirmDialog(this, "Reject this joint appointment?", "Confirmation", JOptionPane.YES_NO_OPTION) == 0){
 				NewAppt.addReject(getCurrentUser());
 				NewAppt.getAttendList().remove(getCurrentUser());
 				NewAppt.getWaitingList().remove(getCurrentUser());
@@ -404,7 +398,7 @@ parent.timeMachine.getCurrentTime());
 
 	}
 
-	public int[] getValidDate() {
+	private int[] getValidDate() {
 
 		int[] date = new int[3];
 		date[0] = Utility.getNumber(yearF.getText());
@@ -436,7 +430,7 @@ parent.timeMachine.getCurrentTime());
 		return date;
 	}
 
-	public int getTime(JTextField h, JTextField min) {
+	private int getTime(JTextField h, JTextField min) {
 
 		int hour = Utility.getNumber(h.getText());
 		if (hour == -1)
@@ -449,7 +443,7 @@ parent.timeMachine.getCurrentTime());
 
 	}
 
-	public int[] getValidTimeInterval() {
+	private int[] getValidTimeInterval() {
 
 		int[] result = new int[2];
 		result[0] = getTime(sTimeH, sTimeM);
@@ -461,12 +455,8 @@ parent.timeMachine.getCurrentTime());
 			return null;
 		}
 		
-		if (!sTimeM.getText().equals("0") && !sTimeM.getText().equals("15") && !sTimeM.getText().equals("30") && !
-
-sTimeM.getText().equals("45") 
-			|| !eTimeM.getText().equals("0") && !eTimeM.getText().equals("15") && !eTimeM.getText().equals
-
-("30") && !eTimeM.getText().equals("45")){
+		if (!sTimeM.getText().equals("0") && !sTimeM.getText().equals("15") && !sTimeM.getText().equals("30") && !sTimeM.getText().equals("45") 
+			|| !eTimeM.getText().equals("0") && !eTimeM.getText().equals("15") && !eTimeM.getText().equals("30") && !eTimeM.getText().equals("45")){
 			JOptionPane.showMessageDialog(this,
 					"Minute Must be 0, 15, 30, or 45 !", "Input Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -492,6 +482,28 @@ sTimeM.getText().equals("45")
 		}
 
 		return result;
+	}
+	
+	public void modifyAppt() {
+		//int[] validDate = getValidDate();
+		//int[] validTime = getValidTimeInterval();
+		//TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
+		
+		//if(apptTimeSpan.Overlap(NewAppt.TimeSpan())) return;
+		
+		saveButtonResponse();
+	}
+	
+	public void setStartTime(int hour, int min) {
+		sTimeH.setText(Integer.toString(hour));
+		sTimeM.setText(Integer.toString(min));
+		
+		TimeSpan interval = NewAppt.TimeSpan();
+		
+		eTimeH.setText(Integer.toString(hour + (int)Math.floor(interval.TimeLength() / 60)));
+		eTimeM.setText(Integer.toString(min + 
+				(interval.TimeLength() / 60 -  (int)Math.floor(interval.TimeLength() / 60)) * 60 ));
+		
 	}
 
 	private void saveButtonResponse() {
@@ -519,12 +531,8 @@ sTimeM.getText().equals("45")
 				NewAppt.setScheduled(false);
 		}
 		if(remField.isSelected()) {
-			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && 
-
-Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
-				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber
-
-(rTimeM.getText()));
+			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
+				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
 				rTimeValid = true;
 			}
 			else {
@@ -552,26 +560,19 @@ Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=
 		//check of valid date and time
 		int[] validDate = getValidDate();
 		int[] validTime = getValidTimeInterval();
-		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, 
-
-validTime[1]));
+		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
-	
 		for(int i=0; i<retrivedAppts.length; i++) {
-			if(retrivedAppts[i].IsScheduled() && retrivedAppts[i].getAttendList().contains(getCurrentUser()) && 
-
-retrivedAppts[i].getID()==NewAppt.getID())
+			if(/*retrivedAppts[i].IsScheduled() &&*/ retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()!=NewAppt.getID())
 				noTimeConflict = false;
 		}
 		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
 		for(int i=0; i<retriedAppts2.length; i++)
-			if(retriedAppts2[i].IsScheduled())
+			if(/*retriedAppts2[i].IsScheduled() &&*/ retriedAppts2[i].getID()!=NewAppt.getID())
 				noLocationConflict = false;
 		//check if the appointment is overlapped with other appointments
-		//if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID
-
-()))) {
+		//if(!((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 		if(!noTimeConflict) {
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments !",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
@@ -580,18 +581,11 @@ retrivedAppts[i].getID()==NewAppt.getID())
 			JOptionPane.showMessageDialog(this, "Overlap with other appointments in that location!",
 					"Input Error", JOptionPane.ERROR_MESSAGE);
 		}
-		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || 
-
-(retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
+		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 		if(rTimeValid==true && noTimeConflict && noLocationConflict) {
 			if(this.getTitle().equals("New")) {
-				if(NewAppt.isJoint() && NewAppt.getWaitingList().size()==0)
-					JOptionPane.showMessageDialog(this, "Please Select Participants For Group Event !",
-							"Input Error", JOptionPane.ERROR_MESSAGE);
-				else {
-					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-					this.setVisible(false);
-				}
+				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+				this.setVisible(false);
 			}
 			if(this.getTitle().equals("Modify")) {
 				if(NewAppt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
@@ -612,9 +606,7 @@ retrivedAppts[i].getID()==NewAppt.getID())
 					this.setVisible(false);
 				}
 			}
-			if(this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join 
-
-Appointment Invitation")) {
+			if(this.getTitle().equals("Join Appointment Content Change") || this.getTitle().equals("Join Appointment Invitation")) {
 				//move current user from waiting list to attend list after pressed accept button
 				NewAppt.addAttendant(getCurrentUser());
 				NewAppt.getWaitingList().remove(getCurrentUser());
@@ -626,9 +618,20 @@ Appointment Invitation")) {
 				this.setVisible(false);
 			}
 		}
+		if(NewAppt.getAttendList().size()==0)
+			NewAppt.addAttendant(getCurrentUser());
+		if(isJoint == false)
+			NewAppt.setScheduled(true);
+		else {
+			//joint appointment is scheduled only when no one is in waiting and reject list
+			if(NewAppt.getWaitingList().size() == 0 && NewAppt.getRejectList().size() == 0)
+				NewAppt.setScheduled(true);
+			else
+				NewAppt.setScheduled(false);
+		}
 	}
 
-	public Timestamp CreateTimeStamp(int[] date, int time) {
+	private Timestamp CreateTimeStamp(int[] date, int time) {
 		Timestamp stamp = new Timestamp(0);
 		stamp.setYear(date[0]);
 		stamp.setMonth(date[1] - 1);
@@ -649,7 +652,6 @@ Appointment Invitation")) {
 		dayF.setText(Integer.toString(sCal.get(Calendar.DAY_OF_MONTH)));
 		sTimeH.setText(Integer.toString(sCal.get(Calendar.HOUR_OF_DAY)));
 		sTimeM.setText(Integer.toString(sCal.get(Calendar.MINUTE)));
-		//System.out.println(sTimeM);
 		eTimeH.setText(Integer.toString(eCal.get(Calendar.HOUR_OF_DAY)));
 		eTimeM.setText(Integer.toString(eCal.get(Calendar.MINUTE)));
 		freField.setSelectedIndex(appt.getFrequency()-1);

@@ -115,6 +115,10 @@ public class AppList extends JPanel implements ActionListener {
 	private Color[][] cellColor = new Color[20][2];
 	public Appt selectedAppt=null;
 	private MouseEvent tempe;
+	private Appt dragAppt=null;
+	private int dragRow;
+	private int dragCol;
+	
 	public AppList() {
 		setLayout(new BorderLayout());
 		currentRow = 0;
@@ -432,6 +436,10 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"Cannot Delete Past Events !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
+			else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst() !=parent.mCurrUser.ID())
+				JOptionPane.showMessageDialog(this,
+						"Only The Inintiator Can Delete Group Event !", "Delete",
+						JOptionPane.ERROR_MESSAGE);
 			else {
 					parent.controller.ManageAppt(apptTitle, parent.controller.REMOVE);
 					parent.getAppList().clear();
@@ -446,7 +454,7 @@ public class AppList extends JPanel implements ActionListener {
 		//check whether the start time of selected appointment is before the current time
 		if (apptTitle == null) {
 			JOptionPane.showMessageDialog(this,
-					"No Appointment To Modify !", "Delete",
+					"No Appointment To Modify !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -454,12 +462,18 @@ public class AppList extends JPanel implements ActionListener {
 			JOptionPane.showMessageDialog(this,
 					"Cannot Modify Past Events !", "Modify",
 					JOptionPane.ERROR_MESSAGE);
+		else if(apptTitle.isJoint() && !apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID()))
+			JOptionPane.showMessageDialog(this,
+					"Only The Ininitator Can Modify The Group Event !", "Modify",
+					JOptionPane.ERROR_MESSAGE);
 		else {
-			AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
-
-			setAppDial.updateSetApp(apptTitle);
-			setAppDial.show();
-			setAppDial.setResizable(false);
+			//if(!apptTitle.isJoint()) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, apptTitle.getID());
+	
+				setAppDial.updateSetApp(apptTitle);
+				setAppDial.show();
+				setAppDial.setResizable(false);
+			//}
 		}
 
 	}
@@ -498,6 +512,20 @@ public class AppList extends JPanel implements ActionListener {
 		
 		if (parent.mCurrUser == null)
 			return;
+		if(hkust.cse.calendar.gui.Utility.createDefaultAppt(
+				parent.currentY, parent.currentM, parent.currentD,
+				parent.mCurrUser).TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime())) {
+			JOptionPane.showMessageDialog(parent, "Cannot Make An Appointment In The Past !",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(parent.controller.getLocationList().length==0) {
+			JOptionPane.showMessageDialog(parent, "Cannot Make An Appointment Because Of No Locations !",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+			
 		if (currentRow < 0 || currentRow > ROWNUM - 1) {
 			JOptionPane.showMessageDialog(parent, "Please Select Again !",
 					"Error", JOptionPane.ERROR_MESSAGE);
@@ -524,6 +552,24 @@ public class AppList extends JPanel implements ActionListener {
 		pressCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
+		//start dragging appt
+		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+			Object apptTitle;
+			
+			if(pressCol < 3)
+				apptTitle = tableView.getModel().getValueAt(pressRow, 1);
+			else
+				apptTitle = tableView.getModel().getValueAt(pressRow, 4);
+			
+			if (apptTitle instanceof Appt)
+				dragAppt = (Appt)apptTitle;
+			else
+				dragAppt = null;
+			
+			dragRow = pressRow;
+			dragCol = pressCol;
+		}
 	}
 	private void releaseResponse(MouseEvent e) {
 		
@@ -531,6 +577,8 @@ public class AppList extends JPanel implements ActionListener {
 		releaseCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
+		
 	}
 	private void calculateDrag(MouseEvent e){
 		
@@ -547,6 +595,21 @@ public class AppList extends JPanel implements ActionListener {
 			currentCol = releaseCol;
 		}
 		
+		//end dragging appt
+		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+			if(dragAppt != null) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, dragAppt.getID());
+				setAppDial.updateSetApp(dragAppt);
+				setAppDial.setStartTime(getHour(currentRow, currentCol), getMinute(currentRow, currentCol));
+				setAppDial.modifyAppt();
+				setAppDial.dispose();
+				parent.updateAppList();
+				
+				dragAppt = null;
+				tableView.getSelectionModel().clearSelection();
+				tableView.clearSelection();
+			}
+		}
 	}
 	public void setParent(CalGrid grid) {
 		parent = grid;
@@ -555,9 +618,25 @@ public class AppList extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == tableView) {
 			pop.show(tableView, currentRow * 20, currentRow * 20);
-
 		}
 		
+	}
+	
+	public int getHour(int row, int col) {
+		int hour = 8;
+		hour += Math.floor(row / 4);
+		if(col > 2)
+			hour += 5;
+		
+		return hour;
+	}
+	
+	public int getMinute(int row, int col) {
+		int min = 0;
+		
+		min = row % 4 * 15;
+		
+		return min;
 	}
 
 }

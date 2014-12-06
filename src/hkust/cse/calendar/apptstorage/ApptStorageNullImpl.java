@@ -1,9 +1,14 @@
 package hkust.cse.calendar.apptstorage;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
-import hkust.cse.calendar.unit.User;
 import hkust.cse.calendar.unit.Location;
+import hkust.cse.calendar.unit.user.User;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 public class ApptStorageNullImpl extends ApptStorage {
 
@@ -56,6 +61,12 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public Appt[] RetrieveAppts(Location location, TimeSpan time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public void UpdateAppt(Appt appt) {
@@ -80,5 +91,29 @@ public class ApptStorageNullImpl extends ApptStorage {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void PutApptToXml() {
+		//TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void LoadLocFromXml() {
+		// TODO Auto-generated method stub
+	}
+	
+	public void PutLocToXml() {
+		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public UserManagement LoadUserFromXml() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void PutUserToXml() {
+		// TODO Auto-generated method stub
+	}
 }
