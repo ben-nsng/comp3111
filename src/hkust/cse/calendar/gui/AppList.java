@@ -64,7 +64,7 @@ class AppCellRenderer extends DefaultTableCellRenderer {
 			setHorizontalAlignment(SwingConstants.LEFT);
 		else
 			setHorizontalAlignment(SwingConstants.RIGHT);
-		if (col == 1 || col == 4) {
+		if (col == 1 || col == 4 || col == 2 || col == 5) {
 			if (colorCMD == AppList.COLORED_TITLE) {
 				setBackground(currColor);
 				setForeground(Color.black);
@@ -173,7 +173,6 @@ public class AppList extends JPanel implements ActionListener {
 					return new AppCellRenderer(new Object(), true, row, col, 1,
 							null);
 				else if (col == 1) {
-
 					return new AppCellRenderer(new Object(), false, row, col,
 							cellCMD[row][0], cellColor[row][0]);
 
@@ -183,7 +182,6 @@ public class AppList extends JPanel implements ActionListener {
 				} else
 					return new AppCellRenderer(new Object(), false, row, col,
 							1, null);
-
 			}
 		};
 
@@ -368,6 +366,8 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED_TITLE;
 					cellColor[pos[0]][1] = color;
+					cellCMD[pos[0]][2] = COLORED_TITLE;
+					cellColor[pos[0]][2] = color;
 				}
 			} else {
 				tableView.getModel().setValueAt(appt, pos[0], pos[1]);
@@ -378,7 +378,8 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED;
 					cellColor[pos[0]][1] = color;
-					
+					cellCMD[pos[0]][2] = COLORED;
+					cellColor[pos[0]][2] = color;
 				}
 
 			}

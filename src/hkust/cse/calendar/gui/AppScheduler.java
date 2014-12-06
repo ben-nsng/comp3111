@@ -5,6 +5,7 @@ import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.gui.LocationsDialog;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -517,9 +518,16 @@ public class AppScheduler extends JDialog implements ActionListener,
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
+		//check initiator time conflict
 		for(int i=0; i<retrivedAppts.length; i++) {
 			if(/*retrivedAppts[i].IsScheduled() &&*/ retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()!=NewAppt.getID())
 				noTimeConflict = false;
+		}
+		//check other attendants' time conflict
+		UserManagement um = UserManagement.getInstance();
+		for(int i=0; i<NewAppt.getWaitingList().size(); i++) {
+			if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan).length!=0)
+					noTimeConflict = false;
 		}
 		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
 		for(int i=0; i<retriedAppts2.length; i++)
