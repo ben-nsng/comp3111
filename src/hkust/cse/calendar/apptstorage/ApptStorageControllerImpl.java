@@ -19,6 +19,9 @@ public class ApptStorageControllerImpl {
 	/* Add a new Appt into the storage */
 	public final static int NEW = 3;
 	
+	/* Transfer the ownership of a Appt */
+	public final static int TRANSFER = 4;
+	
 	/*
 	 * Add additional flags which you feel necessary
 	 */
@@ -65,7 +68,7 @@ public class ApptStorageControllerImpl {
 			if (appt == null)
 				return;
 			mApptStorage.SaveAppt(appt);
-		} else if (action == MODIFY) {		// Update the Appt in the storage if it is modified and non-null
+		} else if (action == MODIFY || action == TRANSFER) {		// Update the Appt in the storage if it is modified and non-null
 			if (appt == null)
 				return;
 			mApptStorage.UpdateAppt(appt);
