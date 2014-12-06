@@ -1,6 +1,7 @@
 package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+import hkust.cse.calendar.gui.TransferOwnershipDialog;
 import hkust.cse.calendar.unit.Appt;
 
 import java.awt.BorderLayout;
@@ -159,6 +160,14 @@ public class AppList extends JPanel implements ActionListener {
 				modify();
 			}
 		});
+		
+		mi = (JMenuItem) pop.add(new JMenuItem("Transfer Ownership"));
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				transfer();
+			}
+		});
+		
 		pop.add(new JPopupMenu.Separator());
 		JMenuItem j = new JMenuItem("Details");
 		j.setFont(f);
@@ -480,6 +489,41 @@ public class AppList extends JPanel implements ActionListener {
 			//}
 		}
 
+	}
+	
+	private void transfer(){
+		Appt apptTitle = getSelectedAppTitle();
+		//check whether the start time of selected appointment is before the current time
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this,
+					"No Appointment To Transfer Ownership !", "Transfer",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(apptTitle.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
+			JOptionPane.showMessageDialog(this,
+					"Cannot Transfer Owership of Past Events !", "Transfer",
+					JOptionPane.ERROR_MESSAGE);
+		else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID()) && apptTitle.getAttendList().size()==1)
+			JOptionPane.showMessageDialog(this,
+					"No other users can be selected !", "Transfer",
+					JOptionPane.ERROR_MESSAGE);
+		else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID()) && apptTitle.getAttendList().size()>1) {
+				TransferOwnershipDialog setAppDial = new TransferOwnershipDialog(apptTitle, parent.controller);
+	
+				setAppDial.show();
+				setAppDial.setResizable(false);
+		}
+		else if(!apptTitle.isJoint()){
+			JOptionPane.showMessageDialog(this,
+				"Ownership of personal appointment cannot be transferred !", "Transfer",
+				JOptionPane.ERROR_MESSAGE);
+		}
+		else if(apptTitle.isJoint() && !apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID())){
+			JOptionPane.showMessageDialog(this,
+				"Only Initiator can transfer ownership !", "Transfer",
+				JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public Appt getSelectedAppTitle() {
