@@ -11,10 +11,16 @@ import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,6 +30,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 
 public class LoginDialog extends JFrame implements ActionListener
@@ -34,9 +42,23 @@ public class LoginDialog extends JFrame implements ActionListener
 	private JButton closeButton;
 	private JButton signupButton;
 	private UserManagement um;
+	public ApptStorageControllerImpl controller;
+	private Font font;
+	private JLabel fontLabel;
 	
 	public LoginDialog()		// Create a dialog to log in
 	{
+		try {
+			File fontFile = new File("fontawesome-webfont.ttf");
+			font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+			font = font.deriveFont(Font.PLAIN, 24f);
+			
+		} catch (/*ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | */FontFormatException | IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} 
+		
+		
 		
 		setTitle("Log in");
 		
@@ -58,12 +80,18 @@ public class LoginDialog extends JFrame implements ActionListener
 		top.add(messPanel);
 		
 		JPanel namePanel = new JPanel();
+		fontLabel = new JLabel("\uf0c0");
+		fontLabel.setFont(font);
+		namePanel.add(fontLabel);
 		namePanel.add(new JLabel("User Name:"));
 		userName = new JTextField(15);
 		namePanel.add(userName);
 		top.add(namePanel);
 		
 		JPanel pwPanel = new JPanel();
+		fontLabel = new JLabel("\uf084");
+		fontLabel.setFont(font);
+		pwPanel.add(fontLabel);
 		pwPanel.add(new JLabel("Password:  "));
 		password = new JPasswordField(15);
 		pwPanel.add(password);
@@ -98,6 +126,9 @@ public class LoginDialog extends JFrame implements ActionListener
 		um = UserManagement.getInstance();
 		userName.setText("user");
 		password.setText("user");
+		
+		controller = new ApptStorageControllerImpl(new ApptStorageDiskImpl(null));
+		
 	}
 	
 
@@ -160,8 +191,10 @@ public class LoginDialog extends JFrame implements ActionListener
 		{
 			int n = JOptionPane.showConfirmDialog(null, "Exit Program ?",
 					"Confirm", JOptionPane.YES_NO_OPTION);
-			if (n == JOptionPane.YES_OPTION)
+			if (n == JOptionPane.YES_OPTION){
+				controller.PutUserToXml();
 				System.exit(0);			
+			}
 		}
 	}
 	

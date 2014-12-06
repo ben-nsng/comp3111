@@ -1,12 +1,7 @@
 package hkust.cse.calendar.notification;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.HttpURLConnection;
+import java.io.*;
+import java.net.*;
 
 public class SmsService {
 
@@ -27,7 +22,7 @@ public class SmsService {
 
 		
 		String url = "http://notification.elp-spot.net/sms";
-		String urlParameters = "username=" + username + "&address=" + address + "&message=" + message;
+		String urlParameters = "username=" +  URLEncoder.encode(username) + "&address=" +  URLEncoder.encode(address) + "&message=" +  URLEncoder.encode(message);
 		
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();

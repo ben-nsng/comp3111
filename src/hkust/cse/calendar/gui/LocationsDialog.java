@@ -19,9 +19,11 @@ import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 
 import javax.swing.JFrame;
 
+import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.unit.PendingEngine;
 import hkust.cse.calendar.unit.PendingRequest;
+import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.user.UserManagement;
 
 import javax.swing.JTextField;
@@ -29,6 +31,10 @@ import javax.swing.event.ListSelectionListener;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -99,7 +105,8 @@ public class LocationsDialog extends JFrame {
 					JOptionPane.showMessageDialog(null, "The request has been sent to administrator and waiting for approval." ,"Info", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else
-					listModel.addElement(new Location(locNameText.getText()));
+				*/
+				listModel.addElement(new Location(locNameText.getText()));
 				
 				//save the location into storage
 				saveLocations();
@@ -118,6 +125,30 @@ public class LocationsDialog extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = list.getSelectedIndex();
 				if (index != -1){
+					
+					//to notify user if location will be deleted
+					PendingEngine pe = PendingEngine.getInstance();
+					UserManagement um = UserManagement.getInstance();
+					ArrayList<String> ids = new ArrayList<String>();
+					Location loc = (Location)listModel.elementAt(index);
+					Appt[] appts = _controller.RetrieveAppt(loc,
+							new TimeSpan(
+									new Timestamp(1970, 0, 0, 0, 0, 0, 0),
+									new Timestamp(2030, 0, 0, 0, 0, 0, 0)
+									)
+							);
+					System.out.println(loc.getName());
+					System.out.println(appts.length);
+					for(Appt appt : appts) {
+						LinkedList<String> people = appt.getAllPeople();
+						for(String person : people) {
+							if(!ids.contains(person)) ids.add(person);
+						}
+					}
+					for(String id : ids) {
+						pe.addPendingRequest(PendingRequest.REMOVE_LOCATION, _controller.getDefaultUser(), um.getUser(id), loc.getName());
+					}
+					
 					listModel.removeElementAt(index);
 					saveLocations();
 				}

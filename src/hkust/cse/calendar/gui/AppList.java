@@ -5,6 +5,7 @@ import hkust.cse.calendar.unit.Appt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -115,6 +116,10 @@ public class AppList extends JPanel implements ActionListener {
 	private Color[][] cellColor = new Color[20][2];
 	public Appt selectedAppt=null;
 	private MouseEvent tempe;
+	private Appt dragAppt=null;
+	private int dragRow;
+	private int dragCol;
+	
 	public AppList() {
 		setLayout(new BorderLayout());
 		currentRow = 0;
@@ -172,16 +177,18 @@ public class AppList extends JPanel implements ActionListener {
 				if (col == 0 || col == 3)
 					return new AppCellRenderer(new Object(), true, row, col, 1,
 							null);
-				else if (col == 1) {
+				else if (col == 1 || col == 2) {
+
 					return new AppCellRenderer(new Object(), false, row, col,
 							cellCMD[row][0], cellColor[row][0]);
 
-				} else if (col == 4) {
+				} else if (col == 4 || col == 5) {
 					return new AppCellRenderer(new Object(), false, row, col,
 							cellCMD[row][1], cellColor[row][1]);
 				} else
 					return new AppCellRenderer(new Object(), false, row, col,
 							1, null);
+
 			}
 		};
 
@@ -366,8 +373,6 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED_TITLE;
 					cellColor[pos[0]][1] = color;
-					cellCMD[pos[0]][2] = COLORED_TITLE;
-					cellColor[pos[0]][2] = color;
 				}
 			} else {
 				tableView.getModel().setValueAt(appt, pos[0], pos[1]);
@@ -378,8 +383,7 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED;
 					cellColor[pos[0]][1] = color;
-					cellCMD[pos[0]][2] = COLORED;
-					cellColor[pos[0]][2] = color;
+					
 				}
 
 			}
@@ -433,7 +437,7 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"Cannot Delete Past Events !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
-			else if(apptTitle.isJoint() && !apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID()))
+			else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst() !=parent.mCurrUser.ID())
 				JOptionPane.showMessageDialog(this,
 						"Only The Inintiator Can Delete Group Event !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
@@ -549,6 +553,26 @@ public class AppList extends JPanel implements ActionListener {
 		pressCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
+		//start dragging appt
+		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+			Object apptTitle;
+			
+			if(pressCol < 3)
+				apptTitle = tableView.getModel().getValueAt(pressRow, 1);
+			else
+				apptTitle = tableView.getModel().getValueAt(pressRow, 4);
+			
+			if (apptTitle instanceof Appt) {
+				dragAppt = (Appt)apptTitle;
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+			}
+			else
+				dragAppt = null;
+			
+			dragRow = pressRow;
+			dragCol = pressCol;
+		}
 	}
 	private void releaseResponse(MouseEvent e) {
 		
@@ -556,6 +580,8 @@ public class AppList extends JPanel implements ActionListener {
 		releaseCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
+		
+		
 	}
 	private void calculateDrag(MouseEvent e){
 		
@@ -572,6 +598,22 @@ public class AppList extends JPanel implements ActionListener {
 			currentCol = releaseCol;
 		}
 		
+		//end dragging appt
+		if((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+			if(dragAppt != null) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, dragAppt.getID());
+				setAppDial.updateSetApp(dragAppt);
+				setAppDial.setStartTime(getHour(currentRow, currentCol), getMinute(currentRow, currentCol));
+				setAppDial.modifyAppt();
+				setAppDial.dispose();
+				parent.updateAppList();
+				
+				dragAppt = null;
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				tableView.getSelectionModel().clearSelection();
+				tableView.clearSelection();
+			}
+		}
 	}
 	public void setParent(CalGrid grid) {
 		parent = grid;
@@ -583,6 +625,23 @@ public class AppList extends JPanel implements ActionListener {
 
 		}
 		
+	}
+	
+	public int getHour(int row, int col) {
+		int hour = 8;
+		hour += Math.floor(row / 4);
+		if(col > 2)
+			hour += 5;
+		
+		return hour;
+	}
+	
+	public int getMinute(int row, int col) {
+		int min = 0;
+		
+		min = row % 4 * 15;
+		
+		return min;
 	}
 
 }
