@@ -92,14 +92,6 @@ public class TransferOwnershipDialog extends JFrame{
 			}
 		}
 	}
-	
-	public void clearAllList() {
-		currAppt.getWaitingList().clear();
-		currAppt.getRejectList().clear();
-		currAppt.getAttendList().clear();
-		currAppt.addAttendant(_controller.getDefaultUser().ID());
-	}
-	
 	//select user and place them into waiting list
 	
 }

@@ -513,6 +513,7 @@ public class AppList extends JPanel implements ActionListener {
 	
 				setAppDial.show();
 				setAppDial.setResizable(false);
+				parent.controller.ManageAppt(apptTitle, parent.controller.TRANSFER);
 		}
 		else if(!apptTitle.isJoint()){
 			JOptionPane.showMessageDialog(this,
