@@ -94,7 +94,7 @@ public class LocationsDialog extends JFrame {
 				//add the item to the list
 				
 				//request admin to approve if user is not an admin
-				if(!_controller.getDefaultUser().IsAdmin()) {
+				/*if(!_controller.getDefaultUser().IsAdmin()) {
 					PendingEngine.getInstance().addPendingRequest(
 							PendingRequest.TYPE_LOCATION,
 							_controller.getDefaultUser(),

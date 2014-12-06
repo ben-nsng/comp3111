@@ -580,8 +580,6 @@ public class AppList extends JPanel implements ActionListener {
 		releaseCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
-		
-		
 	}
 	private void calculateDrag(MouseEvent e){
 		
