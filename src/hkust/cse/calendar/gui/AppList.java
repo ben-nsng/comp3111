@@ -433,7 +433,7 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"Cannot Delete Past Events !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
-			else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst() !=parent.mCurrUser.ID())
+			else if(apptTitle.isJoint() && !apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID()))
 				JOptionPane.showMessageDialog(this,
 						"Only The Inintiator Can Delete Group Event !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
