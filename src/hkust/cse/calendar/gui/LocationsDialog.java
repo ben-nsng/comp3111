@@ -137,13 +137,13 @@ public class LocationsDialog extends JFrame {
 									new Timestamp(2030, 0, 0, 0, 0, 0, 0)
 									)
 							);
-					System.out.println(loc.getName());
-					System.out.println(appts.length);
 					for(Appt appt : appts) {
 						LinkedList<String> people = appt.getAllPeople();
 						for(String person : people) {
 							if(!ids.contains(person)) ids.add(person);
+							pe.addPendingRequest(PendingRequest.REMOVE_APPOINTMENT, _controller.getDefaultUser(), um.getUser(person), appt.toString());
 						}
+						_controller.ManageAppt(appt, ApptStorageControllerImpl.REMOVE);
 					}
 					for(String id : ids) {
 						pe.addPendingRequest(PendingRequest.REMOVE_LOCATION, _controller.getDefaultUser(), um.getUser(id), loc.getName());

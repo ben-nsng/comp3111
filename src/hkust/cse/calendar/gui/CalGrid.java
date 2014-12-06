@@ -276,6 +276,11 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				
 				JOptionPane.showMessageDialog(null, "The location \"" + loc + "\" has been removed by admin " + request.getFrom().ID() + "." ,"Info", JOptionPane.INFORMATION_MESSAGE);
 			}
+			else if(request.getType() == PendingRequest.REMOVE_APPOINTMENT) {
+				String title = (String)request.getObj();
+				
+				JOptionPane.showMessageDialog(null, "The appointment \"" + title + "\" has been removed due to location removed." ,"Info", JOptionPane.INFORMATION_MESSAGE);
+			}
 			
 			/*
 			if(request.getType() == PendingRequest.TYPE_LOCATION) {

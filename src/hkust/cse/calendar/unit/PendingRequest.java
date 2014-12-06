@@ -5,6 +5,7 @@ import hkust.cse.calendar.unit.user.User;
 public class PendingRequest {
 	public final static int TYPE_LOCATION = 1;
 	public final static int REMOVE_LOCATION = 2;
+	public final static int REMOVE_APPOINTMENT = 3;
 	
 	private int type;
 	private User from;
