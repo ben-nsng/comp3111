@@ -373,6 +373,8 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED_TITLE;
 					cellColor[pos[0]][1] = color;
+					cellCMD[pos[0]][2] = COLORED_TITLE;
+					cellColor[pos[0]][2] = color;
 				}
 			} else {
 				tableView.getModel().setValueAt(appt, pos[0], pos[1]);
@@ -383,7 +385,8 @@ public class AppList extends JPanel implements ActionListener {
 				} else {
 					cellCMD[pos[0]][1] = COLORED;
 					cellColor[pos[0]][1] = color;
-					
+					cellCMD[pos[0]][2] = COLORED;
+					cellColor[pos[0]][2] = color;
 				}
 
 			}
@@ -437,7 +440,7 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this,
 						"Cannot Delete Past Events !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
-			else if(apptTitle.isJoint() && apptTitle.getAttendList().getFirst() !=parent.mCurrUser.ID())
+			else if(apptTitle.isJoint() && !apptTitle.getAttendList().getFirst().equals(parent.mCurrUser.ID()))
 				JOptionPane.showMessageDialog(this,
 						"Only The Inintiator Can Delete Group Event !", "Delete",
 						JOptionPane.ERROR_MESSAGE);
@@ -580,8 +583,6 @@ public class AppList extends JPanel implements ActionListener {
 		releaseCol = tableView.getSelectedColumn();
 		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)
 			pop.show(e.getComponent(), e.getX(), e.getY());
-		
-		
 	}
 	private void calculateDrag(MouseEvent e){
 		
@@ -622,6 +623,7 @@ public class AppList extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == tableView) {
 			pop.show(tableView, currentRow * 20, currentRow * 20);
+
 		}
 		
 	}
