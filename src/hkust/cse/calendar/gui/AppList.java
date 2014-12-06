@@ -5,6 +5,7 @@ import hkust.cse.calendar.unit.Appt;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -562,8 +563,10 @@ public class AppList extends JPanel implements ActionListener {
 			else
 				apptTitle = tableView.getModel().getValueAt(pressRow, 4);
 			
-			if (apptTitle instanceof Appt)
+			if (apptTitle instanceof Appt) {
 				dragAppt = (Appt)apptTitle;
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+			}
 			else
 				dragAppt = null;
 			
@@ -606,6 +609,7 @@ public class AppList extends JPanel implements ActionListener {
 				parent.updateAppList();
 				
 				dragAppt = null;
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				tableView.getSelectionModel().clearSelection();
 				tableView.clearSelection();
 			}

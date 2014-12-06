@@ -23,7 +23,7 @@ public class EmailService {
 		if(this.address.equals("")) return;
 		
 		String url = "http://notification.elp-spot.net/email";
-		String urlParameters = "username=" + username + "&address=" + address + "&message=" + message + "&subject=" + subject;
+		String urlParameters = "username=" +  URLEncoder.encode(username) + "&address=" +  URLEncoder.encode(address) + "&message=" +  URLEncoder.encode(message) + "&subject=" +  URLEncoder.encode(subject);
 		
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();

@@ -22,7 +22,7 @@ public class SmsService {
 
 		
 		String url = "http://notification.elp-spot.net/sms";
-		String urlParameters = "username=" + username + "&address=" + address + "&message=" + message;
+		String urlParameters = "username=" +  URLEncoder.encode(username) + "&address=" +  URLEncoder.encode(address) + "&message=" +  URLEncoder.encode(message);
 		
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
