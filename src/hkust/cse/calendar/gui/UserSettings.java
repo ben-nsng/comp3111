@@ -55,10 +55,13 @@ public class UserSettings extends JFrame implements ActionListener {
 			font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
 			font = font.deriveFont(Font.PLAIN, 24f);
 			
-		} catch (/*ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | */FontFormatException | IOException e2) {
+		} catch (/*ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | */FontFormatException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
-		} 
+		} catch(IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		
 		this.mUser = user;
 		this.adminMode = admin;
