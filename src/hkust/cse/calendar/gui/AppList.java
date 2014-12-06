@@ -64,7 +64,7 @@ class AppCellRenderer extends DefaultTableCellRenderer {
 			setHorizontalAlignment(SwingConstants.LEFT);
 		else
 			setHorizontalAlignment(SwingConstants.RIGHT);
-		if (col == 1 || col == 4) {
+		if (col == 1 || col == 4 || col == 2 || col == 5) {
 			if (colorCMD == AppList.COLORED_TITLE) {
 				setBackground(currColor);
 				setForeground(Color.black);
@@ -176,12 +176,12 @@ public class AppList extends JPanel implements ActionListener {
 				if (col == 0 || col == 3)
 					return new AppCellRenderer(new Object(), true, row, col, 1,
 							null);
-				else if (col == 1) {
+				else if (col == 1 || col == 2) {
 
 					return new AppCellRenderer(new Object(), false, row, col,
 							cellCMD[row][0], cellColor[row][0]);
 
-				} else if (col == 4) {
+				} else if (col == 4 || col == 5) {
 					return new AppCellRenderer(new Object(), false, row, col,
 							cellCMD[row][1], cellColor[row][1]);
 				} else
