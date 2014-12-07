@@ -363,8 +363,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
 		} else if (e.getSource() == availableTime){
 			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller, parent.timeMachine.getCurrentTime()); 
-			yearF.setText(Integer.toString(aTimeD.firstTime.StartTime().getYear()));
-			monthF.setText(Integer.toString(aTimeD.firstTime.StartTime().getMonth()));
+			yearF.setText(Integer.toString(aTimeD.firstTime.StartTime().getYear()+1900));
+			monthF.setText(Integer.toString(aTimeD.firstTime.StartTime().getMonth()+1));
 			dayF.setText(Integer.toString(aTimeD.firstTime.StartTime().getDate()));
 			sTimeH.setText(Integer.toString(aTimeD.firstTime.StartTime().getHours()));
 			sTimeM.setText(Integer.toString(aTimeD.firstTime.StartTime().getMinutes()));
