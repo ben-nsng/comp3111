@@ -38,8 +38,6 @@ public class TransferOwnershipDialog extends JFrame{
 	private DefaultListModel model;
 	private JLabel aUserL;
 	private JComboBox aUserCB;
-	private JButton addBut;
-	private JButton removeBut;
 	private JButton confirmBut;
 	private UserManagement um;
 	private ArrayList<String> arrayList;
@@ -78,22 +76,10 @@ public class TransferOwnershipDialog extends JFrame{
 				dispose();
 		      }
 		});
-		removeBut = new JButton("Remove");
-		removeBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = list.getSelectedIndex();
-				if (index != -1){
-					aUserCB.addItem(model.get(index));
-					model.removeElementAt(index);
-					selectedUsers.remove(index);
-				}
-		      }
-		});
 		um = UserManagement.getInstance();
 		centerPanel.add(aUserL);
 		centerPanel.add(aUserCB);
 		centerPanel.add(confirmBut);
-		centerPanel.add(removeBut);
 		add(centerPanel, BorderLayout.CENTER);
 		this.setSize(300, 300);
 		this.show();
@@ -106,14 +92,6 @@ public class TransferOwnershipDialog extends JFrame{
 			}
 		}
 	}
-	
-	public void clearAllList() {
-		currAppt.getWaitingList().clear();
-		currAppt.getRejectList().clear();
-		currAppt.getAttendList().clear();
-		currAppt.addAttendant(_controller.getDefaultUser().ID());
-	}
-	
 	//select user and place them into waiting list
 	
 }
