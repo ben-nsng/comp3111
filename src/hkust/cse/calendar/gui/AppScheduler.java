@@ -362,6 +362,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 			//show dialog to add/remove participant
 			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
 		} else if (e.getSource() == availableTime){
+			NewAppt.setLocation((Location)locField.getSelectedItem());
 			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller, parent.timeMachine.getCurrentTime()); 
 			yearF.setText(Integer.toString(aTimeD.firstTime.StartTime().getYear()+1900));
 			monthF.setText(Integer.toString(aTimeD.firstTime.StartTime().getMonth()+1));
@@ -738,3 +739,4 @@ public class AppScheduler extends JDialog implements ActionListener,
 		availableTime.setEnabled(false);
 	}
 }
+

@@ -63,7 +63,8 @@ public class AvailableTimeListDialog extends JFrame{
 		
 		while(aTime.size()==0){
 				while(newts.equals(end_day_time) == false && newts.before(end_day_time)){
-					boolean noTimeConflict = true;			
+					boolean noTimeConflict = true;	
+					boolean noLocationConflict = true;
 					TimeSpan tspan = new TimeSpan(newts, newts2);	
 					
 					UserManagement um = UserManagement.getInstance();			
@@ -78,7 +79,21 @@ public class AvailableTimeListDialog extends JFrame{
 									noTimeConflict = false;		
 						}
 			
-						if( noTimeConflict ){			
+						Appt[] retriedAppts2 = _controller.RetrieveAppt(currAppt.getLocation(), tspan);
+						//System.out.println(retriedAppts2.length);
+						//System.out.println(currAppt.getLocation());
+						//System.out.println(tspan.StartTime());
+
+						for(int i=0; i<retriedAppts2.length; i++){
+							if(retriedAppts2[i].getID()!=currAppt.getID())
+								noLocationConflict = false;
+							//System.out.println(retriedAppts2.length);
+							//System.out.println(currAppt.getLocation());
+							//System.out.println(currAppt.TimeSpan().StartTime());
+						}
+									
+						
+						if( noTimeConflict && noLocationConflict){			
 							aTime.add(tspan);
 						}
 					newts = new Timestamp(newts.getYear(), newts.getMonth(), newts.getDate(),newts.getHours(), newts.getMinutes()+15, 0, 0);			
