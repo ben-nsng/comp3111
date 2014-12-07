@@ -2,3 +2,4 @@
 *CVS
 *.orig
 *.xml
+.DS_Store

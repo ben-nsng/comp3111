@@ -1,6 +1,9 @@
 package hkust.cse.calendar.unit.user;
 
+import hkust.cse.calendar.unit.Appt;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class User implements Serializable {
 
@@ -10,6 +13,7 @@ public class User implements Serializable {
 	private String mFirstName;
 	private String mLastName;
 	private String mPhoneNum;
+	private ArrayList<Appt> mBookmarks;
 	protected Boolean isAdmin;
 	
 	public String getPhoneNum() {
@@ -33,6 +37,8 @@ public class User implements Serializable {
 		mFirstName = "";
 		mLastName = "";
 		mEmail = "";
+		mPhoneNum = "";
+		mBookmarks = new ArrayList<Appt>();
 	}
 
 	public String getFirstName() {
@@ -78,5 +84,17 @@ public class User implements Serializable {
 	
 	public Boolean IsAdmin() {
 		return this.isAdmin;
+	}
+	
+	public ArrayList<Appt> getBookmark() {
+		return mBookmarks;
+	}
+	
+	public void AddBookmark(Appt appt) {
+		if(!mBookmarks.contains(appt)) mBookmarks.add(appt);
+	}
+	
+	public void RemoveBookmark(Appt appt) {
+		if(mBookmarks.contains(appt)) mBookmarks.remove(appt);
 	}
 }

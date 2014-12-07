@@ -474,10 +474,13 @@ public class AppScheduler extends JDialog implements ActionListener,
 	}
 	
 	public void modifyAppt() {
-		//int[] validDate = getValidDate();
-		//int[] validTime = getValidTimeInterval();
-		//TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
+		int[] validDate = getValidDate();
+		int[] validTime = getValidTimeInterval();
+		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		
+		if(NewAppt.TimeSpan().StartTime().equals(apptTimeSpan.StartTime())) return;
+		
+		//if(NewAppt.TimeSpan().StartTime().before(apptTimeSpan.StartTime()) && NewAppt.TimeSpan().EndTime().after(apptTimeSpan.StartTime())) return;
 		//if(apptTimeSpan.Overlap(NewAppt.TimeSpan())) return;
 		
 		saveButtonResponse();
@@ -492,6 +495,8 @@ public class AppScheduler extends JDialog implements ActionListener,
 		eTimeH.setText(Integer.toString(hour + (int)Math.floor(interval.TimeLength() / 60)));
 		eTimeM.setText(Integer.toString(min + 
 				(interval.TimeLength() / 60 -  (int)Math.floor(interval.TimeLength() / 60)) * 60 ));
+		
+		
 		
 	}
 

@@ -3,6 +3,7 @@ package hkust.cse.calendar.gui;
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
 import hkust.cse.calendar.gui.TransferOwnershipDialog;
 import hkust.cse.calendar.unit.Appt;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -165,6 +166,13 @@ public class AppList extends JPanel implements ActionListener {
 		mi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				transfer();
+			}
+		});
+		
+		mi = (JMenuItem) pop.add(new JMenuItem("Bookmark"));
+		mi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				bookmark();
 			}
 		});
 		
@@ -525,6 +533,23 @@ public class AppList extends JPanel implements ActionListener {
 				JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	private void bookmark() {
+		Appt apptTitle = getSelectedAppTitle();
+		//check whether the start time of selected appointment is before the current time
+		if (apptTitle == null) {
+			JOptionPane.showMessageDialog(this,
+					"No Appointment To Bookmark !", "Bookmark",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		JOptionPane.showMessageDialog(this,
+				"Awesome, you have just bookmarked an appointment!", "Awesome",
+				JOptionPane.INFORMATION_MESSAGE);
+		
+		parent.mCurrUser.AddBookmark(apptTitle);
+	}
 
 	public Appt getSelectedAppTitle() {
 		
@@ -611,8 +636,20 @@ public class AppList extends JPanel implements ActionListener {
 				apptTitle = tableView.getModel().getValueAt(pressRow, 4);
 			
 			if (apptTitle instanceof Appt) {
-				dragAppt = (Appt)apptTitle;
-				this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				
+				//check if last row is also the same appt
+				Object tmp = null;
+				if(pressRow != 0) {
+					if(pressCol < 3)
+						tmp = tableView.getModel().getValueAt(pressRow - 1, 1);
+					else
+						tmp = tableView.getModel().getValueAt(pressRow - 1, 4);
+				}
+				
+				if(!(tmp instanceof Appt)) {
+					dragAppt = (Appt)apptTitle;
+					this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				}
 			}
 			else
 				dragAppt = null;

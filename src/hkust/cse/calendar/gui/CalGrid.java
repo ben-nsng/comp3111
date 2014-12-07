@@ -442,6 +442,10 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 					GroupEventDialog g = new GroupEventDialog(controller);
 					g.show();
 				}
+				else if(e.getActionCommand().equals("Bookmarks")) {
+					BookmarkList g = new BookmarkList(CalGrid.this);
+					g.show();
+				}
 
 			}
 		};
@@ -547,6 +551,10 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 		}
 		
 		mi = new JMenuItem("Create Group Event");
+		mi.addActionListener(listener);
+		Appmenu.add(mi);
+
+		mi = new JMenuItem("Bookmarks");
 		mi.addActionListener(listener);
 		Appmenu.add(mi);
 		
@@ -885,6 +893,15 @@ public class CalGrid extends JFrame implements ActionListener, TimeMachineListen
 				c.show();
 			}
 		}
+	}
+	
+	public void navigate(Appt appt) {
+		currentY = appt.TimeSpan().StartTime().getYear() + 1900;
+		year.setText(new Integer(currentY).toString());
+		currentM = appt.TimeSpan().StartTime().getMonth() + 1;
+		month.setSelectedIndex(currentM - 1);
+		currentD = appt.TimeSpan().StartTime().getDate();
+		UpdateCal();
 	}
 
 }
