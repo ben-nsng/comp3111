@@ -119,6 +119,7 @@ public class AppList extends JPanel implements ActionListener {
 	public Appt selectedAppt=null;
 	private MouseEvent tempe;
 	private Appt dragAppt=null;
+	private Appt resizeAppt=null;
 	private int dragRow;
 	private int dragCol;
 	
@@ -638,18 +639,33 @@ public class AppList extends JPanel implements ActionListener {
 			
 			if (apptTitle instanceof Appt) {
 				
-				//check if last row is also the same appt
+				//check if prev row is also the same appt
+				//if prev row is same appt, stop dragging appt
 				Object tmp = null;
 				if(pressRow != 0) {
 					if(pressCol < 3)
 						tmp = tableView.getModel().getValueAt(pressRow - 1, 1);
 					else
 						tmp = tableView.getModel().getValueAt(pressRow - 1, 4);
+					
+					if(!(tmp instanceof Appt)) {
+						dragAppt = (Appt)apptTitle;
+						this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					}
 				}
 				
-				if(!(tmp instanceof Appt)) {
-					dragAppt = (Appt)apptTitle;
-					this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				//now check if next appt is null or not
+				//if null, allow user to resize appt
+				if(pressRow != 19) {
+					if(pressCol < 3)
+						tmp = tableView.getModel().getValueAt(pressRow + 1, 1);
+					else
+						tmp = tableView.getModel().getValueAt(pressRow + 1, 4);
+					
+					if(!(tmp instanceof Appt)) {
+						resizeAppt = (Appt)apptTitle;
+						this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					}
 				}
 			}
 			else
@@ -692,6 +708,19 @@ public class AppList extends JPanel implements ActionListener {
 				parent.updateAppList();
 				
 				dragAppt = null;
+				this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				tableView.getSelectionModel().clearSelection();
+				tableView.clearSelection();
+			}
+			if(resizeAppt != null) {
+				AppScheduler setAppDial = new AppScheduler("Modify", parent, resizeAppt.getID());
+				setAppDial.updateSetApp(resizeAppt);
+				setAppDial.setEndTime(getHour(currentRow, currentCol), getMinute(currentRow, currentCol));
+				setAppDial.modifyAppt();
+				setAppDial.dispose();
+				parent.updateAppList();
+				
+				resizeAppt = null;
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				tableView.getSelectionModel().clearSelection();
 				tableView.clearSelection();

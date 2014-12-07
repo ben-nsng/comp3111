@@ -485,7 +485,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 		int[] validTime = getValidTimeInterval();
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		
-		if(NewAppt.TimeSpan().StartTime().equals(apptTimeSpan.StartTime())) return;
+		if(NewAppt.TimeSpan().StartTime().equals(apptTimeSpan.StartTime()) && NewAppt.TimeSpan().EndTime().equals(apptTimeSpan.EndTime())) return;
 		
 		//if(NewAppt.TimeSpan().StartTime().before(apptTimeSpan.StartTime()) && NewAppt.TimeSpan().EndTime().after(apptTimeSpan.StartTime())) return;
 		//if(apptTimeSpan.Overlap(NewAppt.TimeSpan())) return;
@@ -493,18 +493,30 @@ public class AppScheduler extends JDialog implements ActionListener,
 		saveButtonResponse();
 	}
 	
+	//drag appt
 	public void setStartTime(int hour, int min) {
 		sTimeH.setText(Integer.toString(hour));
 		sTimeM.setText(Integer.toString(min));
 		
 		TimeSpan interval = NewAppt.TimeSpan();
 		
-		eTimeH.setText(Integer.toString(hour + (int)Math.floor(interval.TimeLength() / 60)));
-		eTimeM.setText(Integer.toString(min + 
-				(interval.TimeLength() / 60 -  (int)Math.floor(interval.TimeLength() / 60)) * 60 ));
+		int hroffset = hour + (int)Math.floor(interval.TimeLength() / 60);
+		int minoffset = min + (interval.TimeLength() / 15 % 4) * 15;
 		
+		if(minoffset >= 60) {
+			minoffset -= 60;
+			hroffset += 1;
+		}
 		
+		eTimeH.setText(Integer.toString(hroffset));
+		eTimeM.setText(Integer.toString(minoffset));
 		
+	}
+	
+	//resize appt
+	public void setEndTime(int hour, int min) {
+		eTimeH.setText(Integer.toString(hour + (min == 45 ? 1 : 0)));
+		eTimeM.setText(Integer.toString(min + 15 == 60 ? 0 : min + 15));
 	}
 
 	private void saveButtonResponse() {
