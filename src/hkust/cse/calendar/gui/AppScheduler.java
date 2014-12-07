@@ -1,10 +1,12 @@
 package hkust.cse.calendar.gui;
 
 import hkust.cse.calendar.apptstorage.ApptStorageControllerImpl;
+
 import hkust.cse.calendar.unit.Appt;
 import hkust.cse.calendar.unit.TimeSpan;
 import hkust.cse.calendar.unit.Location;
 import hkust.cse.calendar.gui.LocationsDialog;
+import hkust.cse.calendar.unit.user.UserManagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -360,20 +362,14 @@ public class AppScheduler extends JDialog implements ActionListener,
 			//show dialog to add/remove participant
 			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
 		} else if (e.getSource() == availableTime){
-			int[] validDate = getValidDate();
-			int[] validTime = getValidTimeInterval();
-			TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp
-
-(validDate, validTime[1]));
-			//System.out.println(apptTimeSpan.StartTime());
-			//System.out.println(apptTimeSpan.EndTime());
-			NewAppt.setTimeSpan(apptTimeSpan);
-			//System.out.println(NewAppt.TimeSpan().StartTime());
-			//System.out.println(NewAppt.TimeSpan().EndTime());
-			
-			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller, 
-
-parent.timeMachine.getCurrentTime());
+			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller, parent.timeMachine.getCurrentTime()); 
+			yearF.setText(Integer.toString(aTimeD.firstTime.StartTime().getYear()+1900));
+			monthF.setText(Integer.toString(aTimeD.firstTime.StartTime().getMonth()+1));
+			dayF.setText(Integer.toString(aTimeD.firstTime.StartTime().getDate()));
+			sTimeH.setText(Integer.toString(aTimeD.firstTime.StartTime().getHours()));
+			sTimeM.setText(Integer.toString(aTimeD.firstTime.StartTime().getMinutes()));
+			eTimeH.setText(Integer.toString(aTimeD.firstTime.EndTime().getHours()));
+			eTimeM.setText(Integer.toString(aTimeD.firstTime.EndTime().getMinutes()));
 		}
 		parent.getAppList().clear();
 		parent.getAppList().setTodayAppt(parent.GetTodayAppt());
@@ -519,17 +515,6 @@ parent.timeMachine.getCurrentTime());
 		NewAppt.setLocation((Location)locField.getSelectedItem());
 		NewAppt.setSendEmail(sEmailCB.isSelected());
 		NewAppt.setSendSms(sSmsCB.isSelected());
-		if(NewAppt.getAttendList().size()==0)
-			NewAppt.addAttendant(getCurrentUser());
-		if(isJoint == false)
-			NewAppt.setScheduled(true);
-		else {
-			//joint appointment is scheduled only when no one is in waiting and reject list
-			if(NewAppt.getWaitingList().size() == 0 && NewAppt.getRejectList().size() == 0)
-				NewAppt.setScheduled(true);
-			else
-				NewAppt.setScheduled(false);
-		}
 		if(remField.isSelected()) {
 			if(Utility.getNumber(rTimeH.getText())<=24 && Utility.getNumber(rTimeH.getText())>=0 && Utility.getNumber(rTimeM.getText())<=59 && Utility.getNumber(rTimeM.getText())>=0) {
 				NewAppt.setReminderTime(Utility.getNumber(rTimeH.getText()), Utility.getNumber(rTimeM.getText()));
@@ -563,9 +548,18 @@ parent.timeMachine.getCurrentTime());
 		TimeSpan apptTimeSpan = new TimeSpan(CreateTimeStamp(validDate, validTime[0]), CreateTimeStamp(validDate, validTime[1]));
 		NewAppt.setTimeSpan(apptTimeSpan);
 		Appt[] retrivedAppts = parent.controller.RetrieveAppts(apptTimeSpan, NewAppt.getFrequency());
+		//check initiator time conflict
 		for(int i=0; i<retrivedAppts.length; i++) {
 			if(/*retrivedAppts[i].IsScheduled() &&*/ retrivedAppts[i].getAttendList().contains(getCurrentUser()) && retrivedAppts[i].getID()!=NewAppt.getID())
 				noTimeConflict = false;
+		}
+		//check other attendants' time conflict
+		UserManagement um = UserManagement.getInstance();
+		for(int i=0; i<NewAppt.getWaitingList().size(); i++) {
+			//if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan).length!=0)
+				for(int j =0; j<parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan).length; j++)
+						if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan)[j].getID()!=NewAppt.getID())
+								noTimeConflict = false;
 		}
 		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
 		for(int i=0; i<retriedAppts2.length; i++)
@@ -584,8 +578,13 @@ parent.timeMachine.getCurrentTime());
 		//if(rTimeValid==true && (validDate!=null) && (validTime!=null) && ((retrivedAppts.length==0) || (retrivedAppts.length==1 && retrivedAppts[0].getID()==NewAppt.getID()))) {
 		if(rTimeValid==true && noTimeConflict && noLocationConflict) {
 			if(this.getTitle().equals("New")) {
-				parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
-				this.setVisible(false);
+				if(NewAppt.isJoint() && NewAppt.getWaitingList().size()==0)
+					JOptionPane.showMessageDialog(this, "Please Select Participants For Group Event !",
+							"Input Error", JOptionPane.ERROR_MESSAGE);
+				else {
+					parent.controller.ManageAppt(NewAppt, ApptStorageControllerImpl.NEW);
+					this.setVisible(false);
+				}
 			}
 			if(this.getTitle().equals("Modify")) {
 				if(NewAppt.TimeSpan().StartTime().before(parent.timeMachine.getCurrentTime()))
@@ -722,3 +721,4 @@ parent.timeMachine.getCurrentTime());
 		availableTime.setEnabled(false);
 	}
 }
+
