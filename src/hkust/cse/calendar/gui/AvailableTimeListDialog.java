@@ -79,10 +79,19 @@ public class AvailableTimeListDialog extends JFrame{
 									noTimeConflict = false;		
 						}
 			
-						Appt[] retriedAppts2 = _controller.RetrieveAppt(currAppt.getLocation(), currAppt.TimeSpan());
-						for(int i=0; i<retriedAppts2.length; i++)
+						Appt[] retriedAppts2 = _controller.RetrieveAppt(currAppt.getLocation(), tspan);
+						//System.out.println(retriedAppts2.length);
+						//System.out.println(currAppt.getLocation());
+						//System.out.println(tspan.StartTime());
+
+						for(int i=0; i<retriedAppts2.length; i++){
 							if(retriedAppts2[i].getID()!=currAppt.getID())
 								noLocationConflict = false;
+							//System.out.println(retriedAppts2.length);
+							//System.out.println(currAppt.getLocation());
+							//System.out.println(currAppt.TimeSpan().StartTime());
+						}
+									
 						
 						if( noTimeConflict && noLocationConflict){			
 							aTime.add(tspan);

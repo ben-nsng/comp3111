@@ -362,6 +362,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 			//show dialog to add/remove participant
 			AddUserDialog addUserD = new AddUserDialog(NewAppt, parent.controller);
 		} else if (e.getSource() == availableTime){
+			NewAppt.setLocation((Location)locField.getSelectedItem());
 			AvailableTimeListDialog aTimeD = new AvailableTimeListDialog(NewAppt, parent.controller, parent.timeMachine.getCurrentTime()); 
 			yearF.setText(Integer.toString(aTimeD.firstTime.StartTime().getYear()+1900));
 			monthF.setText(Integer.toString(aTimeD.firstTime.StartTime().getMonth()+1));
@@ -561,7 +562,7 @@ public class AppScheduler extends JDialog implements ActionListener,
 						if(parent.controller.RetrieveAppts(um.getUser(NewAppt.getWaitingList().get(i)), apptTimeSpan)[j].getID()!=NewAppt.getID())
 								noTimeConflict = false;
 		}
-		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());
+		Appt[] retriedAppts2 = parent.controller.RetrieveAppt(NewAppt.getLocation(), NewAppt.TimeSpan());	
 		for(int i=0; i<retriedAppts2.length; i++)
 			if(/*retriedAppts2[i].IsScheduled() &&*/ retriedAppts2[i].getID()!=NewAppt.getID())
 				noLocationConflict = false;
