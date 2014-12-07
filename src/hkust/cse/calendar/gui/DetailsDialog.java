@@ -93,7 +93,10 @@ public class DetailsDialog extends JFrame implements ActionListener {
 			time = time + eTime.getMinutes();
 
 		area.setText("Appointment Information \n");
-		area.append("Title: " + appt.getTitle() + "\n");
+		if(appt.IsScheduled())
+			area.append("Title: " + appt.getTitle() + " (Scheduled) \n");
+		else
+			area.append("Title: " + appt.getTitle() + " (Not Scheduled) \n");
 		area.append("Time: " + time + "\n");
 		area.append("\nParticipants:\n");
 		area.append("  Attend:");
