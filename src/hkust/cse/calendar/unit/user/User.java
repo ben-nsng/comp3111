@@ -91,7 +91,10 @@ public class User implements Serializable {
 	}
 	
 	public void AddBookmark(Appt appt) {
-		if(!mBookmarks.contains(appt)) mBookmarks.add(appt);
+		Boolean contain = false;
+		for(Appt bookmark : mBookmarks)
+			if(bookmark.getID() == appt.getID()) contain = true;
+		if(!contain) mBookmarks.add(appt);
 	}
 	
 	public void RemoveBookmark(Appt appt) {

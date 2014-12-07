@@ -653,6 +653,10 @@ public class AppList extends JPanel implements ActionListener {
 						this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					}
 				}
+				else {
+					dragAppt = (Appt)apptTitle;
+					this.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				}
 				
 				//now check if next appt is null or not
 				//if null, allow user to resize appt
